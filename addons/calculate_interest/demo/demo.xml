@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+<!-- 
+          <record id="object0" model="calculate_interest">
+            <field name="entry_date">Date</field>
+            <field name="entry_type">Interest2Principal</field>
+            <field name="entry_no">1</field>
+            <field name="account_id">1</field>
+            <field name="amount">20000</field>
+            <field name="base_amount">20000</field>
+          </record>
+
+          <record id="object1" model="calculate_interest">
+            <field name="entry_date">Date</field>
+            <field name="entry_type">Interest2Principal</field>
+            <field name="entry_no">2</field>
+            <field name="account_id">1</field>
+            <field name="amount">15000</field>
+            <field name="base_amount">15000</field>
+          </record> -->
+
+    </data>
+</odoo>
