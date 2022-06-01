@@ -16,6 +16,7 @@
 
   <menuitem id="interest_root_menu"
             name="Interest"
+            web_icon="calculate_interest,static/description/icon.png"
             sequence="0"/>
 
   <menuitem id="interest_menu_master"
