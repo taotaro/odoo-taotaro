@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="action_calculate_interest" model="ir.actions.act_window">
+    <field name="name">Interest</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">calculate_interest</field>
+    <field name="view_mode">tree,form,kanban</field>
+    <field name="context">{}</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">
+        Create your first entry!
+      </p>
+    </field>
+  </record>
+
+  <menuitem id="interest_root_menu"
+            name="Interest"
+            sequence="0"/>
+
+  <menuitem id="interest_menu_master"
+          name="Calculate"
+          parent="interest_root_menu"
+          sequence="0"/>
+
+  <menuitem id="interest_menu"
+          name="Calculator"
+          parent="interest_menu_master"
+          sequence="0"/>
+
+</odoo>
