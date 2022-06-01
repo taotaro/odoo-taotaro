@@ -25,6 +25,7 @@
 
   <menuitem id="interest_menu"
           name="Calculator"
+          action="action_calculate_interest"
           parent="interest_menu_master"
           sequence="0"/>
 
