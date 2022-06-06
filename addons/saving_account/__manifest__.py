@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Calculate Interest",
+    'name': "Saving Account",
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
@@ -23,11 +23,8 @@
     'depends': ['base'],
 
     # always loaded
-    'data': [
-        'security/ir.model.access.csv',
-        'views/menu.xml',
-        'views/interest_view.xml',
-    ],
+    'data': [],
+    
     # only loaded in demonstration mode
     'demo': [
         # 'demo/demo.xml',
