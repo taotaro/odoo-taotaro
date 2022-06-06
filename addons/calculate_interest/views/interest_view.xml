@@ -7,7 +7,7 @@
       <field name="arch" type="xml">
         <tree>
           <field name="entry_no" string="Entry No"/>
-          <field name="account_name" string="Account" groups="hr.group_hr_user"/>
+          <field name="account_id" string="Account" groups="hr.group_hr_user"/>
           <field name="entry_type" string="Entry Type"/>
           <field name="ledger" string="Ledger"/>
           <field name="entry_date" string="Entry Date"/>
