@@ -1,21 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-  <record id="view_calculate_interest_tree" model="ir.ui.view">
-    <field name="name">calculate_interest.tree</field>
-    <field name="model">calculate_interest</field>
-    <field name="arch" type="xml">
-      <tree>
-        <field name="entry_no" string="Entry No"/>
-        <field name="account_id" string="Employee"/>
-        <field name="entry_type" string="Entry Type"/>
-        <field name="ledger" string="Ledger"/>
-        <field name="entry_date" string="Entry Date"/>
-        <field name="ref_no" string="Ref. No"/>
-        <field name="amount" string="Amount"/>
-      </tree>
-    </field>
-  </record>
+    <record id="view_calculate_interest_tree" model="ir.ui.view">
+      <field name="name">calculate_interest.tree</field>
+      <field name="model">calculate_interest</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="entry_no" string="Entry No"/>
+          <field name="account_name" string="Account" groups="hr.group_hr_user"/>
+          <field name="entry_type" string="Entry Type"/>
+          <field name="ledger" string="Ledger"/>
+          <field name="entry_date" string="Entry Date"/>
+          <field name="ref_no" string="Ref. No"/>
+          <field name="amount" string="Amount"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- <record id="view_calculate_interest_form" model="ir.ui.view">
+      <field name="name">calculate_interest.form</field>
+      <field name="name">calculate_interest</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <group>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record> -->
 
     <record id="action_calculate_interest" model="ir.actions.act_window">
     <field name="name">Interest</field>

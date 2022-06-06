@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 
 
 class calculate_interest(models.Model):
@@ -13,7 +13,8 @@ class calculate_interest(models.Model):
       ('interest2principal', 'Interest2Principal')
     ], string='Entry Type')
     entry_no = fields.Char(string='Entry No')
-    account_id = fields.Char(string='Account ID')
+    # account_id = fields.Char(string='Account ID')
+    account_name = fields.Many2one('hr.employee.name', string='Account Name')
     amount = fields.Integer(string='Amount')
     base_amount = fields.Integer(string='Base Amount')
     ledger = fields.Selection([
