@@ -20,3 +20,4 @@ class calculate_interest(models.Model):
       ('principal', 'Principal'), 
       ('interest', 'Interest')
     ], string='Ledger')
+    ref_no = fields.Char(string='Reference No')
