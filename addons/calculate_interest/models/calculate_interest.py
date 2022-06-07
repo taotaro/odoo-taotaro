@@ -9,6 +9,7 @@ class calculate_interest(models.Model):
 
     entry_date = fields.Date(string='Entry Date')
     entry_type = fields.Selection([
+      ('deposit', 'Deposit'),
       ('withdraw', 'Withdraw'),
       ('interest2principal', 'Interest2Principal')
     ], string='Entry Type')
