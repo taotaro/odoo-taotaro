@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<odoo>/
 
   <record id="view_saving_account_form" model="ir.ui.view">
     <field name="name">saving_account.form</field>
@@ -23,6 +23,20 @@
     </field>
   </record>
 
+  <record id="view_saving_account_tree" model="ir.ui.view">
+    <field name="name">saving_account.tree</field>
+    <field name="model">saving_account</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name" string="Name"/>
+        <field name="email" string="Email"/>
+        <field name="phone" string="Phone"/>
+        <field name="open_date" string="Open Date"/>
+        <field name="close_date" string="Close Date"/>
+      </tree>
+    </field>
+  </record>
+
   <record id="action_saving_account" model="ir.actions.act_window">
     <field name="name">Accounts</field>
     <field name="type">ir.actions.act_window</field>
@@ -32,35 +46,6 @@
     <field name="help" type="html">
       <p class="o_view_nocontent_smiling_face">
         Create your first account!
-      </p>
-    </field>
-  </record>
-
-  <!-- <record id="view_principal_deposit_form" model="ir.ui.view">
-    <field name="name">principal.form</field>
-    <field name="model">principal</field>
-    <field name="arch" type="xml">
-      <tree>
-        <field name="entry_no" string="Entry No"/>
-        <field name="account_id" string="Account"/>
-        <field name="entry_type" string="Entry Type" default="Deposit"/>
-        <field name="ledger" string="Ledger" default="Principal"/>
-        <field name="entry_date" string="Entry Date"/>
-        <field name="ref_no" string="Ref. No"/>
-        <field name="base_amount" string="Amount"/>
-      </tree>
-    </field>
-  </record> -->
-
-  <record id="action_principal" model="ir.actions.act_window">
-    <field name="name">Principal</field>
-    <field name="type">ir.actions.act_window</field>
-    <field name="res_model">principal</field>
-    <field name="view_mode">tree,form,kanban</field>
-    <field name="context">{}</field>
-    <field name="help" type="html">
-      <p class="o_view_nocontent_smiling_face">
-        Create your first entry!
       </p>
     </field>
   </record>
@@ -79,19 +64,60 @@
             sequence="0"/>
 
   <!-- principal menu -->
+  <record id="view_principal_form" model="ir.ui.view">
+    <field name="name">principal.form</field>
+    <field name="model">principal</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="account_id" string="Account"/>
+            <field name="entry_date" string="Entry Date"/>
+            <field name="entry_no" string="Entry No"/>
+            <field name="entry_type" string="Entry Type"/>
+            <field name="ledger" string="Ledger"/>
+            <field name="ref_no" string="Ref. No"/>
+            <field name="base_amount" string="Amount"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_principal_tree" model="ir.ui.view">
+    <field name="name">principal.tree</field>
+    <field name="model">principal</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="entry_no" string="Entry No"/>
+        <field name="account_id" string="Account"/>
+        <field name="entry_type" string="Entry Type"/>
+        <field name="ledger" string="Ledger"/>
+        <field name="entry_date" string="Entry Date"/>
+        <field name="ref_no" string="Ref. No"/>
+        <field name="base_amount" string="Amount"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="action_principal" model="ir.actions.act_window">
+    <field name="name">Principal</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">principal</field>
+    <field name="view_mode">tree,form,kanban</field>
+    <field name="context">{}</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">
+        Create your first entry!
+      </p>
+    </field>
+  </record>
+
   <menuitem id="principal_menu_master"
             name="Principal"
             action="action_principal"
             parent="saving_account_root_menu"
             sequence="0"/>
-
-    <menuitem id="principal_deposit_menu"
-              name="Deposit"
-              parent="principal_menu_master"/>
-
-    <menuitem id="principal_withdraw_menu"
-              name="Withdraw"
-              parent="principal_menu_master"/>
 
   <!-- interest menu -->
   <menuitem id="interest_menu_master"
