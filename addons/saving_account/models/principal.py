@@ -13,8 +13,8 @@ class Principal(models.Model):
     ('interest2principal', 'Interest2Principal')
   ], string='Entry Type')
   entry_no = fields.Char(string='Entry No')
-  account_id = fields.Char(string='Account ID')
-  # account_name = fields.Many2one('hr.employee.name', string='Account Name')
+  # account_id = fields.Char(string='Account ID')
+  account_id = fields.Many2one('saving_account', string='Account')
   base_amount = fields.Integer(string='Base Amount')
   add_amount = fields.Integer(string='Added Amount')
   ledger = fields.Selection([
