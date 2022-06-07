@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <menuitem id="saving_account_root_menu"
+            name="Saving Account"
+            web_icon="saving_account,static/description/icon.png"
+            sequence="0"/>
+
+  <menuitem id="account_menu_master"
+            name="Accounts"
+            parent="saving_account_root_menu"
+            sequence="0"/>
+
+  <menuitem id="principal_menu_master"
+            name="Principal"
+            parent="saving_account_root_menu"
+            sequence="0"/>
+
+    <menuitem id="principal_deposit_menu"
+              name="Deposit"
+              parent="principal_menu_master"/>
+
+    <menuitem id="principal_withdraw_menu"
+              name="Withdraw"
+              parent="principal_menu_master"/>
+
+  <menuitem id="interest_menu_master"
+            name="Interest"
+            parent="saving_account_root_menu"
+            sequence="0"/>
+</odoo>
