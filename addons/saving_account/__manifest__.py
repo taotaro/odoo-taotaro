@@ -33,5 +33,7 @@
     ],
 
     'application': True,
-    'sequence': -99,
+    'sequence': -100,
+
+     'license': 'LGPL-3',
 }
