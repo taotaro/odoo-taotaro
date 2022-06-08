@@ -15,16 +15,16 @@
             sequence="0"/>
 
   <!-- principal menu -->
-  <menuitem id="principal_menu_master"
+  <menuitem id="principal_base_menu_master"
             name="Principal"
-            action="action_principal"
+            action="action_principal_base"
             parent="saving_account_root_menu"
             sequence="0"/>
 
   <!-- interest menu -->
-  <menuitem id="interest_menu_master"
+  <menuitem id="principal_interest_menu_master"
             name="Interest"
             parent="saving_account_root_menu"
             sequence="0"/>
-            
+
 </odoo>
