@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-  <record id="seq_principal" model="ir.sequence">
+  <record id="seq_principal_base" model="ir.sequence">
     <field name="name">Principal</field>
-    <field name="code">principal</field>
+    <field name="code">principal.base</field>
     <field name="prefix">PR</field>
     <field name="padding">5</field>
     <field name="company_id" eval="False"/>

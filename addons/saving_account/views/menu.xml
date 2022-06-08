@@ -24,6 +24,7 @@
   <!-- interest menu -->
   <menuitem id="principal_interest_menu_master"
             name="Interest"
+            action="action_principal_interest"
             parent="saving_account_root_menu"
             sequence="0"/>
 
