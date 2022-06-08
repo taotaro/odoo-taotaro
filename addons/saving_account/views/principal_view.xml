@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="view_principal_form" model="ir.ui.view">
+    <field name="name">principal.form</field>
+    <field name="model">principal</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="account_id" string="Account"/>
+            <field name="entry_date" string="Entry Date"/>
+            <field name="entry_no" string="Entry No"/>
+            <field name="entry_type" string="Entry Type"/>
+            <field name="ledger" string="Ledger"/>
+            <field name="ref_no" string="Ref. No"/>
+            <field name="base_amount" string="Amount"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_principal_tree" model="ir.ui.view">
+    <field name="name">principal.tree</field>
+    <field name="model">principal</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="entry_no" string="Entry No"/>
+        <field name="account_id" string="Account"/>
+        <field name="entry_type" string="Entry Type"/>
+        <field name="ledger" string="Ledger"/>
+        <field name="entry_date" string="Entry Date"/>
+        <field name="ref_no" string="Ref. No"/>
+        <field name="base_amount" string="Amount"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="action_principal" model="ir.actions.act_window">
+    <field name="name">Principal</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">principal</field>
+    <field name="view_mode">tree,form,kanban</field>
+    <field name="context">{}</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">
+        Create your first entry!
+      </p>
+    </field>
+  </record>
+
+</odoo>
