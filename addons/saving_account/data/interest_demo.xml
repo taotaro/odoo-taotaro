@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <record id="interest_john_1" model="principal.interest">
+      <field name="entry_date" eval="time.strftime('%Y')+'-1-1'"/>
+      <field name="entry_type">interest2principal</field>
+      <field name="account_id" ref="account_john"/>
+      <field name="base_amount">20000</field>
+      <field name="add_amount">20</field>
+      <field name="ledger">interest</field>
+    </record>
+  </data>
+</odoo>
