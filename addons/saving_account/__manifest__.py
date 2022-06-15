@@ -27,6 +27,8 @@
       'security/ir.model.access.csv',
       'data/sequence_data.xml',
       'data/cron.xml',
+      'data/saving_account_demo.xml',
+      'data/principal_demo.xml',
       'views/account_view.xml',
       'views/principal_view.xml',
       'views/interest_view.xml',
