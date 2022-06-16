@@ -18,6 +18,8 @@ class SavingAccount(models.Model):
     close_date = fields.Date(string='Close Date')
     principal_amount = fields.Char(string='Principal')
     interest_amount = fields.Char(string='Interest')
+    custom1 = fields.Text(string='Custom 1')
+    custom2 = fields.Text(string='Custom 2')
 
     @api.model
     def create(self, vals):

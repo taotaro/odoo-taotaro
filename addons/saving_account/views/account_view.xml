@@ -18,6 +18,10 @@
             <field name="open_date"/>
             <field name="close_date"/>
           </group>
+          <group>
+            <field name="custom1"/>
+            <field name="custom2"/>
+          </group>
         </group>
         </sheet>
       </form>
@@ -30,12 +34,16 @@
     <field name="arch" type="xml">
       <tree>
         <field name="account_no" string="Account ID"/>
-        <field name="account_type" string="Account Type"/>
         <field name="name" string="Name"/>
-        <field name="email" string="Email"/>
-        <field name="phone" string="Phone"/>
+        <field name="account_type" string="Account Type"/>
         <field name="open_date" string="Open Date"/>
         <field name="close_date" string="Close Date"/>
+        <field name="principal_amount" string="Principal"/>
+        <field name="interest_amount" string="Interest"/>
+        <field name="phone" string="Phone"/>
+        <field name="email" string="Email"/>
+        <field name="custom1" string="Custom 1"/>
+        <field name="custom2" string="Custom 2"/>
       </tree>
     </field>
   </record>
