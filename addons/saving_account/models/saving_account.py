@@ -25,3 +25,6 @@ class SavingAccount(models.Model):
     def create(self, vals):
       vals['account_no'] = self.env['ir.sequence'].next_by_code('saving_account')
       return super(SavingAccount, self).create(vals)
+    
+    def close(self):
+      self.device.close()

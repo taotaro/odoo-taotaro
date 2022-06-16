@@ -38,3 +38,5 @@ class PrincipalBase(models.Model):
       print("entry", entry)
     res = super(PrincipalBase, self).create(vals)
     return res
+
+    
