@@ -15,11 +15,4 @@
     <field name="company_id" eval="False"/>
   </record>
 
-   <record id="seq_principal_interest" model="ir.sequence">
-    <field name="name">Principal</field>
-    <field name="code">principal.interest</field>
-    <field name="prefix">IN</field>
-    <field name="company_id" eval="False"/>
-  </record>
-
 </odoo>

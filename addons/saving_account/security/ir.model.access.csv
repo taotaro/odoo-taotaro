@@ -1,4 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access.saving.account,access_saving_account,saving_account.model_saving_account,base.group_user,1,1,1,1
 saving_account.access_principal_base,access_principal_base,saving_account.model_principal_base,base.group_user,1,1,1,1
-saving_account.access_principal_interest,access_principal_interest,saving_account.model_principal_interest,base.group_user,1,1,1,1

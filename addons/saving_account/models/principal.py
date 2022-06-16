@@ -7,6 +7,7 @@ class PrincipalBase(models.Model):
   _name = "principal.base"
   _description = "Principal Base"
 
+  entry_no = fields.Char(string='Entry No')
   entry_date = fields.Date(string='Entry Date', default=fields.Date.today())
   entry_type = fields.Selection([
     ('deposit', 'Deposit'),
@@ -14,9 +15,10 @@ class PrincipalBase(models.Model):
     ('interest', 'Interest'),
     ('credit_interest', 'Credit Interest')
   ], string='Entry Type')
-  entry_no = fields.Char(string='Entry No')
   account_id = fields.Many2one('saving_account', string='Account')
+  account_type = fields.Many2one('saving_account', string='Account Type')
   principal_amount = fields.Integer(string='Base Amount')
+  interest_amount = fields.Integer(string='Added Amount')
   ledger = fields.Selection([
     ('principal', 'Principal'), 
     ('interest', 'Interest')
@@ -28,3 +30,11 @@ class PrincipalBase(models.Model):
   def create(self, vals):
     vals['entry_no'] = self.env['ir.sequence'].next_by_code('principal.base')
     return super(PrincipalBase, self).create(vals)
+
+  @api.model
+  def calculate_daily_interest(self, vals):
+    print("Calculating daily interest")
+    for entry in vals.get('entry_no'):
+      print("entry", entry)
+    res = super(PrincipalBase, self).create(vals)
+    return res
