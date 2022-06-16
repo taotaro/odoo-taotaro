@@ -10,7 +10,6 @@
           <group>
             <field name="account_id" string="Account"/>
             <field name="entry_date" string="Entry Date"/>
-            <field name="entry_no" string="Entry No"/>
             <field name="entry_type" string="Entry Type"/>
             <field name="ledger" string="Ledger"/>
             <field name="ref_no" string="Ref. No"/>

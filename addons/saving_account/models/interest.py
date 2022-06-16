@@ -11,5 +11,9 @@ class PrincipalInterest(models.Model):
   add_amount = fields.Integer(string='Added Amount')
 
   @api.model
-  def calculate_daily_interest(self):
-    print("test")
+  def calculate_daily_interest(self, vals):
+    print("Calculating daily interest")
+    for entry in vals.get('entry_no'):
+      print("entry", entry)
+    res = super(PrincipalInterest, self).create(vals)
+    return res
