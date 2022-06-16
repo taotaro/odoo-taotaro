@@ -8,7 +8,7 @@ class PrincipalInterest(models.Model):
   _description = "Interest accumulated"
   _inherit = "principal.base"
 
-  add_amount = fields.Integer(string='Added Amount')
+  interest_amount = fields.Integer(string='Added Amount')
 
   @api.model
   def calculate_daily_interest(self, vals):
@@ -17,3 +17,8 @@ class PrincipalInterest(models.Model):
       print("entry", entry)
     res = super(PrincipalInterest, self).create(vals)
     return res
+
+  @api.model
+  def create(self, vals):
+    vals['entry_no'] = self.env['ir.sequence'].next_by_code('principal.interest')
+    return super(PrincipalInterest, self).create(vals)

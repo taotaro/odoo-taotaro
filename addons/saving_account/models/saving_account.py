@@ -6,7 +6,7 @@ class SavingAccount(models.Model):
     _name = 'saving_account'
     _description = 'Saving Account'
 
-    account_id = fields.Char(string='Account ID')
+    account_no = fields.Char(string='Account ID')
     account_type = fields.Selection([
       ('normal', 'Normal'), 
       ('vip', 'VIP')
@@ -14,10 +14,12 @@ class SavingAccount(models.Model):
     name = fields.Char(string='Account Name')
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone Number')
-    open_date = fields.Date(string='Open Date')
+    open_date = fields.Date(string='Open Date', default=fields.Date.today())
     close_date = fields.Date(string='Close Date')
+    principal_amount = fields.Char(string='Principal')
+    interest_amount = fields.Char(string='Interest')
 
     @api.model
     def create(self, vals):
-      vals['account_id'] = self.env['ir.sequence'].next_by_code('saving_account')
+      vals['account_no'] = self.env['ir.sequence'].next_by_code('saving_account')
       return super(SavingAccount, self).create(vals)

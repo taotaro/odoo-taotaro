@@ -13,7 +13,7 @@
             <field name="entry_type" string="Entry Type"/>
             <field name="ledger" string="Ledger"/>
             <field name="ref_no" string="Ref. No"/>
-            <field name="base_amount" string="Amount"/>
+            <field name="principal_amount" string="Amount"/>
           </group>
         </sheet>
       </form>
@@ -31,7 +31,7 @@
         <field name="ledger" string="Ledger"/>
         <field name="entry_date" string="Entry Date"/>
         <field name="ref_no" string="Ref. No"/>
-        <field name="base_amount" string="Amount"/>
+        <field name="principal_amount" string="Amount"/>
       </tree>
     </field>
   </record>
