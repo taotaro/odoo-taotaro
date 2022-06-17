@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from email.policy import default
 from odoo import models, fields, api
 
 class PrincipalBase(models.Model):
@@ -17,8 +16,7 @@ class PrincipalBase(models.Model):
   ], string='Entry Type')
   account_id = fields.Many2one('saving_account', string='Account')
   account_type = fields.Many2one('saving_account', string='Account Type')
-  principal_amount = fields.Integer(string='Base Amount')
-  interest_amount = fields.Integer(string='Added Amount')
+  principal_amount = fields.Integer(string='Amount')
   ledger = fields.Selection([
     ('principal', 'Principal'), 
     ('interest', 'Interest')
@@ -32,11 +30,7 @@ class PrincipalBase(models.Model):
     return super(PrincipalBase, self).create(vals)
 
   @api.model
-  def calculate_daily_interest(self, vals):
+  def calculate_daily_interest(self):
     print("Calculating daily interest")
-    for entry in vals.get('entry_no'):
-      print("entry", entry)
-    res = super(PrincipalBase, self).create(vals)
-    return res
 
     

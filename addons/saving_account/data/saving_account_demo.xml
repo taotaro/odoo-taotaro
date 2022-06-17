@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <data noupdate="1">
+  <data>
     <record id="account_john" model="saving_account">
       <field name="account_type">normal</field>
       <field name="name">John Smith</field>

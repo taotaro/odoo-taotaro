@@ -19,6 +19,7 @@
             <field name="close_date"/>
           </group>
           <group>
+            <field name="total_principal"/>
             <field name="custom1"/>
             <field name="custom2"/>
           </group>
@@ -33,13 +34,13 @@
     <field name="model">saving_account</field>
     <field name="arch" type="xml">
       <tree>
-        <field name="account_no" string="Account ID"/>
+        <field name="account_no" string="Account No"/>
         <field name="name" string="Name"/>
         <field name="account_type" string="Account Type"/>
         <field name="open_date" string="Open Date"/>
         <field name="close_date" string="Close Date"/>
-        <field name="principal_amount" string="Principal"/>
-        <field name="interest_amount" string="Interest"/>
+        <field name="total_principal" string="Principal"/>
+        <!-- <field name="total_interest" string="Interest"/> -->
         <field name="phone" string="Phone"/>
         <field name="email" string="Email"/>
         <field name="custom1" string="Custom 1"/>

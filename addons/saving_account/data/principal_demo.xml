@@ -5,13 +5,15 @@
       <field name="entry_date" eval="time.strftime('%Y')+'-1-1'"/>
       <field name="entry_type">deposit</field>
       <field name="account_id" ref="account_john"/>
+      <field name="account_type" ref="account_john"/>
       <field name="principal_amount">20000</field>
       <field name="ledger">principal</field>
     </record>
-    <record id="base_lisa_deposit" model="principal.base">
+    <!-- <record id="base_lisa_deposit" model="principal.base">
       <field name="entry_date" eval="time.strftime('%Y')+'-1-1'"/>
       <field name="entry_type">deposit</field>
       <field name="account_id" ref="account_lisa"/>
+      <field name="account_type" ref="account_lisa"/>
       <field name="principal_amount">40000</field>
       <field name="ledger">principal</field>
     </record>
@@ -19,8 +21,9 @@
       <field name="entry_date" eval="time.strftime('%Y')+'-1-3'"/>
       <field name="entry_type">withdraw</field>
       <field name="account_id" ref="account_lisa"/>
+      <field name="account_type" ref="account_lisa"/>
       <field name="principal_amount">20000</field>
       <field name="ledger">principal</field>
-    </record>
+    </record> -->
   </data>
 </odoo>
