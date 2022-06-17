@@ -16,7 +16,7 @@ class SavingAccount(models.Model):
     phone = fields.Char(string='Phone Number')
     open_date = fields.Date(string='Open Date', default=fields.Date.today())
     close_date = fields.Date(string='Close Date')
-    principal_list_ids = fields.One2many('principal.base', 'entry_no', string="Principal Lists", domain=[('entry_type','in',['deposit', 'withdraw'])])
+    principal_list_ids = fields.One2many('principal.base', 'amount', string="Principal Lists", domain=[('entry_type','in',['deposit', 'withdraw'])])
     # interest_list_ids = fields.One2many('principal.base', 'entry_no', string="Interest Lists", domain=[('entry_type','=','interest')])
     total_principal = fields.Integer(compute='_compute_total_principal', string='Principal')
     # total_interest = fields.Char(compute='_calculate_total_interest', string='Interest')
@@ -33,8 +33,8 @@ class SavingAccount(models.Model):
       print('Calculating total principal')
       for rec in self:
         # total_principal = rec.env['principal.base'].search_count([('account_id','=',rec.id), ('entry_type','in',['deposit', 'withdraw'])])
-        print(rec.principal_list_ids.principal_amount)
-        total_principal = sum([rec.principal_list_ids.principal_amount])
+        print(rec.principal_list_ids.amount)
+        total_principal = sum([rec.principal_list_ids.amount])
         print(total_principal)
         rec.total_principal = total_principal
     

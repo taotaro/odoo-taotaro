@@ -16,7 +16,7 @@ class PrincipalBase(models.Model):
   ], string='Entry Type')
   account_id = fields.Many2one('saving_account', string='Account')
   account_type = fields.Many2one('saving_account', string='Account Type')
-  principal_amount = fields.Integer(string='Amount')
+  amount = fields.Integer(string='Amount')
   ledger = fields.Selection([
     ('principal', 'Principal'), 
     ('interest', 'Interest')
