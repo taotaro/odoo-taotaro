@@ -34,7 +34,7 @@
     <field name="model">saving_account</field>
     <field name="arch" type="xml">
       <tree>
-        <field name="account_no" string="Account No"/>
+        <field name="account_no" string="Account ID"/>
         <field name="name" string="Name"/>
         <field name="account_type" string="Account Type"/>
         <field name="open_date" string="Open Date"/>

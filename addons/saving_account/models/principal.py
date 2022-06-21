@@ -2,11 +2,11 @@
 
 from odoo import models, fields, api
 
-class PrincipalBase(models.Model):
-  _name = "principal.base"
-  _description = "Principal Base"
+class SavingAccountEntry(models.Model):
+  _name = "saving_account.entry"
+  _description = "Entry of saving account"
 
-  entry_no = fields.Char(string='Entry No')
+  entry_no = fields.Integer(string='Entry No')
   entry_date = fields.Date(string='Entry Date', default=fields.Date.today())
   entry_type = fields.Selection([
     ('deposit', 'Deposit'),
@@ -15,7 +15,6 @@ class PrincipalBase(models.Model):
     ('credit_interest', 'Credit Interest')
   ], string='Entry Type')
   account_id = fields.Many2one('saving_account', string='Account')
-  account_type = fields.Many2one('saving_account', string='Account Type')
   amount = fields.Integer(string='Amount')
   ledger = fields.Selection([
     ('principal', 'Principal'), 
@@ -26,11 +25,24 @@ class PrincipalBase(models.Model):
 
   @api.model
   def create(self, vals):
-    vals['entry_no'] = self.env['ir.sequence'].next_by_code('principal.base')
-    return super(PrincipalBase, self).create(vals)
+    vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry')
+    return super(SavingAccountEntry, self).create(vals)
 
   @api.model
   def calculate_daily_interest(self):
     print("Calculating daily interest")
+    for rec in self:
+      account_list = rec.env('saving_account').search([('account_id','=',rec.account_id)])
+      if account_list:
+        for account in account_list:
+          interest_amount = account.total_principal * 1.5
+      
+      list = {
+        'entry_type': 'interest',
+        'account_id': rec.account_id,
+        'amount': interest_amount,
+        'ledger': 'interest',
+      }
+      self.env['saving_account.entry'].create(list)
 
     

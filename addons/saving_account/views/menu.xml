@@ -15,9 +15,9 @@
             sequence="0"/>
 
   <!-- principal menu -->
-  <menuitem id="principal_base_menu_master"
-            name="Principal"
-            action="action_principal_base"
+  <menuitem id="entry_base_menu_master"
+            name="Entries"
+            action="action_entry"
             parent="saving_account_root_menu"
             sequence="0"/>
 

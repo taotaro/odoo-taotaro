@@ -6,6 +6,7 @@ class SavingAccount(models.Model):
     _name = 'saving_account'
     _description = 'Saving Account'
 
+    account_id = fields.One2many('saving_account.entry', 'account_id', string='Account ID')
     account_no = fields.Char(string='Account No')
     account_type = fields.Selection([
       ('normal', 'Normal'), 
@@ -16,8 +17,8 @@ class SavingAccount(models.Model):
     phone = fields.Char(string='Phone Number')
     open_date = fields.Date(string='Open Date', default=fields.Date.today())
     close_date = fields.Date(string='Close Date')
-    principal_list_ids = fields.One2many('principal.base', 'amount', string="Principal Lists", domain=[('entry_type','in',['deposit', 'withdraw'])])
-    interest_list_ids = fields.One2many('principal.base', 'entry_no', string="Interest Lists", domain=[('entry_type','=','interest')])
+    principal_list_ids = fields.One2many('saving_account.entry', 'amount', string="Principal Lists", domain=[('entry_type','in',['deposit', 'withdraw'])])
+    interest_list_ids = fields.One2many('saving_account.entry', 'entry_no', string="Interest Lists", domain=[('entry_type','=','interest')])
     total_principal = fields.Integer(compute='_compute_total_principal', compute_sudo=True, string='Principal')
     total_interest = fields.Char(compute='_compute_total_interest', string='Interest')
     custom1 = fields.Text(string='Custom 1')
@@ -28,12 +29,12 @@ class SavingAccount(models.Model):
       vals['account_no'] = self.env['ir.sequence'].next_by_code('saving_account')
       return super(SavingAccount, self).create(vals)
     
-    @api.onchange('principal_list_ids')
+    @api.depends('principal_list_ids')
     def _compute_total_principal(self):
       print('Calculating total principal')
       for rec in self:
         current_total = 0
-        principal_list = rec.env['principal.base'].search([('account_id','=',rec.id), ('entry_type','in',['deposit', 'withdraw'])])
+        principal_list = rec.env['saving_account.entry'].search([('account_id','=',rec.id), ('entry_type','in',['deposit', 'withdraw'])])
         if principal_list:
           for principal in principal_list:
             if principal.entry_type == "deposit":
@@ -48,7 +49,7 @@ class SavingAccount(models.Model):
       print('Calculating total interest')
       for rec in self:
         current_total = 0
-        interest_list = rec.env['principal.base'].search([('account_id','=',rec.id), ('entry_type','in','interest')])
+        interest_list = rec.env['saving_account.entry'].search([('account_id','=',rec.id), ('entry_type','in','interest')])
         if interest_list:
           for interest in interest_list:
             current_total = current_total + interest.amount
