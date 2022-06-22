@@ -32,7 +32,7 @@ class SavingAccountEntry(models.Model):
   @api.model
   def _cron_daily_interest(self):
     print("Calculating daily interest")
-    account = self.env['saving_account'].search([('close_date','!=',False)])
+    account = self.env['saving_account'].search([('close_date','=',False)])
     if account:
       interest_amount = account.total_principal * 1.5
       print("account", account)

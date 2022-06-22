@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+  <record id="view_schedule_form" model="ir.ui.view">
+    <field name="name">interest.schedule.form</field>
+    <field name="model">interest.schedule</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <group>
+              <field name="interest_calculation_time" widget="float_time"/>
+            </group>
+            <group>
+              <field name="credit_interest_time" widget="float_time"/>
+              <field name="credit_interest_day"/>
+            </group>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
   <record id="action_schedule" model="ir.actions.act_window">
     <field name="name">Interest Schedule</field>
     <field name="type">ir.actions.act_window</field>
