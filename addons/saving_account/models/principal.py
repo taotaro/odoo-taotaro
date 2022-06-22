@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from cgi import test
 from odoo import models, fields, api
 
 class SavingAccountEntry(models.Model):
@@ -29,20 +30,19 @@ class SavingAccountEntry(models.Model):
     return super(SavingAccountEntry, self).create(vals)
 
   @api.model
-  def calculate_daily_interest(self):
+  def _cron_daily_interest(self):
     print("Calculating daily interest")
-    for rec in self:
-      account_list = rec.env('saving_account').search([('account_id','=',rec.account_id)])
-      if account_list:
-        for account in account_list:
-          interest_amount = account.total_principal * 1.5
-      
+    account = self.env['saving_account'].search([('close_date','!=',False)])
+    if account:
+      interest_amount = account.total_principal * 1.5
+      print("account", account)
+      print("Interest amount", interest_amount)
       list = {
         'entry_type': 'interest',
-        'account_id': rec.account_id,
+        'account_id': account.id,
         'amount': interest_amount,
         'ledger': 'interest',
       }
-      self.env['saving_account.entry'].create(list)
-
+      self.create(list)
+    return
     
