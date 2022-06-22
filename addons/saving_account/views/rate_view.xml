@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="action_rate" model="ir.actions.act_window">
+    <field name="name">Interest Rates</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">interest_rate</field>
+    <field name="view_mode">tree,form</field>
+       <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">
+        Set up the interest rates!
+      </p>
+    </field>
+  </record>
+
+</odoo>

@@ -31,6 +31,7 @@
       'data/principal_demo.xml',
       'views/account_view.xml',
       'views/principal_view.xml',
+      'views/rate_view.xml',
       'views/menu.xml',
     ],
 

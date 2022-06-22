@@ -16,7 +16,7 @@ class SavingAccountEntry(models.Model):
     ('credit_interest', 'Credit Interest')
   ], string='Entry Type')
   account_id = fields.Many2one('saving_account', string='Account')
-  amount = fields.Integer(string='Amount')
+  amount = fields.Float(string='Amount')
   ledger = fields.Selection([
     ('principal', 'Principal'), 
     ('interest', 'Interest')

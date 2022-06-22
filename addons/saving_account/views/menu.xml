@@ -15,9 +15,16 @@
             sequence="0"/>
 
   <!-- principal menu -->
-  <menuitem id="entry_base_menu_master"
+  <menuitem id="entry_menu_master"
             name="Entries"
             action="action_entry"
+            parent="saving_account_root_menu"
+            sequence="0"/>
+
+  <!-- interest rate menu -->
+  <menuitem id="rate_menu_master"
+            name="Rates"
+            action="action_rate"
             parent="saving_account_root_menu"
             sequence="0"/>
 
