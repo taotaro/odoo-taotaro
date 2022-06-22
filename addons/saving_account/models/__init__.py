@@ -2,4 +2,5 @@
 
 from . import saving_account
 from . import principal
-from . import rate
+from . import interest_rate
+from . import interest_schedule
