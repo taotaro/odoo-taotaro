@@ -28,4 +28,11 @@
             parent="saving_account_root_menu"
             sequence="0"/>
 
+  <!-- interest schedule menu -->
+  <menuitem id="schedule_menu_master"
+            name="Schedule"
+            action="action_schedule"
+            parent="saving_account_root_menu"
+            sequence="0"/>
+
 </odoo>

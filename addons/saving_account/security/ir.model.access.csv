@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access.saving.account,access_saving_account,saving_account.model_saving_account,base.group_user,1,1,1,1
 saving_account.access_saving_account_entry,access_saving_account_entry,saving_account.model_saving_account_entry,base.group_user,1,1,1,1
 saving_account.access_interest_rate,access_interest_rate,saving_account.model_interest_rate,base.group_user,1,1,1,1
+saving_account.access_interest_schedule,access_interest_schedule,saving_account.model_interest_schedule,base.group_user,1,1,1,1

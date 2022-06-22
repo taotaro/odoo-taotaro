@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-  <record id="action_rate" model="ir.actions.act_window">
-    <field name="name">Interest Rates</field>
+  <record id="action_schedule" model="ir.actions.act_window">
+    <field name="name">Interest Schedule</field>
     <field name="type">ir.actions.act_window</field>
-    <field name="res_model">interest.rate</field>
+    <field name="res_model">interest.schedule</field>
     <field name="view_mode">tree,form</field>
        <field name="help" type="html">
       <p class="o_view_nocontent_smiling_face">
-        Set up the interest rates!
+        Set up the interest schedule!
       </p>
     </field>
   </record>
