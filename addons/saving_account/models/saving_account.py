@@ -19,8 +19,8 @@ class SavingAccount(models.Model):
     close_date = fields.Date(string='Close Date')
     principal_list_ids = fields.One2many('saving_account.entry', 'amount', string="Principal Lists", domain=[('entry_type','in',['deposit', 'withdraw'])])
     interest_list_ids = fields.One2many('saving_account.entry', 'entry_no', string="Interest Lists", domain=[('entry_type','=','interest')])
-    total_principal = fields.Integer(compute='_compute_total_principal', compute_sudo=True, string='Principal')
-    total_interest = fields.Char(compute='_compute_total_interest', string='Interest')
+    total_principal = fields.Float(compute='_compute_total_principal', compute_sudo=True, string='Principal')
+    total_interest = fields.Float(compute='_compute_total_interest', compute_sudo=True, string='Interest')
     custom1 = fields.Text(string='Custom 1')
     custom2 = fields.Text(string='Custom 2')
 
@@ -49,7 +49,7 @@ class SavingAccount(models.Model):
       print('Calculating total interest')
       for rec in self:
         current_total = 0
-        interest_list = rec.env['saving_account.entry'].search([('account_id','=',rec.id), ('entry_type','in','interest')])
+        interest_list = rec.env['saving_account.entry'].search([('account_id','=',rec.id), ('entry_type','=','interest')])
         if interest_list:
           for interest in interest_list:
             current_total = current_total + interest.amount

@@ -40,7 +40,7 @@
         <field name="open_date" string="Open Date"/>
         <field name="close_date" string="Close Date"/>
         <field name="total_principal" string="Principal"/>
-        <!-- <field name="total_interest" string="Interest"/> -->
+        <field name="total_interest" string="Interest"/>
         <field name="phone" string="Phone"/>
         <field name="email" string="Email"/>
         <field name="custom1" string="Custom 1"/>
