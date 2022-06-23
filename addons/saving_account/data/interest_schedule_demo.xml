@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <record id="schedule_1" model="interest.schedule">
+      <field name="interest_calculation_time">15.15</field>
+      <field name="credit_interest_day" eval="time.strftime('%Y')+'-3-3'"/>
+      <field name="credit_interest_time">10.30</field>
+    </record>
+  </data>
+</odoo>

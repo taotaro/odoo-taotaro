@@ -11,10 +11,10 @@
       <field name="account_type">normal</field>
       <field name="annual_rate">1.7</field>
     </record>
-    <!-- <record id="rate_vip_2" model="interest.rate">
+    <record id="rate_vip_2" model="interest.rate">
       <field name="start_date" eval="time.strftime('%Y')+'-6-21'"/>
       <field name="account_type">vip</field>
       <field name="annual_rate">2.2</field>
-    </record> -->
+    </record>
   </data>
 </odoo>

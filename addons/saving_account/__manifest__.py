@@ -30,6 +30,7 @@
       'data/saving_account_demo.xml',
       'data/principal_demo.xml',
       'data/interest_rate_demo.xml',
+      'data/interest_schedule_demo.xml',
       'views/account_view.xml',
       'views/principal_view.xml',
       'views/rate_view.xml',

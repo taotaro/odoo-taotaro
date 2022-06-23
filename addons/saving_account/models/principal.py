@@ -35,13 +35,16 @@ class SavingAccountEntry(models.Model):
     account = self.env['saving_account'].search([('close_date','=',False)])
     rate = self.env['interest.rate'].search([('start_date','<=',fields.Date.today())])[-1]
     if account:
-      interest_amount = (account.total_principal * (rate.annual_rate / 100)) / 365
-      list = {
-        'entry_type': 'interest',
-        'account_id': account.id,
-        'amount': interest_amount,
-        'ledger': 'interest',
-      }
-      self.create(list)
+      account_type = account.account_type
+      rate = self.env['interest.rate'].search([('start_date','<=',fields.Date.today()),('account_type','=',account_type)])[-1]
+      if rate:
+        interest_amount = (account.total_principal * (rate.annual_rate / 100)) / 365
+        list = {
+          'entry_type': 'interest',
+          'account_id': account.id,
+          'amount': interest_amount,
+          'ledger': 'interest',
+        }
+        self.create(list)
     return
     
