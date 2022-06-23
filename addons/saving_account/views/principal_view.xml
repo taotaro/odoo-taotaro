@@ -32,7 +32,7 @@
         <field name="account_id" string="Account"/>
         <field name="description" string="Description"/>
         <field name="ref_no" string="Ref. No"/>
-        <field name="amount" string="Amount"/>
+        <field name="amount" string="Amount" eval="4"/>
       </tree>
     </field>
   </record>

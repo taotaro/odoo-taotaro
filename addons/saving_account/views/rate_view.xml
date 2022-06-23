@@ -17,7 +17,7 @@
     </field>
   </record>
 
-  <record id="view_entry_tree" model="ir.ui.view">
+  <record id="view_rate_tree" model="ir.ui.view">
     <field name="name">interest.rate.tree</field>
     <field name="model">interest.rate</field>
     <field name="arch" type="xml">

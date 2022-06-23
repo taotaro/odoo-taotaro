@@ -34,9 +34,8 @@ class SavingAccountEntry(models.Model):
     print("Calculating daily interest")
     account = self.env['saving_account'].search([('close_date','=',False)])
     rate = self.env['interest.rate'].search([('start_date','<=',fields.Date.today())])[-1]
-    print("rate", rate)
     if account:
-      interest_amount = (account.total_principal * (1.5 / 100)) / 365
+      interest_amount = (account.total_principal * (rate.annual_rate / 100)) / 365
       list = {
         'entry_type': 'interest',
         'account_id': account.id,
