@@ -8,12 +8,24 @@
       <form>
         <sheet>
           <group>
-              <field name="start_date"/>
-              <field name="account_type"/>
-              <field name="annual_rate"/>
+            <field name="start_date"/>
+            <field name="account_type"/>
+            <field name="annual_rate"/>
           </group>
         </sheet>
       </form>
+    </field>
+  </record>
+
+  <record id="view_entry_tree" model="ir.ui.view">
+    <field name="name">interest.rate.tree</field>
+    <field name="model">interest.rate</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="start_date"/>
+        <field name="account_type"/>
+        <field name="annual_rate"/>
+      </tree>
     </field>
   </record>
 
