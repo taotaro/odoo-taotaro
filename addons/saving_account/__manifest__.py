@@ -36,7 +36,7 @@
       'views/rate_view.xml',
       # 'views/schedule_view.xml',
       'views/menu.xml',
-      'reports/daily_financial_report.xml'
+      'reports/term_account_report.xml'
     ],
 
     # only loaded in demonstration mode
