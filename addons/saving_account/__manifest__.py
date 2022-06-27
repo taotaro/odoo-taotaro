@@ -37,7 +37,8 @@
       # 'views/schedule_view.xml',
       'wizard/term_account_view.xml',
       'views/menu.xml',
-      'reports/term_account_report.xml'
+      'report/term_account_report.xml',
+      'report/report.xml'
     ],
 
     # only loaded in demonstration mode

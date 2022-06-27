@@ -1,51 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-  <record id="term_account_report" model="ir.actions.report">
-    <field name="name">Term Account Report</field>
-    <field name="model">term_account.report.wizard</field>
-    <field name="report_type">qweb-pdf</field>
-    <field name="report_name">saving_account.term_report</field>
-    <field name="report_file">saving_account.term_report</field>
-    <!-- <field name="print_report_name">Term - %s' % (object.name)</field> -->
-    <field name="binding_model_id" ref="model_term_account_report_wizard"/>
-    <field name="binding_type">report</field>
-  </record>
-
-  <template id="term_report">
+  <template id="term_account_details">
     <t t-call="web.html_container">
-      <t t-foreach="docs" t-as="o">
-        <t t-call="web.external_layout">
-          <div class="page">
-            <table style="table-layout:fixed">
+      <t t-call="web.external_layout">
+        <div class="page">
+          <table style="table-layout:fixed">
+            <tr>
+              <td>Yue Hwa Chinese Products Saving System</td>
+              <td><t t-esc="form['date_to']"/></td>
+            </tr>
+          </table>
+          <center>
+            <h6>Term Account Summary</h6>
+          </center>
+          <table class="table table-bordered" style="table-layout:fixed">
+            <tr>
+              <th>Acc. No.</th>
+              <th>Name</th>
+              <th>Balance</th>
+              <th>Last Int. Crdt.</th>
+              <th>Interest Tax</th>
+              <th>After Tax</th>
+            </tr>
+            <t t-foreach="accounts" t-as="line">
               <tr>
-                <td>Yue Hwa Chinese Products Saving System</td>
-                <td>Date</td>
+                <td><t t-esc="line['account_no']"/></td>
+                <td><t t-esc="line['name']"/></td>
+                <td><t t-esc="line['total_principal']"/></td>
+                <td><t t-esc="line['total_principal']"/></td>
+                <td><t t-esc="line['total_principal']"/></td>
+                <td><t t-esc="line['total_interest']"/></td>
               </tr>
-            </table>
-            <center>
-              <h6>Term Account Summary</h6>
-            </center>
-            <table class="table table-bordered" style="table-layout:fixed">
-              <tr>
-                <th>Acc. No.</th>
-                <th>Name</th>
-                <th>Balance</th>
-                <th>Last Int. Crdt.</th>
-                <th>Interest Tax</th>
-                <th>After Tax</th>
-              </tr>
-              <tr>
-                <td><span t-field="o.account_no"/></td>
-                <td><span t-field="o.name"/></td>
-                <td><span t-field="o.total_principal"/></td>
-                <td><span t-field="o.total_principal"/></td>
-                <td><span t-field="o.total_principal"/></td>
-                <td><span t-field="o.total_interest"/></td>
-              </tr>
-            </table>
-          </div>
-        </t>
+            </t>
+          </table>
+        </div>
       </t>
     </t>
   </template>
