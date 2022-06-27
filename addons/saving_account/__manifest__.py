@@ -35,6 +35,7 @@
       'views/principal_view.xml',
       'views/rate_view.xml',
       # 'views/schedule_view.xml',
+      'wizard/term_account_view.xml',
       'views/menu.xml',
       'reports/term_account_report.xml'
     ],

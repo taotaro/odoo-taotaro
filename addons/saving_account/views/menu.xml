@@ -35,4 +35,16 @@
             parent="saving_account_root_menu"
             sequence="0"/> -->
 
+  <!-- reports menu -->
+  <menuitem id="report_menu_master"
+            name="Reports"
+            parent="saving_account_root_menu"
+            sequence="0"/>
+
+    <menuitem id="term_account_report_menu"
+              name="Term Account"
+              parent="report_menu_master"
+              action="action_report_term_account"
+              sequence="0"/>
+
 </odoo>
