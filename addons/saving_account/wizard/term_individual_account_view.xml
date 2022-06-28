@@ -8,8 +8,7 @@
       <form string="Print Term Individual Account Report">
         <group>
           <field name="account_id"/>
-          <field name="date_from"/>
-          <field name="date_to"/>
+          <field name="date"/>
         </group>
         <footer>
           <button name="action_print_report" type="object" string="Print" class="btn-primary"/>
