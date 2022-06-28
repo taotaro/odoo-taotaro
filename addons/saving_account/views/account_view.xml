@@ -9,6 +9,7 @@
         <sheet>
         <group>
           <group>
+            <field name="account_no"/>
             <field name="account_type"/>
             <field name="name"/>
             <field name="email"/>
@@ -20,6 +21,7 @@
           </group>
           <group>
             <field name="total_principal"/>
+            <field name="total_interest"/>
             <field name="custom1"/>
             <field name="custom2"/>
           </group>

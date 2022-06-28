@@ -20,7 +20,7 @@ class SavingAccount(models.Model):
     principal_list_ids = fields.One2many('saving_account.entry', 'amount', string="Principal Lists", domain=[('entry_type','in',['deposit', 'withdraw'])])
     interest_list_ids = fields.One2many('saving_account.entry', 'entry_no', string="Interest Lists", domain=[('entry_type','=','interest')])
     total_principal = fields.Float(compute='_compute_total_principal', compute_sudo=True, string='Principal')
-    total_interest = fields.Float(compute='_compute_total_interest', compute_sudo=True, string='Interest')
+    total_interest = fields.Float(compute='_compute_total_interest', compute_sudo=True, string='Interest', digits=(16, 4))
     # last_interest_credit = fields.Float(compute='_compute_last_interest_credit', compute_sudo=True, string='Last Interest Credit')
     interest_tax = fields.Float(compute='_compute_interest_tax', compute_sudo=True, string='Interest Tax')
     custom1 = fields.Text(string='Custom 1')
