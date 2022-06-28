@@ -62,13 +62,12 @@ class SavingAccount(models.Model):
     @api.depends('last_interest_credit')
     def _compute_last_interest_credit(self):
       for rec in self:
-        interest_credit = rec.env['saving_account.entry'].search([('account_id','=',rec.id)], limit=1)[-1]
+        interest_credit = rec.env['saving_account.entry'].search([('account_id','=',rec.id), ('entry_type','=','interest')], limit=1)[-1]
         if interest_credit:
           rec.last_interest_credit = interest_credit.amount
         else:
           rec.last_interest_credit = 0.0
         
-        print('last_int_credit', rec.last_interest_credit)
 
     @api.depends('interest_tax')
     def _compute_interest_tax(self):

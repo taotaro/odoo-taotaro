@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <template id="term_individual_account_template">
+    <t t-call="web.html_container">
+      <t t-call="web.external_layout">
+        <div class="page">
+          <table style="table-layout:fixed; table-width:full">
+            <tr>
+              <td>Yue Hwa Chinese Products Saving System</td>
+              <td><t t-esc="form['date_to']"/></td>
+            </tr>
+            <tr>
+              <td><t t-esc="form['account_id'][0]"/></td>
+              <td><t t-esc="form['account_id'][1]"/></td>
+            </tr>
+          </table>
+          <table class="table table-bordered" style="table-layout:fixed">
+            <tr>
+              <th>Date</th>
+              <th>Withdrawals</th>
+              <th>Deposits</th>
+              <th>Interest</th>
+              <th>Balance</th>
+              <th>Ref</th>
+            </tr>
+            <t t-foreach="entry" t-as="line">
+              <tr>
+                <td><t t-esc="line['create_date']"/></td>
+                  <t t-if="line.get('entry_type')=='withdraw'">
+                    <td><t t-esc="line['amount']"/></td>
+                  </t>
+                  <t t-else="">
+                    <td></td>
+                  </t>
+                  <t t-if="line.get('entry_type')=='deposit'">
+                    <td><t t-esc="line['amount']"/></td>
+                  </t>
+                  <t t-else="">
+                    <td></td>
+                  </t>
+                  <t t-if="line['entry_type']=='interest'">
+                    <td><t t-esc="line['amount']"/></td>
+                  </t>
+                  <t t-else="">
+                    <td></td>
+                  </t>
+                <td><t t-esc="line['ledger']"/></td>
+                <td><t t-esc="line['ref_no']"/></td>
+              </tr>
+            </t>
+          </table>
+        </div>
+      </t>
+    </t>
+  </template>
+
+</odoo>

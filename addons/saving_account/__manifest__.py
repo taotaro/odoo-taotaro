@@ -31,13 +31,15 @@
       'data/principal_demo.xml',
       'data/interest_rate_demo.xml',
       # 'data/interest_schedule_demo.xml',
+      'wizard/term_account_view.xml',
+      'wizard/term_individual_account_view.xml',
       'views/account_view.xml',
       'views/principal_view.xml',
       'views/rate_view.xml',
       # 'views/schedule_view.xml',
-      'wizard/term_account_view.xml',
       'views/menu.xml',
-      'report/term_account_report.xml',
+      'report/term_account_template.xml',
+      'report/term_individual_account_template.xml',
       'report/report.xml'
     ],
 

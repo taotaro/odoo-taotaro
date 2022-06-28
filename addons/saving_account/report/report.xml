@@ -5,10 +5,20 @@
     <field name="name">Term Account Report</field>
     <field name="model">term_account.report.wizard</field>
     <field name="report_type">qweb-pdf</field>
-    <field name="report_name">saving_account.term_account_details</field>
-    <field name="report_file">saving_account.term_account_details</field>
+    <field name="report_name">saving_account.term_account_template</field>
+    <field name="report_file">saving_account.term_account_template</field>
     <!-- <field name="print_report_name">Term - %s' % (object.name)</field> -->
     <field name="binding_model_id" ref="model_term_account_report_wizard"/>
+    <field name="binding_type">report</field>
+  </record>
+
+   <record id="action_term_individual_account_report" model="ir.actions.report">
+    <field name="name">Term Account Individual Report</field>
+    <field name="model">term_individual_account.report.wizard</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">saving_account.term_individual_account_template</field>
+    <field name="report_file">saving_account.term_individual_account_template</field>
+    <field name="binding_model_id" ref="model_term_individual_account_report_wizard"/>
     <field name="binding_type">report</field>
   </record>
 
