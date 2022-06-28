@@ -39,7 +39,7 @@
                   <t t-else="">
                     <td></td>
                   </t>
-                  <t t-if="line['entry_type']=='interest'">
+                  <t t-if="line.get('entry_type')=='interest'">
                     <td><t t-esc="line['amount']"/></td>
                   </t>
                   <t t-else="">
