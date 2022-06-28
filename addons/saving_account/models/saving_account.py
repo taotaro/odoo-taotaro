@@ -21,7 +21,7 @@ class SavingAccount(models.Model):
     interest_list_ids = fields.One2many('saving_account.entry', 'entry_no', string="Interest Lists", domain=[('entry_type','=','interest')])
     total_principal = fields.Float(compute='_compute_total_principal', compute_sudo=True, string='Principal')
     total_interest = fields.Float(compute='_compute_total_interest', compute_sudo=True, string='Interest')
-    last_interest_credit = fields.Float(compute='_compute_last_interest_credit', compute_sudo=True, string='Last Interest Credit')
+    # last_interest_credit = fields.Float(compute='_compute_last_interest_credit', compute_sudo=True, string='Last Interest Credit')
     interest_tax = fields.Float(compute='_compute_interest_tax', compute_sudo=True, string='Interest Tax')
     custom1 = fields.Text(string='Custom 1')
     custom2 = fields.Text(string='Custom 2')
@@ -59,14 +59,14 @@ class SavingAccount(models.Model):
         rec.total_interest = rec.total_interest + current_total
 
     
-    @api.depends('last_interest_credit')
-    def _compute_last_interest_credit(self):
-      for rec in self:
-        interest_credit = rec.env['saving_account.entry'].search([('account_id','=',rec.id), ('entry_type','=','interest')], limit=1)[-1]
-        if interest_credit:
-          rec.last_interest_credit = interest_credit.amount
-        else:
-          rec.last_interest_credit = 0.0
+    # @api.depends('last_interest_credit')
+    # def _compute_last_interest_credit(self):
+    #   for rec in self:
+    #     interest_credit = rec.env['saving_account.entry'].search([('account_id','=',rec.id), ('entry_type','=','interest')], limit=1)[-1]
+    #     if interest_credit:
+    #       rec.last_interest_credit = interest_credit.amount
+    #     else:
+    #       rec.last_interest_credit = 0.0
         
 
     @api.depends('interest_tax')
@@ -79,8 +79,5 @@ class SavingAccount(models.Model):
           rec.interest_tax = rate.annual_rate
         else:
           rec.interest_tax = 0.0
-
-      print('interest_tax', rec.interest_tax)
-
       
     

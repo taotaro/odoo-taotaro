@@ -45,7 +45,7 @@
                   <t t-else="">
                     <td></td>
                   </t>
-                <td><t t-esc="line['ledger']"/></td>
+                <td><t t-esc="line['balance']"/></td>
                 <td><t t-esc="line['ref_no']"/></td>
               </tr>
             </t>

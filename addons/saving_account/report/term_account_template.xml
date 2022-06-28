@@ -17,6 +17,7 @@
           <table class="table table-bordered" style="table-layout:fixed">
             <tr>
               <th>Acc. No.</th>
+              <th>Acc. Type</th>
               <th>Name</th>
               <th>Balance</th>
               <th>Last Int. Crdt.</th>
@@ -26,6 +27,7 @@
             <t t-foreach="accounts" t-as="line">
               <tr>
                 <td><t t-esc="line['account_no']"/></td>
+                <td><t t-esc="line['account_type']"/></td>
                 <td><t t-esc="line['name']"/></td>
                 <td><t t-esc="line['total_principal']"/></td>
                 <td><t t-esc="line['total_interest']"/></td>

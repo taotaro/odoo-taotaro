@@ -34,16 +34,6 @@
               <td><t t-esc="report['cash_out_amount']"/></td>
             </tr>
             <tr>
-              <td>Cheque In</td>
-              <td>0</td>
-              <td>0</td>
-            </tr>
-            <tr>
-              <td>Bad Cheque</td>
-              <td>0</td>
-              <td>0</td>
-            </tr>
-            <tr>
               <td>Total Interest</td>
               <td><t t-esc="report['total_interest_transaction']"/></td>
               <td><t t-esc="report['total_interest_amount']"/></td>
