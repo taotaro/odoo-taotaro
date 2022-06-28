@@ -33,6 +33,7 @@
       # 'data/interest_schedule_demo.xml',
       'wizard/term_account_view.xml',
       'wizard/term_individual_account_view.xml',
+      'wizard/daily_financial_view.xml',
       'views/account_view.xml',
       'views/principal_view.xml',
       'views/rate_view.xml',
@@ -40,6 +41,7 @@
       'views/menu.xml',
       'report/term_account_template.xml',
       'report/term_individual_account_template.xml',
+      'report/daily_financial_template.xml',
       'report/report.xml'
     ],
 

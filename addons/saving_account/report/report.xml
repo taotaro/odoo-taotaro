@@ -12,13 +12,23 @@
     <field name="binding_type">report</field>
   </record>
 
-   <record id="action_term_individual_account_report" model="ir.actions.report">
+  <record id="action_term_individual_account_report" model="ir.actions.report">
     <field name="name">Term Account Individual Report</field>
     <field name="model">term_individual_account.report.wizard</field>
     <field name="report_type">qweb-pdf</field>
     <field name="report_name">saving_account.term_individual_account_template</field>
     <field name="report_file">saving_account.term_individual_account_template</field>
     <field name="binding_model_id" ref="model_term_individual_account_report_wizard"/>
+    <field name="binding_type">report</field>
+  </record>
+
+   <record id="action_daily_financial_report" model="ir.actions.report">
+    <field name="name">Daily Financial Report</field>
+    <field name="model">daily_financial.report.wizard</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">saving_account.daily_financial_template</field>
+    <field name="report_file">saving_account.daily_financial_template</field>
+    <field name="binding_model_id" ref="model_daily_financial_report_wizard"/>
     <field name="binding_type">report</field>
   </record>
 

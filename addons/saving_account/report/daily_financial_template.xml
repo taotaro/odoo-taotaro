@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <template id="daily_financial_template">
+    <t t-call="web.html_container">
+      <t t-call="web.external_layout">
+        <div class="page">
+          <table style="table-layout:fixed; table-width:full">
+            <tr>
+              <td>Yue Hwa Chinese Products Saving System</td>
+              <td><t t-esc="form['date']"/></td>
+            </tr>
+          </table>
+          <h5><center>Daily Financial Summary</center></h5>
+          <table class="table table-bordered" style="table-layout:fixed">
+            <tr>
+              <th>Items</th>
+              <th>Transactions</th>
+              <th>Amount</th>
+            </tr>
+            <tr>
+              <td>Total Accounts</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Active Accounts</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Cash In</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Cash Out</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Cheque In</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Bad Cheque</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Total Transactions</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Total Interest</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Accrued Interest</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Void Transactions</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Unposted Items</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+        </div>
+      </t>
+    </t>
+  </template>
+
+</odoo>

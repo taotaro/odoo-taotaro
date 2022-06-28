@@ -52,5 +52,11 @@
               parent="report_menu_master"
               action="action_report_term_individual_account"
               sequence="2"/>
+    
+    <menuitem id="daily_financial_report_menu"
+              name="Daily Financial"
+              parent="report_menu_master"
+              action="action_report_daily_financial"
+              sequence="3"/>
 
 </odoo>
