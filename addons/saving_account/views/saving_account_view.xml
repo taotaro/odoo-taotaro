@@ -6,6 +6,10 @@
     <field name="model">saving_account</field>
     <field name="arch" type="xml">
       <form>
+        <header>
+          <button name="open_deposit_withdraw_form" string="Deposit/Withdraw" class="oe_highlight" 
+          context="{'close_date': 'False'}" type="object"/>
+        </header>
         <sheet>
         <group>
           <group>
