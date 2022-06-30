@@ -34,7 +34,7 @@
       'wizard/term_account_view.xml',
       'wizard/term_individual_account_view.xml',
       'wizard/daily_financial_view.xml',
-      'views/account_view.xml',
+      'views/saving_account_view.xml',
       'views/principal_view.xml',
       'views/rate_view.xml',
       # 'views/schedule_view.xml',

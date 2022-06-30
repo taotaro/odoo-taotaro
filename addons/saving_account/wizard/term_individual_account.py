@@ -6,7 +6,8 @@ class TermIndividualAccountWizard(models.TransientModel):
   _description="Print Term Individual Account Report Wizard"
 
   account_id = fields.Many2one('saving_account', string='Account')
-  date=fields.Date(string="Date", default=fields.Date.today())
+  date_from=fields.Date(string="Date From", default=fields.Date.today())
+  date_to=fields.Date(string="Date To", default=fields.Date.today())
 
   def action_print_report(self):
     entries = self.env['saving_account.entry'].search_read([('account_id','=', self.account_id.id)])

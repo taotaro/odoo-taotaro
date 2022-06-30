@@ -19,7 +19,7 @@
   </record>
 
   <record id="action_report_term_account" model="ir.actions.act_window">
-    <field name="name">Term Account</field>
+    <field name="name">Term Account Summary</field>
     <field name="type">ir.actions.act_window</field>
     <field name="res_model">term_account.report.wizard</field>
     <field name="view_mode">form</field>

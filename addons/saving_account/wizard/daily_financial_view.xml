@@ -7,7 +7,8 @@
     <field name="arch" type="xml">
       <form string="Print Daily Financial Report">
         <group>
-          <field name="date"/>
+          <field name="date_from"/>
+          <field name="date_to"/>
         </group>
         <footer>
           <button name="action_print_report" type="object" string="Print" class="btn-primary"/>
@@ -18,7 +19,7 @@
   </record>
 
   <record id="action_report_daily_financial" model="ir.actions.act_window">
-    <field name="name">Daily Financial</field>
+    <field name="name">Daily Financial Statement</field>
     <field name="type">ir.actions.act_window</field>
     <field name="res_model">daily_financial.report.wizard</field>
     <field name="view_mode">form</field>

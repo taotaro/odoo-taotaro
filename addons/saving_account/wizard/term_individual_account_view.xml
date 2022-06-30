@@ -8,7 +8,8 @@
       <form string="Print Term Individual Account Report">
         <group>
           <field name="account_id"/>
-          <field name="date"/>
+          <field name="date_from"/>
+          <field name="date_to"/>
         </group>
         <footer>
           <button name="action_print_report" type="object" string="Print" class="btn-primary"/>
@@ -19,7 +20,7 @@
   </record>
 
   <record id="action_report_term_individual_account" model="ir.actions.act_window">
-    <field name="name">Individual Account</field>
+    <field name="name">Term Individual Account Summary</field>
     <field name="type">ir.actions.act_window</field>
     <field name="res_model">term_individual_account.report.wizard</field>
     <field name="view_mode">form</field>
