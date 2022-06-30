@@ -22,7 +22,6 @@ class SavingAccount(models.Model):
     total_principal = fields.Float(compute='_compute_total_principal', compute_sudo=True, string='Principal')
     total_interest = fields.Float(compute='_compute_total_interest', compute_sudo=True, string='Interest', digits=(16, 4))
     # last_interest_credit = fields.Float(compute='_compute_last_interest_credit', compute_sudo=True, string='Last Interest Credit')
-    interest_tax = fields.Float(compute='_compute_interest_tax', compute_sudo=True, string='Interest Tax')
     custom1 = fields.Text(string='Custom 1')
     custom2 = fields.Text(string='Custom 2')
 
@@ -67,17 +66,5 @@ class SavingAccount(models.Model):
     #       rec.last_interest_credit = interest_credit.amount
     #     else:
     #       rec.last_interest_credit = 0.0
-        
-
-    @api.depends('interest_tax')
-    def _compute_interest_tax(self):
-      for rec in self:
-        print("type", rec.account_type)
-        rate = rec.env['interest.rate'].search([('start_date','<=',fields.Date.today()),('account_type','=',rec.account_type)], order='start_date', limit=1)[-1]
-        print("rate is", rate)
-        if rate:
-          rec.interest_tax = rate.annual_rate
-        else:
-          rec.interest_tax = 0.0
       
     

@@ -4,10 +4,11 @@ class DailyFinancialWizard(models.TransientModel):
   _name="daily_financial.report.wizard"
   _description="Print Daily Financial Summary Report Wizard"
 
-  date=fields.Date(string="Date", default=fields.Date.today())
+  date_from=fields.Date(string="Date From")
+  date_to=fields.Date(string="Date To")
 
   def action_print_report(self):
-    accounts = self.env['saving_account'].search_read([('open_date','=',self.date)])
+    accounts = self.env['saving_account'].search_read([('open_date','>=',self.date_from)])
     account_total_principal_amount, account_total_interest_amount = 0, 0
     for account in accounts:
       account_total_principal_amount += account.total_principal
@@ -15,7 +16,7 @@ class DailyFinancialWizard(models.TransientModel):
 
     cash_in_amount, cash_out_amount, total_interest_amount, credit_interest_amount = 0, 0, 0, 0
     cash_in_transaction, cash_out_transaction, total_interest_transaction, credit_interest_transaction = 0, 0, 0, 0
-    entries = self.env['saving_account.entry'].search_read([('create_date','=',self.date)])
+    entries = self.env['saving_account.entry'].search_read([('create_date','>=',self.date_from)])
     for entry in entries:
       if entry.entry_type == 'deposit':
         cash_in_transaction += 1

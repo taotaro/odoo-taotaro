@@ -13,5 +13,4 @@ class TermAccountWizard(models.TransientModel):
       'form': self.read()[0],
       'accounts': accounts
     }
-    print("test...", data)
     return self.env.ref('saving_account.action_term_account_report').report_action(self, data=data)

@@ -42,19 +42,19 @@
             sequence="0"/>
 
     <menuitem id="term_account_report_menu"
-              name="Term Account"
+              name="Term Account Summary"
               parent="report_menu_master"
               action="action_report_term_account"
               sequence="1"/>
 
     <menuitem id="term_individual_account_report_menu"
-              name="Individual Account"
+              name="Term Individual Account Summary"
               parent="report_menu_master"
               action="action_report_term_individual_account"
               sequence="2"/>
     
     <menuitem id="daily_financial_report_menu"
-              name="Daily Financial"
+              name="Daily Financial Statement"
               parent="report_menu_master"
               action="action_report_daily_financial"
               sequence="3"/>
