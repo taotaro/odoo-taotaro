@@ -18,6 +18,19 @@ class TermIndividualAccountWizard(models.TransientModel):
     ])
     account = self.env['saving_account'].search_read([('account_id', '=', self.account_id.id)])
     initial_balance = account[0]['total_principal']
+    
+    # initial_entries = self.env['saving_account.entry'].search_read([
+    #   ('account_id','=', self.account_id.id),
+    #   ('ledger','=','principal'), 
+    #   ('entry_date','<=',self.date_from)
+    # ])
+    # initial_balance = 0
+    # for entry in initial_entries:
+    #   if entry['ledger'] == 'principal' and entry['entry_type'] == 'withdraw':
+    #     initial_balance -= entry['amount']
+    #   elif entry['ledger'] == 'principal'and entry['entry_type'] != 'withdraw':
+    #     initial_balance += entry['amount']
+
     initial_entry = {
       "entry_type": "initial",
       "balance": 0,

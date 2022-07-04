@@ -17,6 +17,7 @@ class SavingAccountEntry(models.Model):
   ], string='Entry Type')
   account_id = fields.Many2one('saving_account', string='Account')
   amount = fields.Float(string='Amount')
+  amount_signed = fields.Float(compute='_compute_amount_signed', string='Amount')
   ledger = fields.Selection([
     ('principal', 'Principal'), 
     ('interest', 'Interest')
@@ -33,14 +34,13 @@ class SavingAccountEntry(models.Model):
   def create(self, vals):
     vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry')
     if vals['entry_type'] == 'deposit':
-      vals['ref_no'] = 'dp'
+      vals['ref_no'] = 'DP'
       vals['ledger'] = 'principal'
     if vals['entry_type'] == 'withdraw':
-      vals['ref_no'] = 'wd'
+      vals['ref_no'] = 'WD'
       vals['ledger'] = 'principal'
     if vals['entry_type'] == 'credit_interest':
-      vals['ref_no'] = 'ci'
-      vals['ledger'] = 'principal'
+      vals['ref_no'] = 'CI'
     return super(SavingAccountEntry, self).create(vals)
 
   @api.model
@@ -63,4 +63,33 @@ class SavingAccountEntry(models.Model):
         }
         self.create(list)
     return
+
+  @api.model
+  def _cron_credit_interest(self):
+    account = self.env['saving_account'].search([('close_date','=',False)])
+    if account:
+      deduct = {
+        'entry_type': 'credit_interest',
+        'account_id': account.id,
+        'amount': account.total_interest,
+        'ledger': 'interest'
+      }
+      add = {
+        'entry_type': 'credit_interest',
+        'account_id': account.id,
+        'amount': account.total_interest,
+        'ledger': 'principal'
+      }
+      self.create([deduct, add])
+    return
+  
+  @api.depends('amount')
+  def _compute_amount_signed(self):
+    for rec in self:
+      if rec.entry_type == 'withdraw':
+        rec.amount_signed = - rec.amount
+      elif rec.entry_type == 'credit_interest' and rec.ledger == 'interest':
+        rec.amount_signed = - rec.amount
+      else:
+        rec.amount_signed = rec.amount
     

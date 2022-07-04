@@ -2,13 +2,25 @@
 <odoo>
 
   <record id="ir_cron_data_calculate_daily_interest" model="ir.cron">
-            <field name="name">Saving Account: calculate daily interest</field>
+            <field name="name">Saving Account: Calculate Daily Interest</field>
             <field name="model_id" ref="model_saving_account_entry"/>
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
             <field name="code">model._cron_daily_interest()</field>
             <field name="interval_number">5</field>
             <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+  </record>
+
+  <record id="ir_cron_data_move_credit_interest" model="ir.cron">
+            <field name="name">Saving Account: Move Credit Interest</field>
+            <field name="model_id" ref="model_saving_account_entry"/>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model._cron_credit_interest()</field>
+            <field name="interval_number">10</field>
+            <field name="interval_type">minutes</field>
+            <!-- <field name="nextcall" eval="(DateTime.now().replace(month=9, day=30, hour=18, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" /> -->
             <field name="numbercall">-1</field>
   </record>
 
