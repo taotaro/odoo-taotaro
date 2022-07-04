@@ -8,7 +8,7 @@ class TermAccountWizard(models.TransientModel):
   date_to=fields.Date(string="Date To")
 
   def action_print_report(self):
-    accounts = self.env['saving_account'].search_read([])
+    accounts = self.env['saving_account'].search_read([('open_date','>=',self.date_from), ('open_date','<=',self.date_to)])
     data = { 
       'form': self.read()[0],
       'accounts': accounts

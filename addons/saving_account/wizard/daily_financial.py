@@ -8,7 +8,7 @@ class DailyFinancialWizard(models.TransientModel):
   date_to=fields.Date(string="Date To")
 
   def action_print_report(self):
-    accounts = self.env['saving_account'].search_read([('open_date','>=',self.date_from)])
+    accounts = self.env['saving_account'].search_read([('open_date','>=',self.date_from), ('open_date','<=',self.date_to)])
     account_total_principal_amount, account_total_interest_amount = 0, 0
     for account in accounts:
       account_total_principal_amount += account.total_principal
