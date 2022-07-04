@@ -15,6 +15,7 @@
               <td><t t-esc="form['account_id'][1]"/></td>
             </tr>
           </table>
+          <h5><center>Term Individual Account Summary</center></h5>
           <table class="table table-bordered" style="table-layout:fixed">
             <tr>
               <th>Date</th>

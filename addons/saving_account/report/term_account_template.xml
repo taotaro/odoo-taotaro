@@ -11,9 +11,7 @@
               <td><t t-esc="form['date_to']"/></td>
             </tr>
           </table>
-          <center>
-            <h6>Term Account Summary</h6>
-          </center>
+          <h5><center>Term Account Summary</center></h5>
           <table class="table table-bordered" style="table-layout:fixed">
             <tr>
               <th>Acc. No.</th>
