@@ -68,10 +68,10 @@ class SavingAccount(models.Model):
     #       rec.last_interest_credit = 0.0
       
     def open_deposit_withdraw_form(self):
-      print("Deposit/Withdraw", self.env['saving_account'].search([('account_id','=',self.id)]).id)
+      print("Deposit/Withdraw", self.env['saving_account'].search([('id','=',self.id)]))
       return {
         'res_model': 'saving_account.entry',
-        'res_id': self.env['saving_account'].search([('account_id','=',self.id)]),
+        # 'res_id': self.env['saving_account'].search([('id','=',self.id)]).id,
         'type': 'ir.actions.act_window',
         'view_mode': 'form',
         'view_id': self.env.ref('saving_account.view_entry_form').id
