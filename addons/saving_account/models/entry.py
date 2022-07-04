@@ -24,10 +24,10 @@ class SavingAccountEntry(models.Model):
   ], string='Ledger')
   description = fields.Text(string='Description')
   ref_no = fields.Selection([
-    ('bf', 'BF'),
-    ('dp', 'DP'),
-    ('wd', 'WD'),
-    ('ci', 'CI')
+    ('BF', 'BF'),
+    ('DP', 'DP'),
+    ('WD', 'WD'),
+    ('CI', 'CI')
   ], string='Reference No')
 
   @api.model

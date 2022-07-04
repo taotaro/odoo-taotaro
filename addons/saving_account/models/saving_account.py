@@ -35,13 +35,19 @@ class SavingAccount(models.Model):
       print('Calculating total principal')
       for rec in self:
         current_total = 0
-        principal_list = rec.env['saving_account.entry'].search([('account_id','=',rec.id), ('entry_type','in',['deposit', 'withdraw'])])
+        principal_list = rec.env['saving_account.entry'].search([
+          ('account_id','=',rec.id), 
+          ('ledger','=','principal'),
+          ('entry_type','in',['deposit', 'withdraw', 'credit_interest'])
+        ])
         if principal_list:
           for principal in principal_list:
             if principal.entry_type == "deposit":
               current_total = current_total + principal.amount
             if principal.entry_type == "withdraw":
               current_total = current_total - principal.amount
+            if principal.entry_type == "credit_interest":
+              current_total = current_total + principal.amount
 
         rec.total_principal = rec.total_principal + current_total
     
@@ -50,10 +56,17 @@ class SavingAccount(models.Model):
       print('Calculating total interest')
       for rec in self:
         current_total = 0
-        interest_list = rec.env['saving_account.entry'].search([('account_id','=',rec.id), ('entry_type','=','interest')])
+        interest_list = rec.env['saving_account.entry'].search([
+          ('account_id','=',rec.id), 
+          ('ledger','=','interest'),
+          ('entry_type','in',['interest', 'credit_interest'])
+        ])
         if interest_list:
           for interest in interest_list:
-            current_total = current_total + interest.amount
+            if interest.entry_type == 'interest':
+              current_total = current_total + interest.amount
+            # if interest.entry_type == 'credit_interest':
+            #   current_total = current_total - interest.amount
 
         rec.total_interest = rec.total_interest + current_total
 
