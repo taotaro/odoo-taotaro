@@ -37,13 +37,13 @@
                   <t t-if="line.get('entry_type')=='deposit'">
                     <td><t t-esc="line['amount']"/></td>
                   </t>
-                   <t t-elif="line.get('entry_type')=='credit_interest'">
-                    <td><t t-esc="line['amount']"/></td>
-                  </t>
                   <t t-else="">
                     <td></td>
                   </t>
                   <t t-if="line.get('entry_type')=='interest'">
+                    <td><t t-esc="line['amount']"/></td>
+                  </t>
+                  <t t-elif="line.get('entry_type')=='credit_interest'">
                     <td><t t-esc="line['amount']"/></td>
                   </t>
                   <t t-else="">
