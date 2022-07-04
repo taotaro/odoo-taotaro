@@ -71,8 +71,9 @@ class SavingAccount(models.Model):
       print("Deposit/Withdraw", self.env['saving_account'].search([('id','=',self.id)]))
       return {
         'res_model': 'saving_account.entry',
-        # 'res_id': self.env['saving_account'].search([('id','=',self.id)]).id,
         'type': 'ir.actions.act_window',
         'view_mode': 'form',
-        'view_id': self.env.ref('saving_account.view_entry_form').id
+        'view_id': self.env.ref('saving_account.view_entry_form').id,
+        'target': 'new',
+        'context': {'account_id': self.env['saving_account'].search([('account_id','=',self.id)]).id}
       }
