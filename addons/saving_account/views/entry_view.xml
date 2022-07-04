@@ -12,7 +12,6 @@
             <field name="entry_date" string="Entry Date"/>
             <field name="entry_type" string="Entry Type"/>
             <field name="ledger" string="Ledger"/>
-            <field name="ref_no" string="Ref. No"/>
             <field name="amount" string="Amount"/>
           </group>
         </sheet>

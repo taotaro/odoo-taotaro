@@ -22,11 +22,22 @@ class SavingAccountEntry(models.Model):
     ('interest', 'Interest')
   ], string='Ledger')
   description = fields.Text(string='Description')
-  ref_no = fields.Char(string='Reference No')
+  ref_no = fields.Selection([
+    ('bf', 'BF'),
+    ('dp', 'DP'),
+    ('wd', 'WD'),
+    ('ci', 'CI')
+  ], string='Reference No')
 
   @api.model
   def create(self, vals):
     vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry')
+    if vals['entry_type'] == 'deposit':
+      vals['ref_no'] = 'dp'
+    if vals['entry_type'] == 'withdraw':
+      vals['ref_no'] = 'wd'
+    if vals['entry_type'] == 'credit_interest':
+      vals['ref_no'] = 'ci'
     return super(SavingAccountEntry, self).create(vals)
 
   @api.model
