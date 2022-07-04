@@ -9,4 +9,4 @@ class InterestRate(models.Model):
       ('normal', 'Normal'), 
       ('vip', 'VIP')
     ], string='Account Type')
-    annual_rate = fields.Float(string='Annual Interest Rate')
+    annual_rate = fields.Float(string='Annual Interest Rate', digits=(16, 4))
