@@ -34,10 +34,13 @@ class SavingAccountEntry(models.Model):
     vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry')
     if vals['entry_type'] == 'deposit':
       vals['ref_no'] = 'dp'
+      vals['ledger'] = 'principal'
     if vals['entry_type'] == 'withdraw':
       vals['ref_no'] = 'wd'
+      vals['ledger'] = 'principal'
     if vals['entry_type'] == 'credit_interest':
       vals['ref_no'] = 'ci'
+      vals['ledger'] = 'principal'
     return super(SavingAccountEntry, self).create(vals)
 
   @api.model

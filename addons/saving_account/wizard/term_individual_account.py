@@ -10,7 +10,12 @@ class TermIndividualAccountWizard(models.TransientModel):
   date_to=fields.Date(string="Date To", default=fields.Date.today())
 
   def action_print_report(self):
-    entries = self.env['saving_account.entry'].search_read([('account_id','=', self.account_id.id), ('entry_date','>=',self.date_from), ('entry_date','<=',self.date_to)])
+    entries = self.env['saving_account.entry'].search_read([
+      ('account_id','=', self.account_id.id), 
+      ('ledger','=','principal'), 
+      ('entry_date','>=',self.date_from), 
+      ('entry_date','<=',self.date_to)
+    ])
     account = self.env['saving_account'].search_read([('account_id', '=', self.account_id.id)])
     initial_balance = account[0]['total_principal']
     initial_entry = {

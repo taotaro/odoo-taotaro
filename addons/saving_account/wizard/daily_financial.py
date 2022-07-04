@@ -8,7 +8,10 @@ class DailyFinancialWizard(models.TransientModel):
   date_to=fields.Date(string="Date To")
 
   def action_print_report(self):
-    accounts = self.env['saving_account'].search_read([('open_date','>=',self.date_from), ('open_date','<=',self.date_to)])
+    accounts = self.env['saving_account'].search_read([
+      ('open_date','>=',self.date_from), 
+      ('open_date','<=',self.date_to)
+    ])
     account_total_principal_amount, account_total_interest_amount = 0, 0
     for account in accounts:
       account_total_principal_amount += account.total_principal
@@ -18,18 +21,18 @@ class DailyFinancialWizard(models.TransientModel):
     cash_in_transaction, cash_out_transaction, total_interest_transaction, credit_interest_transaction = 0, 0, 0, 0
     entries = self.env['saving_account.entry'].search_read([('create_date','>=',self.date_from)])
     for entry in entries:
-      if entry.entry_type == 'deposit':
+      if entry['entry_type'] == 'deposit':
         cash_in_transaction += 1
-        cash_in_amount += entry.amount
-      elif entry.entry_type == 'withdraw':
+        cash_in_amount += entry['amount']
+      elif entry['entry_type'] == 'withdraw':
         cash_out_transaction += 1
-        cash_out_amount += entry.amount
-      elif entry.entry_type == 'interest':
+        cash_out_amount += entry['amount']
+      elif entry['entry_type'] == 'interest':
         total_interest_transaction += 1
-        total_interest_amount += entry.amount
-      elif entry.entry_type == 'credit_interest':
+        total_interest_amount += entry['amount']
+      elif entry['entry_type'] == 'credit_interest':
         credit_interest_transaction += 1
-        credit_interest_amount += entry.amount
+        credit_interest_amount += entry['amount']
 
     report = {
      "account_transaction": len(accounts),
