@@ -11,7 +11,7 @@
               <td><t t-esc="form['date_to']"/></td>
             </tr>
             <tr>
-              <td><t t-esc="form['account_id'][0]"/></td>
+              <td><t t-esc="account_no"/></td>
               <td><t t-esc="form['account_id'][1]"/></td>
             </tr>
           </table>
