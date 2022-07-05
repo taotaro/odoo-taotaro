@@ -4,7 +4,6 @@
   <record id="seq_saving_account" model="ir.sequence">
     <field name="name">Saving Account ID</field>
     <field name="code">saving_account</field>
-    <field name="suffix">AC</field>
     <field name="padding">7</field>
     <field name="company_id" eval="False"/>
   </record>

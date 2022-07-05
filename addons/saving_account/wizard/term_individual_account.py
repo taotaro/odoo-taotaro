@@ -53,6 +53,6 @@ class TermIndividualAccountWizard(models.TransientModel):
     data = { 
       'form': self.read()[0],
       'entry': entries,
-      'account_no': account[0]['account_no']
+      'account_no': account[0]['account_no_signed']
     }
     return self.env.ref('saving_account.action_term_individual_account_report').report_action(self, data=data)
