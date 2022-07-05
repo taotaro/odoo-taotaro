@@ -10,8 +10,26 @@
           <group>
             <field name="account_id" string="Account"/>
             <field name="entry_date" string="Entry Date"/>
-            <field name="entry_type" string="Entry Type"/>
             <field name="ledger" string="Ledger"/>
+            <field name="entry_type" string="Entry Type"/>
+            <field name="amount" string="Amount"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_entry_form1" model="ir.ui.view">
+    <field name="name">saving_account.entry.form</field>
+    <field name="model">saving_account.entry</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="account_id" string="Account" attrs="{'readonly': 1}"/>
+            <field name="entry_date" string="Entry Date" attrs="{'readonly': 1}"/>
+            <field name="ledger" string="Ledger" attrs="{'readonly': 1}"/>
+            <field name="entry_type" string="Entry Type"/>
             <field name="amount" string="Amount"/>
           </group>
         </sheet>

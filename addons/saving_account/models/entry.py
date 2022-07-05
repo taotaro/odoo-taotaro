@@ -1,7 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from cgi import test
 from odoo import models, fields, api
+
+ALL_SELECTION = [
+  ('deposit', 'Deposit'),
+  ('withdraw', 'Withdraw'),
+  ('interest', 'Interest'),
+  ('credit_interest', 'Credit Interest')
+]
+
+PRINCIPAL_SELECTION = [
+  ('deposit', 'Deposit'),
+  ('withdraw', 'Withdraw')
+]
 
 class SavingAccountEntry(models.Model):
   _name = "saving_account.entry"
@@ -15,13 +26,20 @@ class SavingAccountEntry(models.Model):
     ('interest', 'Interest'),
     ('credit_interest', 'Credit Interest')
   ], string='Entry Type')
-  account_id = fields.Many2one('saving_account', string='Account')
-  amount = fields.Float(string='Amount')
-  amount_signed = fields.Float(compute='_compute_amount_signed', string='Amount')
   ledger = fields.Selection([
     ('principal', 'Principal'), 
     ('interest', 'Interest')
   ], string='Ledger')
+  # entry_type_all = fields.Selection(string='Entry Type All', selection=ALL_SELECTION)
+  # entry_type_principal = fields.Selection(string='Entry Type Principal', selection=PRINCIPAL_SELECTION)
+  # entry_type = fields.Selection(
+  #   selection=ALL_SELECTION + PRINCIPAL_SELECTION,
+  #   compute='_compute_entry_type',
+  #   string="Entry Type", 
+  # )
+  account_id = fields.Many2one('saving_account', string='Account')
+  amount = fields.Float(string='Amount')
+  amount_signed = fields.Float(compute='_compute_amount_signed', string='Amount')
   description = fields.Text(string='Description')
   ref_no = fields.Selection([
     ('BF', 'BF'),
@@ -92,4 +110,15 @@ class SavingAccountEntry(models.Model):
         rec.amount_signed = - rec.amount
       else:
         rec.amount_signed = rec.amount
-    
+
+  # @api.onchange('ledger')
+  # def _compute_entry_type(self):
+  #   for rec in self:
+  #     print("recc", rec.ledger)
+  #     if rec.ledger == 'principal':
+  #       rec.entry_type = rec.entry_type_principal
+  #       print("recc1", rec.entry_type)
+  #     else:
+  #       rec.entry_type = rec.entry_type_all
+  #       print("recc2", rec.entry_type)
+       

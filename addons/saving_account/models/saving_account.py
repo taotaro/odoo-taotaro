@@ -71,7 +71,6 @@ class SavingAccount(models.Model):
 
       rec.total_interest = rec.total_interest + current_total
 
-  
   # @api.depends('last_interest_credit')
   # def _compute_last_interest_credit(self):
   #   for rec in self:
@@ -81,17 +80,6 @@ class SavingAccount(models.Model):
   #     else:
   #       rec.last_interest_credit = 0.0
     
-  def open_deposit_withdraw_form(self):
-    print("Deposit/Withdraw", self.env['saving_account'].search([('id','=',self.id)]))
-    return {
-      'res_model': 'saving_account.entry',
-      'type': 'ir.actions.act_window',
-      'view_mode': 'form',
-      'view_id': self.env.ref('saving_account.view_entry_form').id,
-      'target': 'new',
-      'context': {'account_id': self.env['saving_account'].search([('account_id','=',self.id)]).id}
-    }
-    
   @api.depends('account_no')
   def _compute_account_no_signed(self):
     for rec in self:
@@ -99,3 +87,21 @@ class SavingAccount(models.Model):
         rec.account_no_signed = rec.account_no + 'N'
       if rec.account_type == 'vip':
         rec.account_no_signed = rec.account_no + 'V'
+
+  def open_deposit_withdraw_form(self):
+    account = self.env['saving_account'].search([('id','=',self.id)])
+    account_entry = self.env['saving_account.entry'].search([('id','=',self.id)])
+    print("Deposit/Withdraw", account.id)
+    print("Entry", account_entry.id)
+
+    return {
+      'res_model': 'saving_account.entry',
+      'type': 'ir.actions.act_window',
+      'view_mode': 'form',
+      'view_id': self.env.ref('saving_account.view_entry_form1').id,
+      'target': 'new',
+      'context': {
+        'default_account_id': account_entry.account_id.id,
+        'default_ledger': 'principal',
+      }
+    }
