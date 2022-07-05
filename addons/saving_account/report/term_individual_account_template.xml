@@ -27,7 +27,7 @@
             </tr>
             <t t-foreach="entry" t-as="line">
               <tr>
-                <td><t t-esc="line['create_date']"/></td>
+                <td><t t-esc="line['create_date']" t-options="{'widget': 'date', 'format': 'dd MMMM y'}"/></td>
                   <t t-if="line.get('entry_type')=='withdraw'">
                     <td><t t-esc="line['amount']"/></td>
                   </t>
