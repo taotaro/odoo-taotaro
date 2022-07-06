@@ -13,6 +13,8 @@
             <field name="ledger" string="Ledger"/>
             <field name="entry_type" string="Entry Type"/>
             <field name="amount" string="Amount"/>
+            <field name="description" string="Description"/>
+            <field name="reference" string="Reference"/>
           </group>
         </sheet>
       </form>
@@ -31,6 +33,8 @@
             <field name="ledger" string="Ledger" attrs="{'readonly': 1}"/>
             <field name="entry_type" string="Entry Type"/>
             <field name="amount" string="Amount"/>
+            <field name="description" string="Description"/>
+            <field name="reference" string="Reference"/>
           </group>
         </sheet>
       </form>
@@ -46,9 +50,10 @@
         <field name="entry_date" string="Entry Date"/>
         <field name="entry_type" string="Entry Type"/>
         <field name="ledger" string="Ledger"/>
-        <field name="account_id" string="Account"/>
+        <field name="account_no" string="Account ID"/>
+        <field name="account_id" string="Account Name"/>
         <field name="description" string="Description"/>
-        <field name="ref_no" string="Ref. No"/>
+        <field name="reference" string="Reference"/>
         <field name="amount_signed" string="Amount" eval="4"/>
       </tree>
     </field>

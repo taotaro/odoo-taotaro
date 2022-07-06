@@ -38,9 +38,11 @@ class SavingAccountEntry(models.Model):
   #   store=True,
   # )
   account_id = fields.Many2one('saving_account', string='Account')
-  amount = fields.Float(string='Amount')
+  account_no = fields.Char(related='account_id.account_no', string='Account No')
+  amount = fields.Float(string='Amount', digits=(16, 4))
   amount_signed = fields.Float(compute='_compute_amount_signed', string='Amount')
   description = fields.Text(string='Description')
+  reference = fields.Text(string='Reference')
   ref_no = fields.Selection([
     ('BF', 'BF'),
     ('DP', 'DP'),
@@ -83,6 +85,7 @@ class SavingAccountEntry(models.Model):
             'account_id': account.id,
             'amount': interest_amount,
             'ledger': 'interest',
+            'description': 'Daily Interest - Base Amount: %.2f' % account.total_principal
           }
           self.create(list)
     return
@@ -110,12 +113,16 @@ class SavingAccountEntry(models.Model):
   @api.depends('amount')
   def _compute_amount_signed(self):
     for rec in self:
+      rec.amount = "%.4f" % rec.amount
       if rec.entry_type == 'withdraw':
         rec.amount_signed = - rec.amount
       elif rec.entry_type == 'credit_interest' and rec.ledger == 'interest':
         rec.amount_signed = - rec.amount
       else:
         rec.amount_signed = rec.amount
+      
+      if rec.ledger == 'principal':
+        rec.amount_signed = "%.2f" % rec.amount_signed
 
   # @api.onchange('ledger')
   # def _compute_entry_type(self):

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from email.policy import default
 from odoo import models, fields, api
 
 class SavingAccount(models.Model):
@@ -12,7 +13,7 @@ class SavingAccount(models.Model):
   account_type = fields.Selection([
     ('normal', 'Normal'), 
     ('vip', 'VIP')
-  ], string="Account Type")
+  ], default='normal', string="Account Type")
   name = fields.Char(string='Account Name')
   email = fields.Char(string='Email')
   phone = fields.Char(string='Phone Number')
@@ -66,8 +67,8 @@ class SavingAccount(models.Model):
         for interest in interest_list:
           if interest.entry_type == 'interest':
             current_total = current_total + interest.amount
-          # if interest.entry_type == 'credit_interest':
-          #   current_total = current_total - interest.amount
+          if interest.entry_type == 'credit_interest':
+            current_total = current_total - interest.amount
 
       rec.total_interest = rec.total_interest + current_total
 

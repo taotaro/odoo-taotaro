@@ -21,7 +21,7 @@
           </group>
           <group>
             <field name="open_date"/>
-            <field name="close_date"/>
+            <field name="close_date" attrs="{'readonly': 1}"/>
           </group>
           <group>
             <field name="total_principal"/>
