@@ -89,21 +89,22 @@ class SavingAccountEntry(models.Model):
 
   @api.model
   def _cron_credit_interest(self):
-    account = self.env['saving_account'].search([('close_date','=',False)])
-    if account:
-      deduct = {
-        'entry_type': 'credit_interest',
-        'account_id': account.id,
-        'amount': account.total_interest,
-        'ledger': 'interest'
-      }
-      add = {
-        'entry_type': 'credit_interest',
-        'account_id': account.id,
-        'amount': account.total_interest,
-        'ledger': 'principal'
-      }
-      self.create([deduct, add])
+    accounts = self.env['saving_account'].search([('close_date','=',False)])
+    if accounts:
+      for account in accounts:
+        deduct = {
+          'entry_type': 'credit_interest',
+          'account_id': account.id,
+          'amount': account.total_interest,
+          'ledger': 'interest'
+        }
+        add = {
+          'entry_type': 'credit_interest',
+          'account_id': account.id,
+          'amount': account.total_interest,
+          'ledger': 'principal'
+        }
+        self.create([deduct, add])
     return
   
   @api.depends('amount')
