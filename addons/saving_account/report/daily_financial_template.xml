@@ -23,43 +23,43 @@
             <tr>
               <td>Total Accounts</td>
               <td><t t-esc="report['account_transaction']"/></td>
-              <td></td>
-              <td></td>
+              <td><t t-esc="report['account_vip']"/></td>
+              <td><t t-esc="report['account_normal']"/></td>
               <td><t t-esc="report['account_amount']"/></td>
             </tr>
             <tr>
               <td>Cash In</td>
               <td><t t-esc="report['cash_in_transaction']"/></td>
-              <td></td>
-              <td></td>
+              <td><t t-esc="report['cash_in_vip']"/></td>
+              <td><t t-esc="report['cash_in_normal']"/></td>
               <td><t t-esc="report['cash_in_amount']"/></td>
             </tr>
             <tr>
               <td>Cash Out</td>
               <td><t t-esc="report['cash_out_transaction']"/></td>
-              <td></td>
-              <td></td>
+              <td><t t-esc="report['cash_out_vip']"/></td>
+              <td><t t-esc="report['cash_out_normal']"/></td>
               <td><t t-esc="report['cash_out_amount']"/></td>
             </tr>
             <tr>
               <td>Total Interest</td>
               <td><t t-esc="report['total_interest_transaction']"/></td>
-              <td></td>
-              <td></td>
+              <td><t t-esc="report['total_interest_vip']"/></td>
+              <td><t t-esc="report['total_interest_normal']"/></td>
               <td><t t-esc="report['total_interest_amount']"/></td>
             </tr>
             <tr>
               <td>Accrued Interest</td>
               <td><t t-esc="report['accrued_interest_transaction']"/></td>
-              <td></td>
-              <td></td>
+              <td><t t-esc="report['accrued_interest_vip']"/></td>
+              <td><t t-esc="report['accrued_interest_normal']"/></td>
               <td><t t-esc="report['accrued_interest_amount']"/></td>
             </tr>
             <tr>
               <td>Interest Credit</td>
               <td><t t-esc="report['interest_credit_transaction']"/></td>
-              <td></td>
-              <td></td>
+              <td><t t-esc="report['interest_credit_vip']"/></td>
+              <td><t t-esc="report['interest_credit_normal']"/></td>
               <td><t t-esc="report['interest_credit_amount']"/></td>
             </tr>
           </table>
