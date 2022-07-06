@@ -30,12 +30,12 @@ class SavingAccountEntry(models.Model):
     ('principal', 'Principal'), 
     ('interest', 'Interest')
   ], string='Ledger')
-  # entry_type_all = fields.Selection(string='Entry Type All', selection=ALL_SELECTION)
-  # entry_type_principal = fields.Selection(string='Entry Type Principal', selection=PRINCIPAL_SELECTION)
+  # entry_type_all = fields.Selection(ALL_SELECTION, string='Entry Type All')
+  # entry_type_principal = fields.Selection(PRINCIPAL_SELECTION, string='Entry Type Principal')
   # entry_type = fields.Selection(
-  #   selection=ALL_SELECTION + PRINCIPAL_SELECTION,
-  #   compute='_compute_entry_type',
-  #   string="Entry Type", 
+  #   selection='_compute_entry_type',
+  #   string="Entry Type",
+  #   store=True,
   # )
   account_id = fields.Many2one('saving_account', string='Account')
   amount = fields.Float(string='Amount')
@@ -113,12 +113,12 @@ class SavingAccountEntry(models.Model):
 
   # @api.onchange('ledger')
   # def _compute_entry_type(self):
+  #   print("selff", self)
   #   for rec in self:
   #     print("recc", rec.ledger)
+  #     print("entryy", rec.entry_type)
+  #     print("entry1", rec._fields['entry_type_all'].selection)
   #     if rec.ledger == 'principal':
-  #       rec.entry_type = rec.entry_type_principal
-  #       print("recc1", rec.entry_type)
+  #       return rec._fields['entry_type_principal'].selection
   #     else:
-  #       rec.entry_type = rec.entry_type_all
-  #       print("recc2", rec.entry_type)
-       
+  #       return rec._fields['entry_type_all'].selection       

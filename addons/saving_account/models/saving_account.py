@@ -91,8 +91,6 @@ class SavingAccount(models.Model):
   def open_deposit_withdraw_form(self):
     account = self.env['saving_account'].search([('id','=',self.id)])
     account_entry = self.env['saving_account.entry'].search([('id','=',self.id)])
-    print("Deposit/Withdraw", account.id)
-    print("Entry", account_entry.id)
 
     return {
       'res_model': 'saving_account.entry',
