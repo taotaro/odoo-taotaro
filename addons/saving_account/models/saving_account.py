@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from email.policy import default
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+import datetime
 
 class SavingAccount(models.Model):
   _name = 'saving_account'
@@ -104,3 +104,9 @@ class SavingAccount(models.Model):
         'default_ledger': 'principal',
       }
     }
+
+  def action_close_account(self):
+    account = account = self.env['saving_account'].search([('id','=',self.id)])
+    if account.close_date == False:
+      account.close_date = datetime.date.today()
+    return
