@@ -64,22 +64,27 @@ class SavingAccountEntry(models.Model):
   @api.model
   def _cron_daily_interest(self):
     print("Calculating daily interest")
-    account = self.env['saving_account'].search([('close_date','=',False)])
+    accounts = self.env['saving_account'].search([('close_date','=',False)])
     rate = self.env['interest.rate'].search([('start_date','<=',fields.Date.today())])[-1]
-    if account:
-      account_type = account.account_type
-      rate = self.env['interest.rate'].search([('start_date','<=',fields.Date.today()),('account_type','=',account_type)], order='start_date')[-1]
-      if not rate:
-        rate.annual_rate = 0
-      if rate:
-        interest_amount = (account.total_principal * (rate.annual_rate / 100)) / 365
-        list = {
-          'entry_type': 'interest',
-          'account_id': account.id,
-          'amount': interest_amount,
-          'ledger': 'interest',
-        }
-        self.create(list)
+    if accounts:
+      for account in accounts:
+        account_type = account.account_type
+        rate = self.env['interest.rate'].search([
+          ('start_date','<=',fields.Date.today()),
+          ('account_type','=',account_type)], 
+          order='start_date'
+        )[-1]
+        if not rate:
+          rate.annual_rate = 0
+        if rate:
+          interest_amount = (account.total_principal * (rate.annual_rate / 100)) / 365
+          list = {
+            'entry_type': 'interest',
+            'account_id': account.id,
+            'amount': interest_amount,
+            'ledger': 'interest',
+          }
+          self.create(list)
     return
 
   @api.model
