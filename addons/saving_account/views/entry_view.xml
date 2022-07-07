@@ -14,7 +14,7 @@
             <field name="entry_type" string="Entry Type"/>
             <field name="amount" string="Amount"/>
             <field name="description" string="Description"/>
-            <field name="ref" string="Reference"/>
+            <field name="reference" string="Reference"/>
           </group>
         </sheet>
       </form>
@@ -34,7 +34,7 @@
             <field name="entry_type" string="Entry Type"/>
             <field name="amount" string="Amount"/>
             <field name="description" string="Description"/>
-            <field name="ref" string="Reference"/>
+            <field name="reference" string="Reference"/>
           </group>
         </sheet>
       </form>
@@ -53,7 +53,7 @@
         <field name="account_no" string="Account ID"/>
         <field name="account_id" string="Account Name"/>
         <field name="description" string="Description"/>
-        <field name="ref" string="Reference"/>
+        <field name="reference" string="Reference"/>
         <field name="amount_signed" string="Amount"/>
       </tree>
     </field>
