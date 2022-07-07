@@ -20,9 +20,9 @@ class DailyFinancialWizard(models.TransientModel):
     for account in accounts:
       if account['total_principal']:
         account_total_principal_amount += account['total_principal']
-        if account.account_type == 'normal':
+        if account['account_type'] == 'normal':
           normal_total_principal_amount += account_total_principal_amount
-        if account.account_type == 'vip':
+        if account['account_type'] == 'vip':
           vip_total_principal_amount += account_total_principal_amount
 
       if account['total_interest']:
