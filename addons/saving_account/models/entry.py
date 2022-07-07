@@ -49,7 +49,7 @@ class SavingAccountEntry(models.Model):
     ('DP', 'DP'),
     ('WD', 'WD'),
     ('CI', 'CI')
-  ], string='Reference No')
+  ], string='Ref. No.')
 
   @api.model
   def create(self, vals):

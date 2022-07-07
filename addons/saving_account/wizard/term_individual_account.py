@@ -1,5 +1,5 @@
-from mimetypes import init
 from odoo import models, fields, api
+import math
 
 class TermIndividualAccountWizard(models.TransientModel):
   _name="term_individual_account.report.wizard"
@@ -16,28 +16,20 @@ class TermIndividualAccountWizard(models.TransientModel):
       ('entry_date','>=',self.date_from), 
       ('entry_date','<=',self.date_to)
     ])
-    account = self.env['saving_account'].search_read([('account_id', '=', self.account_id.id)])
-    initial_balance = account[0]['total_principal']
+    account = self.env['saving_account'].search_read([('id', '=', self.account_id.id)])
     
-    # initial_entries = self.env['saving_account.entry'].search_read([
-    #   ('account_id','=', self.account_id.id),
-    #   ('ledger','=','principal'), 
-    #   ('entry_date','<=',self.date_from)
-    # ])
-    # initial_balance = 0
-    # for entry in initial_entries:
-    #   if entry['ledger'] == 'principal' and entry['entry_type'] == 'withdraw':
-    #     initial_balance -= entry['amount']
-    #   elif entry['ledger'] == 'principal'and entry['entry_type'] != 'withdraw':
-    #     initial_balance += entry['amount']
-
-    initial_entry = {
-      "entry_type": "initial",
-      "balance": 0,
-      "create_date": account[0]['create_date'],
-      "ref_no": "BF"
-      }
-    entries.insert(0, initial_entry)
+    initial_entries = self.env['saving_account.entry'].search_read([
+      ('account_id','=', self.account_id.id),
+      ('ledger','=','principal'), 
+      ('entry_date','<',self.date_from)
+    ])
+    initial_balance = 0
+    for entry in initial_entries:
+      if entry['ledger'] == 'principal':
+        if entry['entry_type'] == 'withdraw':
+          initial_balance -= entry['amount']
+        else:
+          initial_balance += entry['amount']
 
     for entry in entries:
       if entry['entry_type'] == 'withdraw':
@@ -48,7 +40,17 @@ class TermIndividualAccountWizard(models.TransientModel):
         initial_balance += entry['amount']
       elif entry['entry_type'] == 'credit_interest':
         initial_balance += entry['amount']
-      entry['balance'] = initial_balance
+      else:
+        continue
+      entry['balance'] = math.floor(initial_balance * 100) / 100.0
+
+    initial_entry = {
+      "entry_type": "initial",
+      "balance": 0,
+      "create_date": self.date_from,
+      "ref_no": "BF"
+      }
+    entries.insert(0, initial_entry)
 
     data = { 
       'form': self.read()[0],

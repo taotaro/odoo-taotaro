@@ -21,7 +21,7 @@
             <field name="phone"/>
           </group>
           <group>
-            <field name="open_date"/>
+            <field name="open_date" attrs="{'readonly': 1}"/>
             <field name="close_date" attrs="{'readonly': 1}"/>
           </group>
           <group>

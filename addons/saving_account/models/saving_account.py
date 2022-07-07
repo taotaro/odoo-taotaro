@@ -106,6 +106,34 @@ class SavingAccount(models.Model):
 
   def action_close_account(self):
     account = self.env['saving_account'].search([('id','=',self.id)])
-    if account.close_date == False:
-      account.close_date = datetime.date.today()
-    return
+    if account['close_date'] == False:
+      account['close_date'] = datetime.date.today()
+      if account['total_interest'] > 0:
+        deduct = {
+          'entry_type': 'credit_interest',
+          'account_id': account.id,
+          'amount': account['total_interest'],
+          'ledger': 'interest'
+        }
+        add = {
+          'entry_type': 'credit_interest',
+          'account_id': account.id,
+          'amount': account['total_interest'],
+          'ledger': 'principal'
+        }
+        self.env['saving_account.entry'].create([deduct, add])
+
+      return {
+        'res_model': 'saving_account.entry',
+        'type': 'ir.actions.act_window',
+        'view_mode': 'form',
+        'view_id': self.env.ref('saving_account.view_entry_form1').id,
+        'target': 'new',
+        'context': {
+          'default_account_id': account.id,
+          'default_ledger': 'principal',
+          'default_entry_type': 'withdraw',
+          'default_amount': account.total_principal
+        }
+      }
+    
