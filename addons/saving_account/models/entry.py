@@ -43,7 +43,7 @@ class SavingAccountEntry(models.Model):
   amount = fields.Float(string='Amount', digits=(16, 4))
   amount_signed = fields.Float(compute='_compute_amount_signed', string='Amount', digits=(16, 4))
   description = fields.Text(string='Description')
-  reference = fields.Text(string='Reference')
+  ref = fields.Text(string='Reference')
   ref_no = fields.Selection([
     ('BF', 'BF'),
     ('DP', 'DP'),
