@@ -14,16 +14,17 @@ class DailyFinancialWizard(models.TransientModel):
     ])
 
     account_total_principal_amount, account_total_interest_amount = 0, 0
-    account_total_vip_amount, account_total_normal_amount = 0, 0
+    vip_total_principal_amount, normal_total_principal_amount = 0, 0
+
 
     for account in accounts:
       account_total_principal_amount += account.total_principal
       account_total_interest_amount += account.total_interest
 
       if account.account_type == 'normal':
-        account_total_normal_amount += account.total_principal
+        normal_total_principal_amount += account_total_principal_amount
       if account.account_type == 'vip':
-        account_total_vip_amount += account.total_interest
+        vip_total_principal_amount += account_total_principal_amount
 
     cash_in_amount, cash_out_amount, total_interest_amount, credit_interest_amount = 0, 0, 0, 0
     cash_in_vip, cash_in_normal, cash_out_vip, cash_out_normal = 0, 0, 0, 0
@@ -68,8 +69,8 @@ class DailyFinancialWizard(models.TransientModel):
     report = {
      "account_transaction": len(accounts),
      "account_amount": account_total_principal_amount,
-     "account_vip": account_total_vip_amount,
-     "account_normal": account_total_normal_amount,
+     "account_vip": vip_total_principal_amount,
+     "account_normal": normal_total_principal_amount,
      "cash_in_transaction": cash_in_transaction,
      "cash_in_amount": cash_in_amount,
      "cash_in_vip": cash_in_vip,
@@ -84,8 +85,8 @@ class DailyFinancialWizard(models.TransientModel):
      "total_interest_normal": total_interest_normal,
      "accrued_interest_transaction": len(accounts),
      "accrued_interest_amount": account_total_interest_amount,
-     "accrued_interest_vip": account_total_vip_amount,
-     "accrued_interest_normal": account_total_normal_amount,
+     "accrued_interest_vip": vip_total_principal_amount,
+     "accrued_interest_normal": normal_total_principal_amount,
      "interest_credit_transaction": credit_interest_transaction,
      "interest_credit_amount": credit_interest_amount,
      "interest_credit_vip": credit_interest_vip,
