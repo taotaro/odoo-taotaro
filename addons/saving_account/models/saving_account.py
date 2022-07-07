@@ -90,8 +90,7 @@ class SavingAccount(models.Model):
         rec.account_no_signed = rec.account_no + 'V'
 
   def open_deposit_withdraw_form(self):
-    account = self.env['saving_account'].search([('id','=',self.id)])
-    account_entry = self.env['saving_account.entry'].search([('id','=',self.id)])
+    account_entry = self.env['saving_account.entry'].search([('account_id','=',self.id)])
 
     return {
       'res_model': 'saving_account.entry',
@@ -106,7 +105,7 @@ class SavingAccount(models.Model):
     }
 
   def action_close_account(self):
-    account = account = self.env['saving_account'].search([('id','=',self.id)])
+    account = self.env['saving_account'].search([('id','=',self.id)])
     if account.close_date == False:
       account.close_date = datetime.date.today()
     return

@@ -54,7 +54,7 @@
         <field name="account_id" string="Account Name"/>
         <field name="description" string="Description"/>
         <field name="reference" string="Reference"/>
-        <field name="amount_signed" string="Amount" eval="4"/>
+        <field name="amount_signed" string="Amount"/>
       </tree>
     </field>
   </record>

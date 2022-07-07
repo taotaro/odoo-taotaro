@@ -41,7 +41,7 @@ class SavingAccountEntry(models.Model):
   account_no = fields.Char(related='account_id.account_no', string='Account No')
   account_type = fields.Selection(related='account_id.account_type', string='Account Type')
   amount = fields.Float(string='Amount', digits=(16, 4))
-  amount_signed = fields.Float(compute='_compute_amount_signed', string='Amount')
+  amount_signed = fields.Float(compute='_compute_amount_signed', string='Amount', digits=(16, 4))
   description = fields.Text(string='Description')
   reference = fields.Text(string='Reference')
   ref_no = fields.Selection([
@@ -114,7 +114,7 @@ class SavingAccountEntry(models.Model):
   @api.depends('amount')
   def _compute_amount_signed(self):
     for rec in self:
-      rec.amount = "%.4f" % rec.amount
+      rec.amount = round(rec.amount, 4)
       if rec.entry_type == 'withdraw':
         rec.amount_signed = - rec.amount
       elif rec.entry_type == 'credit_interest' and rec.ledger == 'interest':
@@ -123,7 +123,7 @@ class SavingAccountEntry(models.Model):
         rec.amount_signed = rec.amount
       
       if rec.ledger == 'principal':
-        rec.amount_signed = "%.2f" % rec.amount_signed
+        rec.amount_signed = round(rec.amount_signed, 2)
 
   # @api.onchange('ledger')
   # def _compute_entry_type(self):
