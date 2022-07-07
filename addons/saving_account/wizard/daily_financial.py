@@ -18,13 +18,15 @@ class DailyFinancialWizard(models.TransientModel):
 
 
     for account in accounts:
-      account_total_principal_amount += account.total_principal
-      account_total_interest_amount += account.total_interest
+      if account['total_principal']:
+        account_total_principal_amount += account['total_principal']
+        if account.account_type == 'normal':
+          normal_total_principal_amount += account_total_principal_amount
+        if account.account_type == 'vip':
+          vip_total_principal_amount += account_total_principal_amount
 
-      if account.account_type == 'normal':
-        normal_total_principal_amount += account_total_principal_amount
-      if account.account_type == 'vip':
-        vip_total_principal_amount += account_total_principal_amount
+      if account['total_interest']:
+        account_total_interest_amount += account['total_interest']
 
     cash_in_amount, cash_out_amount, total_interest_amount, credit_interest_amount = 0, 0, 0, 0
     cash_in_vip, cash_in_normal, cash_out_vip, cash_out_normal = 0, 0, 0, 0
