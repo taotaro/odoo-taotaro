@@ -31,6 +31,15 @@ class TermIndividualAccountWizard(models.TransientModel):
         else:
           initial_balance += entry['amount']
 
+    initial_entry = {
+      "entry_type": "initial",
+      "balance": 0,
+      "create_date": self.date_from,
+      "ref_no": "BF"
+      }
+
+    entries.insert(0, initial_entry)
+
     for entry in entries:
       if entry['entry_type'] == 'withdraw':
         initial_balance -= entry['amount']
@@ -43,14 +52,6 @@ class TermIndividualAccountWizard(models.TransientModel):
       else:
         continue
       entry['balance'] = math.floor(initial_balance * 100) / 100.0
-
-    initial_entry = {
-      "entry_type": "initial",
-      "balance": 0,
-      "create_date": self.date_from,
-      "ref_no": "BF"
-      }
-    entries.insert(0, initial_entry)
 
     data = { 
       'form': self.read()[0],
