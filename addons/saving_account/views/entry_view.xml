@@ -31,7 +31,7 @@
             <field name="account_id" string="Account" attrs="{'readonly': 1}"/>
             <field name="entry_date" string="Entry Date" attrs="{'readonly': 1}"/>
             <field name="ledger" string="Ledger" attrs="{'readonly': 1}"/>
-            <field name="entry_type" string="Entry Type"/>
+            <field name="entry_type_principal" string="Entry Type"/>
             <field name="amount" string="Amount" digits="[6, 2]"/>
             <field name="description" string="Description"/>
             <field name="reference" string="Reference"/>

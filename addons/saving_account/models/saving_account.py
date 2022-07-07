@@ -133,7 +133,7 @@ class SavingAccount(models.Model):
         'context': {
           'default_account_id': account.id,
           'default_ledger': 'principal',
-          'default_entry_type': 'withdraw',
+          'default_entry_type_principal': 'withdraw',
           'default_amount': account.total_principal
         }
       }

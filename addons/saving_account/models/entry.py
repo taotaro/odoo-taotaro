@@ -27,6 +27,10 @@ class SavingAccountEntry(models.Model):
     ('interest', 'Interest'),
     ('credit_interest', 'Credit Interest')
   ], string='Entry Type')
+  entry_type_principal = fields.Selection([
+    ('deposit', 'Deposit'),
+    ('withdraw', 'Withdraw'),
+  ], string='Entry Type')
   ledger = fields.Selection([
     ('principal', 'Principal'), 
     ('interest', 'Interest')
@@ -55,14 +59,19 @@ class SavingAccountEntry(models.Model):
   @api.model
   def create(self, vals):
     vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry')
-    if vals['entry_type'] == 'deposit':
-      vals['ref_no'] = 'DP'
-      vals['ledger'] = 'principal'
-    if vals['entry_type'] == 'withdraw':
-      vals['ref_no'] = 'WD'
-      vals['ledger'] = 'principal'
-    if vals['entry_type'] == 'credit_interest':
-      vals['ref_no'] = 'CI'
+
+    if vals['entry_type_principal']:
+      vals['entry_type'] = vals['entry_type_principal']
+
+    if vals['entry_type']:
+      if vals['entry_type'] == 'deposit':
+        vals['ref_no'] = 'DP'
+        vals['ledger'] = 'principal'
+      if vals['entry_type'] == 'withdraw':
+        vals['ref_no'] = 'WD'
+        vals['ledger'] = 'principal'
+      if vals['entry_type'] == 'credit_interest':
+        vals['ref_no'] = 'CI'
     return super(SavingAccountEntry, self).create(vals)
 
   @api.model
