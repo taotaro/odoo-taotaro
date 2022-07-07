@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+import math
 
 ALL_SELECTION = [
   ('deposit', 'Deposit'),
@@ -105,7 +106,7 @@ class SavingAccountEntry(models.Model):
         add = {
           'entry_type': 'credit_interest',
           'account_id': account.id,
-          'amount': account.total_interest,
+          'amount': math.floor(account.total_interest * 100) / 100.0,
           'ledger': 'principal'
         }
         self.create([deduct, add])
@@ -114,7 +115,6 @@ class SavingAccountEntry(models.Model):
   @api.depends('amount')
   def _compute_amount_signed(self):
     for rec in self:
-      rec.amount = round(rec.amount, 4)
       if rec.entry_type == 'withdraw':
         rec.amount_signed = - rec.amount
       elif rec.entry_type == 'credit_interest' and rec.ledger == 'interest':
@@ -123,7 +123,7 @@ class SavingAccountEntry(models.Model):
         rec.amount_signed = rec.amount
       
       if rec.ledger == 'principal':
-        rec.amount_signed = round(rec.amount_signed, 2)
+        rec.amount_signed = math.floor(rec.amount_signed * 100) / 100.0
 
   # @api.onchange('ledger')
   # def _compute_entry_type(self):

@@ -12,7 +12,7 @@
             <field name="entry_date" string="Entry Date"/>
             <field name="ledger" string="Ledger"/>
             <field name="entry_type" string="Entry Type"/>
-            <field name="amount" string="Amount"/>
+            <field name="amount" string="Amount" digits="[16, 2]"/>
             <field name="description" string="Description"/>
             <field name="reference" string="Reference"/>
           </group>
@@ -32,7 +32,7 @@
             <field name="entry_date" string="Entry Date" attrs="{'readonly': 1}"/>
             <field name="ledger" string="Ledger" attrs="{'readonly': 1}"/>
             <field name="entry_type" string="Entry Type"/>
-            <field name="amount" string="Amount"/>
+            <field name="amount" string="Amount" digits="[6, 2]"/>
             <field name="description" string="Description"/>
             <field name="reference" string="Reference"/>
           </group>

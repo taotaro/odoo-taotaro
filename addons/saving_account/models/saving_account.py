@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api, _
 import datetime
+import math
 
 class SavingAccount(models.Model):
   _name = 'saving_account'
@@ -118,7 +119,7 @@ class SavingAccount(models.Model):
         add = {
           'entry_type': 'credit_interest',
           'account_id': account.id,
-          'amount': account['total_interest'],
+          'amount': math.floor(account['total_interest'] * 100) / 100.0,
           'ledger': 'principal'
         }
         self.env['saving_account.entry'].create([deduct, add])
