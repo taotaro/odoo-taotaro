@@ -33,6 +33,7 @@
       'wizard/term_account_view.xml',
       'wizard/term_individual_account_view.xml',
       'wizard/daily_financial_view.xml',
+      'wizard/message_view.xml',
       'views/saving_account_view.xml',
       'views/entry_view.xml',
       'views/rate_view.xml',

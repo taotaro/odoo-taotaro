@@ -27,10 +27,19 @@ class FileTransfer(models.Model):
           host=rec.sftp_host, 
           username=rec.sftp_user, 
           password=rec.sftp_password, 
-          cnopts=cnopt,
           port=rec.sftp_port,
+          cnopts=cnopt,
         ) as sftp:
           sftp.cwd(rec.sftp_path)
       except Exception as e:
         raise Warning('There was a problem connecting to the remote ftp: ' + str(e))
-      raise Warning("Connection Success!!!")
+
+      message_id = self.env['message.wizard'].create({'message': 'Connection success!'})
+      return {
+          'name': 'Success',
+          'type': 'ir.actions.act_window',
+          'view_mode': 'form',
+          'res_model': 'message.wizard',
+          'res_id': message_id.id,
+          'target': 'new'
+      }
