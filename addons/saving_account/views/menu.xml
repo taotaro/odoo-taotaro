@@ -59,4 +59,10 @@
               action="action_report_term_individual_account"
               sequence="3"/>
 
+  <!-- sftp menu -->
+  <menuitem id="sftp_menu_master"
+            name="SFTP Connection"
+            action="action_sftp"
+            parent="saving_account_root_menu"
+            sequence="0"/>
 </odoo>

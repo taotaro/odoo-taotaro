@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="action_sftp_form" model="ir.ui.view">
+    <field name="name">sftp.form</field>
+    <field name="model">sftp</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name='sftp_test_connection' string="SFTP Test Connection" 
+            type="object" class="oe_highlight" groups="base.group_user" />
+        </header>
+        <sheet>
+          <group>
+            <field name="sftp_host"/>
+            <field name="sftp_port"/>
+            <field name="sftp_user"/>
+            <field name="sftp_password"/>
+            <field name="sftp_path"/>
+            <field name="sftp_hostkeys"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_sftp" model="ir.actions.act_window">
+    <field name="name">SFTP</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">sftp</field>
+    <field name="view_mode">form</field>
+    <field name="context">{}</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">
+        Create your first connection!
+      </p>
+    </field>
+  </record>
+
+</odoo>
