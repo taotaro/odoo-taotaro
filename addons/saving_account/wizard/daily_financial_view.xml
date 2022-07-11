@@ -12,6 +12,7 @@
         </group>
         <footer>
           <button name="action_print_report" type="object" string="Print" class="btn-primary"/>
+          <button name="action_sftp_transfer" type="object" string="Transfer" class="btn-primary"/>
           <button string="Cancel" class="btn-secondary" special="cancel"/>
         </footer>
       </form>

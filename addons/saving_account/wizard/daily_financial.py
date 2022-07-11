@@ -1,4 +1,8 @@
 from odoo import models, fields, api
+import pysftp
+import tempfile
+import base64
+import os
 
 class DailyFinancialWizard(models.TransientModel):
   _name="daily_financial.report.wizard"
@@ -101,3 +105,41 @@ class DailyFinancialWizard(models.TransientModel):
     }
 
     return self.env.ref('saving_account.action_daily_financial_report').report_action(self, data=data)
+
+  def action_sftp_transfer(self):
+    sftp_ids = self.env['sftp'].search([])[-1]
+    report = self.action_print_report()
+    print("reports", report)
+    
+    for rec in sftp_ids:
+      try:
+        cnopt = pysftp.CnOpts()
+        if rec.sftp_hostkeys:
+          cnopt.hostkeys.load(rec.sftp_hostkeys)
+        else:
+          cnopt.hostkeys = None
+
+        try:
+          with pysftp.Connection(
+            host=rec.sftp_host, 
+            username=rec.sftp_user, 
+            password=rec.sftp_password, 
+            port=rec.sftp_port,
+            cnopts=cnopt,
+          ) as sftp:
+            temp = tempfile.NamedTemporaryFile(mode='w+t')
+            temp.writelines(report)
+            temp.seek(0)
+            filename = 'Daily_Financial.pdf'
+            try:
+              sftp.put(temp.name, os.path.join(rec.sftp_path, filename))
+            except Exception as e:
+              raise Warning('Exception! We couldn\'t back up to the SFTP server..' + str(e))
+
+        finally:
+          temp.close()
+
+      except Exception as e:
+        raise Warning('Exception! We couldn\'t back up to the SFTP server..' + str(e))
+
+

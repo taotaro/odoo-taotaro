@@ -1,6 +1,8 @@
-from email.policy import default
 from odoo import models, fields, api
 import pysftp
+import tempfile
+import base64
+import os
 
 class FileTransfer(models.Model):
   _name = "sftp"
