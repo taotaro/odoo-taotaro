@@ -3,18 +3,6 @@
 from odoo import models, fields, api
 import math
 
-ALL_SELECTION = [
-  ('deposit', 'Deposit'),
-  ('withdraw', 'Withdraw'),
-  ('interest', 'Interest'),
-  ('credit_interest', 'Credit Interest')
-]
-
-PRINCIPAL_SELECTION = [
-  ('deposit', 'Deposit'),
-  ('withdraw', 'Withdraw')
-]
-
 class SavingAccountEntry(models.Model):
   _name = "saving_account.entry"
   _description = "Entry of saving account"
@@ -35,13 +23,6 @@ class SavingAccountEntry(models.Model):
     ('principal', 'Principal'), 
     ('interest', 'Interest')
   ], string='Ledger')
-  # entry_type_all = fields.Selection(ALL_SELECTION, string='Entry Type All')
-  # entry_type_principal = fields.Selection(PRINCIPAL_SELECTION, string='Entry Type Principal')
-  # entry_type = fields.Selection(
-  #   selection='_compute_entry_type',
-  #   string="Entry Type",
-  #   store=True,
-  # )
   account_id = fields.Many2one('saving_account', string='Account')
   account_no = fields.Char(related='account_id.account_no', string='Account No')
   account_type = fields.Selection(related='account_id.account_type', string='Account Type')
@@ -132,16 +113,4 @@ class SavingAccountEntry(models.Model):
         rec.amount_signed = rec.amount
       
       if rec.ledger == 'principal':
-        rec.amount_signed = math.floor(rec.amount_signed * 100) / 100.0
-
-  # @api.onchange('ledger')
-  # def _compute_entry_type(self):
-  #   print("selff", self)
-  #   for rec in self:
-  #     print("recc", rec.ledger)
-  #     print("entryy", rec.entry_type)
-  #     print("entry1", rec._fields['entry_type_all'].selection)
-  #     if rec.ledger == 'principal':
-  #       return rec._fields['entry_type_principal'].selection
-  #     else:
-  #       return rec._fields['entry_type_all'].selection       
+        rec.amount_signed = math.floor(rec.amount_signed * 100) / 100.0     
