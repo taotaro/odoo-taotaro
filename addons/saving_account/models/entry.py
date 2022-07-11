@@ -44,15 +44,16 @@ class SavingAccountEntry(models.Model):
     if self['entry_type_principal']:
       vals['entry_type'] = vals['entry_type_principal']
 
-    if vals['entry_type']:
-      if vals['entry_type'] == 'deposit':
-        vals['ref_no'] = 'DP'
-        vals['ledger'] = 'principal'
-      if vals['entry_type'] == 'withdraw':
-        vals['ref_no'] = 'WD'
-        vals['ledger'] = 'principal'
-      if vals['entry_type'] == 'credit_interest':
-        vals['ref_no'] = 'CI'
+    if self['entry_type']:
+      if vals['entry_type']:
+        if vals['entry_type'] == 'deposit':
+          vals['ref_no'] = 'DP'
+          vals['ledger'] = 'principal'
+        if vals['entry_type'] == 'withdraw':
+          vals['ref_no'] = 'WD'
+          vals['ledger'] = 'principal'
+        if vals['entry_type'] == 'credit_interest':
+          vals['ref_no'] = 'CI'
     return super(SavingAccountEntry, self).create(vals)
 
   @api.model
