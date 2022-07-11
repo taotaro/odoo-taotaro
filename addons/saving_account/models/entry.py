@@ -41,7 +41,7 @@ class SavingAccountEntry(models.Model):
   def create(self, vals):
     vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry')
 
-    if vals['entry_type_principal']:
+    if self['entry_type_principal']:
       vals['entry_type'] = vals['entry_type_principal']
 
     if vals['entry_type']:
