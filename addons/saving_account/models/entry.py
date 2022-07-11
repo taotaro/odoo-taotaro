@@ -1,7 +1,20 @@
 # -*- coding: utf-8 -*-
 
+from tkinter import ALL
 from odoo import models, fields, api
 import math
+
+PRINCIPAL_SELECTION = [
+    ('deposit', 'Deposit'),
+    ('withdraw', 'Withdraw'),
+  ]
+
+ALL_SELECTION = [
+    ('deposit', 'Deposit'),
+    ('withdraw', 'Withdraw'),
+    ('interest', 'Interest'),
+    ('credit_interest', 'Credit Interest')
+  ]
 
 class SavingAccountEntry(models.Model):
   _name = "saving_account.entry"
@@ -9,16 +22,8 @@ class SavingAccountEntry(models.Model):
 
   entry_no = fields.Integer(string='Entry No')
   entry_date = fields.Date(string='Entry Date', default=fields.Date.today())
-  entry_type = fields.Selection([
-    ('deposit', 'Deposit'),
-    ('withdraw', 'Withdraw'),
-    ('interest', 'Interest'),
-    ('credit_interest', 'Credit Interest')
-  ], string='Entry Type')
-  entry_type_principal = fields.Selection([
-    ('deposit', 'Deposit'),
-    ('withdraw', 'Withdraw'),
-  ], string='Entry Type')
+  entry_type = fields.Selection(ALL_SELECTION, string='Entry Type')
+  entry_type_principal = fields.Selection(PRINCIPAL_SELECTION, string='Entry Type')
   ledger = fields.Selection([
     ('principal', 'Principal'), 
     ('interest', 'Interest')
@@ -41,20 +46,33 @@ class SavingAccountEntry(models.Model):
   def create(self, vals):
     vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry')
 
-    if self['entry_type_principal']:
+    if vals['entry_type_principal']:
+      print("5 entry", self['entry_type_principal'])
+      self['entry_type'] = self['entry_type_principal']
       vals['entry_type'] = vals['entry_type_principal']
+      print("3 entry", self['entry_type'])
+      print("4 entry", vals['entry_type'])
 
-    if self['entry_type']:
-      if vals['entry_type']:
-        if vals['entry_type'] == 'deposit':
-          vals['ref_no'] = 'DP'
-          vals['ledger'] = 'principal'
-        if vals['entry_type'] == 'withdraw':
-          vals['ref_no'] = 'WD'
-          vals['ledger'] = 'principal'
-        if vals['entry_type'] == 'credit_interest':
-          vals['ref_no'] = 'CI'
+    if vals['entry_type']:
+      print("2 entry", vals['entry_type'])
+      if vals['entry_type'] == 'deposit':
+        vals['ref_no'] = 'DP'
+        vals['ledger'] = 'principal'
+      if vals['entry_type'] == 'withdraw':
+        vals['ref_no'] = 'WD'
+        vals['ledger'] = 'principal'
+      if vals['entry_type'] == 'credit_interest':
+        vals['ref_no'] = 'CI'
     return super(SavingAccountEntry, self).create(vals)
+
+  # @api.onchange('ledger')
+  # def _get_entry_types(self):
+  #   if self.ledger == 'principal':
+  #     print("yes")
+  #     selection = PRINCIPAL_SELECTION
+  #   else:
+  #     selection = ALL_SELECTION
+  #   return selection
 
   @api.model
   def _cron_daily_interest(self):
