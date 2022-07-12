@@ -46,12 +46,15 @@ class SavingAccountEntry(models.Model):
   def create(self, vals):
     vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry')
 
-    if vals['entry_type_principal']:
-      print("5 entry", self['entry_type_principal'])
-      self['entry_type'] = self['entry_type_principal']
-      vals['entry_type'] = vals['entry_type_principal']
-      print("3 entry", self['entry_type'])
-      print("4 entry", vals['entry_type'])
+    try:
+      if vals['entry_type_principal']:
+        print("5 entry", self['entry_type_principal'])
+        self['entry_type'] = self['entry_type_principal']
+        vals['entry_type'] = vals['entry_type_principal']
+        print("3 entry", self['entry_type'])
+        print("4 entry", vals['entry_type'])
+    except:
+      print("no entry_type_principal")
 
     if vals['entry_type']:
       print("2 entry", vals['entry_type'])
@@ -92,10 +95,10 @@ class SavingAccountEntry(models.Model):
         if rate:
           interest_amount = (account.total_principal * (rate.annual_rate / 100)) / 365
           list = {
+            'ledger': 'interest',
             'entry_type': 'interest',
             'account_id': account.id,
             'amount': interest_amount,
-            'ledger': 'interest',
             'description': 'Daily Interest - Base Amount: %.2f' % account.total_principal
           }
           self.create(list)
@@ -107,16 +110,16 @@ class SavingAccountEntry(models.Model):
     if accounts:
       for account in accounts:
         deduct = {
+          'ledger': 'interest',
           'entry_type': 'credit_interest',
           'account_id': account.id,
           'amount': account.total_interest,
-          'ledger': 'interest'
         }
         add = {
+          'ledger': 'principal',
           'entry_type': 'credit_interest',
           'account_id': account.id,
           'amount': math.floor(account.total_interest * 100) / 100.0,
-          'ledger': 'principal'
         }
         self.create([deduct, add])
     return
