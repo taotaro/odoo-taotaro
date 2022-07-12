@@ -40,7 +40,8 @@
       'report/term_account_template.xml',
       'report/term_individual_account_template.xml',
       'report/daily_financial_template.xml',
-      'report/report.xml'
+      'report/report.xml',
+      'data/mail_template_data.xml',
     ],
 
     # only loaded in demonstration mode

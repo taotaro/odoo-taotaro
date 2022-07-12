@@ -1,4 +1,7 @@
+import email
 from odoo import models, fields, api
+from markupsafe import escape
+import base64
 
 class DailyFinancialWizard(models.TransientModel):
   _name="daily_financial.report.wizard"
@@ -6,6 +9,12 @@ class DailyFinancialWizard(models.TransientModel):
 
   date_from=fields.Date(string="Date From")
   date_to=fields.Date(string="Date To")
+  # template_id = fields.Many2one(
+  #   'mail.template', 
+  #   string='Email Template', 
+  #   domain="[('model','=','saving_account')]",
+  #   required=True
+  # )
 
   def action_print_report(self):
     accounts = self.env['saving_account'].search_read([
@@ -101,3 +110,14 @@ class DailyFinancialWizard(models.TransientModel):
     }
 
     return self.env.ref('saving_account.action_daily_financial_report').report_action(self, data=data)
+
+  def action_send_email(self):
+    print("sending email...")
+    report_template_id = self.env.ref('saving_account.email_template_daily_report')
+    email_values = {
+      'email_from': 'dev@taotaro.app',
+      'email_to': 'tomorrownyesterday@gmail.com'
+      }
+    mail_id = report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
+    return {'toast_message': escape(("A sample email has been sent."))}
+
