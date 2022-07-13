@@ -4,7 +4,7 @@
 
     <record id="mail_template_daily_financial_statement" model="mail.template">
             <field name="name">Daily Financial Statement: Send by email</field>
-            <field name="model_id" ref="saving_account.model_daily_financial_report_wizard"/>
+            <field name="model_id" ref="saving_account.model_saving_account"/>
             <field name="subject">Daily Financial Statement</field>
             <field name="email_from">tamara@taotaro.app</field>
             <field name="email_to">tomorrownyesterday@gmail.com</field>
