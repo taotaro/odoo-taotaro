@@ -2,8 +2,6 @@ from odoo import models, fields, api
 from markupsafe import escape
 import base64
 
-from odoo.tools import mail
-
 class DailyFinancialWizard(models.TransientModel):
   _name="daily_financial.report.wizard"
   _description="Print Daily Financial Summary Report Wizard"
@@ -132,11 +130,11 @@ class DailyFinancialWizard(models.TransientModel):
     report_template_id = self.env.ref('saving_account.mail_template_daily_financial_statement')
     print("report template id", report_template_id)
     
-    # email_values = {
-    #   'email_from': 'dev@taotaro.app',
-    #   'email_to': 'tomorrownyesterday@gmail.com',
-    #   }
-    report_template_id.send_mail(self.id, force_send=True)
+    email_values = {
+      'email_from': 'dev@taotaro.app',
+      'email_to': 'tomorrownyesterday@gmail.com',
+      }
+    report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
     print('sent email')
     return
 

@@ -16,8 +16,6 @@
     </p>
 </div>
             </field>
-            <!-- <field name="report_template" ref="saving_account.action_daily_financial_report"/>
-            <field name="report_name">Daily Financial Statement</field> -->
             <field name="auto_delete" eval="False"/>
     </record>
 
