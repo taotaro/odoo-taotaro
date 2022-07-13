@@ -1,22 +1,17 @@
-import email
 from odoo import models, fields, api
 from markupsafe import escape
 import base64
+
+from odoo.tools import mail
 
 class DailyFinancialWizard(models.TransientModel):
   _name="daily_financial.report.wizard"
   _description="Print Daily Financial Summary Report Wizard"
 
-  date_from=fields.Date(string="Date From")
-  date_to=fields.Date(string="Date To")
-  # template_id = fields.Many2one(
-  #   'mail.template', 
-  #   string='Email Template', 
-  #   domain="[('model','=','saving_account')]",
-  #   required=True
-  # )
+  date_from=fields.Date(string="Date From", default=fields.Date.today())
+  date_to=fields.Date(string="Date To", default=fields.Date.today())
 
-  def action_print_report(self):
+  def generate_report(self):
     accounts = self.env['saving_account'].search_read([
       ('open_date','>=',self.date_from), 
       ('open_date','<=',self.date_to)
@@ -109,15 +104,39 @@ class DailyFinancialWizard(models.TransientModel):
       'report': report
     }
 
+    return data
+
+  def action_print_report(self):
+    data = self.generate_report()
+
     return self.env.ref('saving_account.action_daily_financial_report').report_action(self, data=data)
 
   def action_send_email(self):
     print("sending email...")
-    report_template_id = self.env.ref('saving_account.email_template_daily_report')
-    email_values = {
-      'email_from': 'dev@taotaro.app',
-      'email_to': 'tomorrownyesterday@gmail.com'
-      }
-    mail_id = report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
-    return {'toast_message': escape(("A sample email has been sent."))}
+    data = self.generate_report()
+    report_id = self.env.ref('saving_account.action_daily_financial_report')._render_qweb_pdf(self.ids, data=data)
+    report_b64 = base64.b64encode(report_id[0])
+    print("report id", report_id)
+    name = 'my attachment'
+    ctx = self.env['ir.attachment'].create({
+            'name': name,
+            'type': 'binary',
+            'datas': report_b64,
+            # 'datas_fname': name + '.pdf',
+            'store_fname': name,
+            'res_model': self._name,
+            'res_id': self.id,
+            'mimetype': 'application/x-pdf'
+        })
+    print("context", ctx)
+    report_template_id = self.env.ref('saving_account.mail_template_daily_financial_statement')
+    print("report template id", report_template_id)
+    
+    # email_values = {
+    #   'email_from': 'dev@taotaro.app',
+    #   'email_to': 'tomorrownyesterday@gmail.com',
+    #   }
+    report_template_id.send_mail(self.id, force_send=True)
+    print('sent email')
+    return
 
