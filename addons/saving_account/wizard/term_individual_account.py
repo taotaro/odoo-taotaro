@@ -9,7 +9,7 @@ class TermIndividualAccountWizard(models.TransientModel):
   account_id = fields.Many2one('saving_account', string='Account')
   date_from=fields.Date(string="Date From", default=fields.Date.today())
   date_to=fields.Date(string="Date To", default=fields.Date.today())
-  email_to=fields.Text(string="Email To")
+  email_to=fields.Char(string="Email To")
 
   def generate_report(self):
     entries = self.env['saving_account.entry'].search_read([

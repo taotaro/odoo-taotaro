@@ -8,7 +8,7 @@ class DailyFinancialWizard(models.TransientModel):
 
   date_from=fields.Date(string="Date From", default=fields.Date.today())
   date_to=fields.Date(string="Date To", default=fields.Date.today())
-  email_to=fields.Text(string="Email To")
+  email_to=fields.Char(string="Email To")
 
   def generate_report(self):
     accounts = self.env['saving_account'].search_read([
