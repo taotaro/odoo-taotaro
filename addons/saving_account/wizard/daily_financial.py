@@ -131,10 +131,10 @@ class DailyFinancialWizard(models.TransientModel):
     print("report template id", report_template_id)
     
     email_values = {
-      'email_from': 'dev@taotaro.app',
+      'email_from': 'no@taotaro.app',
       'email_to': 'tomorrownyesterday@gmail.com',
       }
-    report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
+    report_template_id.send_mail(self.id, force_send=True)
     print('sent email')
     return
 
