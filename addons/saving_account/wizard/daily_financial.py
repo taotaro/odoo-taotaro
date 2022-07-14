@@ -110,13 +110,11 @@ class DailyFinancialWizard(models.TransientModel):
     return self.env.ref('saving_account.action_daily_financial_report').report_action(self, data=data)
 
   def action_send_email(self):
-    print("sending email...")
     data = self.generate_report()
-    print("report data", data)
     report_id = self.env.ref('saving_account.action_daily_financial_report')._render(self.ids, data)
-    print("report id", report_id)
     report_b64 = base64.b64encode(report_id[0])
-    report_name = 'daily_financial_statement.pdf'
+    now = fields.Datetime.today().strftime('%Y%m%d')
+    report_name = now + '_daily_financial_statement.pdf'
     
     attachment = self.env['ir.attachment'].create({
             'name': report_name,
@@ -126,12 +124,8 @@ class DailyFinancialWizard(models.TransientModel):
             'mimetype': 'application/x-pdf'
         })
 
-    print("attachment_id", attachment.id)
-
     report_template_id = self.env.ref('saving_account.mail_template_daily_financial_statement')
     report_template_id.attachment_ids = [(6, 0, [attachment.id])]
     report_template_id.send_mail(self.id, force_send=True)
-    print("report template id", report_template_id)
-    # self.env['mail.template'].browse(report_template_id).with_context(attachment).send_mail(self.id, force_send=True)
     return
 
