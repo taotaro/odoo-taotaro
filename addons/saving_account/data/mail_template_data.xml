@@ -7,7 +7,6 @@
             <field name="model_id" ref="saving_account.model_daily_financial_report_wizard"/>
             <field name="subject">Daily Financial Statement</field>
             <field name="email_from">no-reply@mail.taotaro.app</field>
-            <field name="email_to">tamara@taotaro.app</field>
             <field name="body_html" type="html">
               <div style="margin: 0px; padding: 0px;">
                   <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -24,7 +23,6 @@
             <field name="model_id" ref="saving_account.model_term_account_report_wizard"/>
             <field name="subject">Term Account</field>
             <field name="email_from">no-reply@mail.taotaro.app</field>
-            <field name="email_to">tamara@taotaro.app</field>
             <field name="body_html" type="html">
               <div style="margin: 0px; padding: 0px;">
                   <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -41,7 +39,6 @@
             <field name="model_id" ref="saving_account.model_term_individual_account_report_wizard"/>
             <field name="subject">Term Individual Account</field>
             <field name="email_from">no-reply@mail.taotaro.app</field>
-            <field name="email_to">tamara@taotaro.app</field>
             <field name="body_html" type="html">
               <div style="margin: 0px; padding: 0px;">
                   <p style="margin: 0px; padding: 0px; font-size: 13px;">

@@ -10,6 +10,7 @@
           <field name="account_id"/>
           <field name="date_from"/>
           <field name="date_to"/>
+          <field name="email_to"/>
         </group>
         <footer>
           <button name="action_print_report" type="object" string="Print" class="btn-primary"/>
