@@ -7,7 +7,7 @@ class TermAccountWizard(models.TransientModel):
 
   date_from=fields.Date(string="Date From")
   date_to=fields.Date(string="Date To")
-  email_to=fields.Date(string="Email To")
+  email_to=fields.Text(string="Email To")
 
   def generate_report(self):
     accounts = self.env['saving_account'].search_read([('open_date','>=',self.date_from), ('open_date','<=',self.date_to)])
@@ -36,7 +36,9 @@ class TermAccountWizard(models.TransientModel):
             'mimetype': 'application/x-pdf'
         })
 
+    email_values = {'email_to': self.email_to}
+
     report_template_id = self.env.ref('saving_account.mail_template_term_account')
     report_template_id.attachment_ids = [(6, 0, [attachment.id])]
-    report_template_id.send_mail(self.id, force_send=True)
+    report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
     return
