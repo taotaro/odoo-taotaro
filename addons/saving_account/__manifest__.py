@@ -51,5 +51,5 @@
     'application': True,
     'sequence': -100,
 
-     'license': 'LGPL-3',
+    'license': 'LGPL-3',
 }
