@@ -112,29 +112,26 @@ class DailyFinancialWizard(models.TransientModel):
   def action_send_email(self):
     print("sending email...")
     data = self.generate_report()
-    report_id = self.env.ref('saving_account.action_daily_financial_report')._render_qweb_pdf(self.ids, data=data)
-    report_b64 = base64.b64encode(report_id[0])
+    print("report data", data)
+    report_id = self.env.ref('saving_account.action_daily_financial_report')._render(self.ids, data)
     print("report id", report_id)
-    name = 'my attachment'
-    ctx = self.env['ir.attachment'].create({
-            'name': name,
+    report_b64 = base64.b64encode(report_id[0])
+    report_name = 'daily_financial_statement.pdf'
+    
+    attachment = self.env['ir.attachment'].create({
+            'name': report_name,
             'type': 'binary',
             'datas': report_b64,
-            # 'datas_fname': name + '.pdf',
-            'store_fname': name,
-            'res_model': self._name,
-            'res_id': self.id,
+            'store_fname': report_name,
             'mimetype': 'application/x-pdf'
         })
-    print("context", ctx)
+
+    print("attachment_id", attachment.id)
+
     report_template_id = self.env.ref('saving_account.mail_template_daily_financial_statement')
-    print("report template id", report_template_id)
-    
-    email_values = {
-      'email_from': 'no@taotaro.app',
-      'email_to': 'tomorrownyesterday@gmail.com',
-      }
+    report_template_id.attachment_ids = [(6, 0, [attachment.id])]
     report_template_id.send_mail(self.id, force_send=True)
-    print('sent email')
+    print("report template id", report_template_id)
+    # self.env['mail.template'].browse(report_template_id).with_context(attachment).send_mail(self.id, force_send=True)
     return
 
