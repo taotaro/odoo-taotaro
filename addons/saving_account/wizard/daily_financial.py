@@ -1,6 +1,7 @@
 from odoo import models, fields, api
 from markupsafe import escape
 import base64
+import datetime
 
 class DailyFinancialWizard(models.TransientModel):
   _name="daily_financial.report.wizard"
@@ -98,10 +99,22 @@ class DailyFinancialWizard(models.TransientModel):
      "interest_credit_normal": credit_interest_normal
     }
 
-    data = { 
-      'form': self.read()[0],
-      'report': report
-    }
+    print("self read", self.read())
+
+    if self.read():
+      data = { 
+        'form': self.read()[0],
+        'report': report
+      }
+    else:
+      data = {
+        'form': {
+            'date_from': fields.Date.today(), 
+            'date_to': fields.Date.today(), 
+          },
+        'report': report
+      }
+    
 
     return data
 
@@ -132,3 +145,7 @@ class DailyFinancialWizard(models.TransientModel):
     report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
     return
 
+  @api.model
+  def _cron_send_email(self):
+    self.action_send_email()
+    return
