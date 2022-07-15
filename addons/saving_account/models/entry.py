@@ -48,16 +48,12 @@ class SavingAccountEntry(models.Model):
 
     try:
       if vals['entry_type_principal']:
-        print("5 entry", self['entry_type_principal'])
         self['entry_type'] = self['entry_type_principal']
         vals['entry_type'] = vals['entry_type_principal']
-        print("3 entry", self['entry_type'])
-        print("4 entry", vals['entry_type'])
     except:
       print("no entry_type_principal")
 
     if vals['entry_type']:
-      print("2 entry", vals['entry_type'])
       if vals['entry_type'] == 'deposit':
         vals['ref_no'] = 'DP'
         vals['ledger'] = 'principal'
@@ -67,15 +63,6 @@ class SavingAccountEntry(models.Model):
       if vals['entry_type'] == 'credit_interest':
         vals['ref_no'] = 'CI'
     return super(SavingAccountEntry, self).create(vals)
-
-  # @api.onchange('ledger')
-  # def _get_entry_types(self):
-  #   if self.ledger == 'principal':
-  #     print("yes")
-  #     selection = PRINCIPAL_SELECTION
-  #   else:
-  #     selection = ALL_SELECTION
-  #   return selection
 
   @api.model
   def _cron_daily_interest(self):
