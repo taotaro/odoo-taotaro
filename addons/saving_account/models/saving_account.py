@@ -100,7 +100,7 @@ class SavingAccount(models.Model):
       'view_id': self.env.ref('saving_account.view_entry_form1').id,
       'target': 'new',
       'context': {
-        'default_account_id': account_entry.account_id.id,
+        'default_account_id': self.id,
         'default_ledger': 'principal',
       }
     }
