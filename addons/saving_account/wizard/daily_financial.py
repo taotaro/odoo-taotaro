@@ -1,13 +1,17 @@
 from odoo import models, fields, api
+from markupsafe import escape
+import base64
+import datetime
 
 class DailyFinancialWizard(models.TransientModel):
   _name="daily_financial.report.wizard"
   _description="Print Daily Financial Summary Report Wizard"
 
-  date_from=fields.Date(string="Date From")
-  date_to=fields.Date(string="Date To")
+  date_from=fields.Date(string="Date From", default=fields.Date.today())
+  date_to=fields.Date(string="Date To", default=fields.Date.today())
+  email_to=fields.Char(string="Email To")
 
-  def action_print_report(self):
+  def generate_report(self):
     accounts = self.env['saving_account'].search_read([
       ('open_date','>=',self.date_from), 
       ('open_date','<=',self.date_to)
@@ -95,9 +99,53 @@ class DailyFinancialWizard(models.TransientModel):
      "interest_credit_normal": credit_interest_normal
     }
 
-    data = { 
-      'form': self.read()[0],
-      'report': report
-    }
+    print("self read", self.read())
+
+    if self.read():
+      data = { 
+        'form': self.read()[0],
+        'report': report
+      }
+    else:
+      data = {
+        'form': {
+            'date_from': fields.Date.today(), 
+            'date_to': fields.Date.today(), 
+          },
+        'report': report
+      }
+    
+
+    return data
+
+  def action_print_report(self):
+    data = self.generate_report()
 
     return self.env.ref('saving_account.action_daily_financial_report').report_action(self, data=data)
+
+  def action_send_email(self):
+    data = self.generate_report()
+    report_id = self.env.ref('saving_account.action_daily_financial_report')._render(self.ids, data)
+    report_b64 = base64.b64encode(report_id[0])
+    now = fields.Datetime.today().strftime('%Y%m%d')
+    report_name = now + '_daily_financial_statement.pdf'
+    
+    attachment = self.env['ir.attachment'].create({
+            'name': report_name,
+            'type': 'binary',
+            'datas': report_b64,
+            'store_fname': report_name,
+            'mimetype': 'application/x-pdf'
+        })
+
+    email_values = {'email_to': self.email_to}
+
+    report_template_id = self.env.ref('saving_account.mail_template_daily_financial_statement')
+    report_template_id.attachment_ids = [(6, 0, [attachment.id])]
+    report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
+    return
+
+  @api.model
+  def _cron_send_email(self):
+    self.action_send_email()
+    return
