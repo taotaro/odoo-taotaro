@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from email.policy import default
 from tkinter import ALL
 from odoo import models, fields, api
 import math
@@ -41,6 +42,7 @@ class SavingAccountEntry(models.Model):
     ('WD', 'WD'),
     ('CI', 'CI')
   ], string='Ref. No.')
+  warning = fields.Boolean(default=False, compute='_compute_warning')
 
   @api.model
   def create(self, vals):
@@ -122,4 +124,10 @@ class SavingAccountEntry(models.Model):
         rec.amount_signed = rec.amount
       
       if rec.ledger == 'principal':
-        rec.amount_signed = math.floor(rec.amount_signed * 100) / 100.0     
+        rec.amount_signed = math.floor(rec.amount_signed * 100) / 100.0
+
+  @api.depends('entry_type_principal')
+  def _compute_warning(self):
+    for rec in self:
+      if rec.account_id.close_date:
+        rec.warning = True

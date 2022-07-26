@@ -28,15 +28,21 @@
     <field name="arch" type="xml">
       <form>
         <sheet>
+          <div class="alert alert-info text-center" role="alert"
+              attrs="{'invisible': [('warning', '=', False)]}">
+              <a class="close" data-dismiss="alert" href="#">x</a>
+              <div>Cannot deposit because account is closed</div>
+          </div>
           <group>
             <field name="account_id" string="Account" attrs="{'readonly': 1}"/>
             <field name="entry_date" string="Entry Date" attrs="{'readonly': 1}"/>
             <field name="ledger" string="Ledger" attrs="{'readonly': 1}"/>
             <field name="entry_type" string="Entry Type" attrs="{'invisible': [('ledger', '!=', 'interest')]}"/>
             <field name="entry_type_principal" string="Entry Type" attrs="{'invisible': [('ledger', '!=', 'principal')]}"/>
-            <field name="amount" string="Amount" digits="[6, 2]"/>
+            <field name="amount" string="Amount" digits="[16, 2]"/>
             <field name="description" string="Description"/>
             <field name="reference" string="Reference"/>
+            <field name="warning" invisible="1"/>
           </group>
         </sheet>
       </form>

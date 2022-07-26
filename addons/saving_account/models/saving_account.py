@@ -93,17 +93,31 @@ class SavingAccount(models.Model):
   def open_deposit_withdraw_form(self):
     account_entry = self.env['saving_account.entry'].search([('account_id','=',self.id)])
 
-    return {
-      'res_model': 'saving_account.entry',
-      'type': 'ir.actions.act_window',
-      'view_mode': 'form',
-      'view_id': self.env.ref('saving_account.view_entry_form1').id,
-      'target': 'new',
-      'context': {
-        'default_account_id': self.id,
-        'default_ledger': 'principal',
+    if self.close_date:
+      return {
+        'res_model': 'saving_account.entry',
+        'type': 'ir.actions.act_window',
+        'view_mode': 'form',
+        'view_id': self.env.ref('saving_account.view_entry_form1').id,
+        'target': 'new',
+        'context': {
+          'default_account_id': self.id,
+          'default_ledger': 'principal',
+          'default_entry_type_principal': 'withdraw'
+        }
       }
-    }
+    else:
+      return {
+        'res_model': 'saving_account.entry',
+        'type': 'ir.actions.act_window',
+        'view_mode': 'form',
+        'view_id': self.env.ref('saving_account.view_entry_form1').id,
+        'target': 'new',
+        'context': {
+          'default_account_id': self.id,
+          'default_ledger': 'principal',
+        }
+      }
 
   def action_close_account(self):
     account = self.env['saving_account'].search([('id','=',self.id)])
