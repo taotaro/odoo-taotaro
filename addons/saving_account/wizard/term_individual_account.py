@@ -6,7 +6,14 @@ class TermIndividualAccountWizard(models.TransientModel):
   _name="term_individual_account.report.wizard"
   _description="Print Term Individual Account Report Wizard"
 
-  account_id = fields.Many2one('saving_account', string='Account')
+  account_type_filter = fields.Selection([
+    ('normal', 'Normal'), 
+    ('vip', 'VIP')
+  ], string="Account Type Filter")
+  account_id = fields.Many2one('saving_account', 
+    string='Account', 
+    domain="[('account_type', '=', account_type_filter)]"
+  )
   date_from=fields.Date(string="Date From", default=fields.Date.today())
   date_to=fields.Date(string="Date To", default=fields.Date.today())
   email_to=fields.Char(string="Email To")
