@@ -8,9 +8,12 @@
       <form>
         <header>
           <button name="open_deposit_withdraw_form" string="Deposit/Withdraw" class="oe_highlight" 
-          context="{'close_date': 'False'}" type="object"/>
+          context="{'close_date': 'False'}" type="object"
+          confirm="Confirm to proceed transaction? 確定進行此項交易?"/>
           <button name="action_close_account" string="Close Account" class="oe_highlight"
-          context="{'close_date': 'False'}" type="object"/>
+          context="{'close_date': 'False'}" type="object"
+          confirm="Confirm closing this account? No further transaction is allowed after Account Closing! 
+          確定關閉此帳戶? 帳戶關閉後將不能作任何交易!"/>
         </header>
         <sheet>
         <group>

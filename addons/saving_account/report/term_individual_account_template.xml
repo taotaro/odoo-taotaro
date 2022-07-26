@@ -8,6 +8,8 @@
           <table style="table-layout:fixed; table-width:full">
             <tr>
               <td>Yue Hwa Chinese Products Saving System</td>
+              <td><t t-esc="form['date_from']"/></td>
+              <td>to</td>
               <td><t t-esc="form['date_to']"/></td>
             </tr>
             <tr>
