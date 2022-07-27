@@ -42,3 +42,8 @@ class TermAccountWizard(models.TransientModel):
     report_template_id.attachment_ids = [(6, 0, [attachment.id])]
     report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
     return
+
+  @api.model
+  def _cron_send_email(self):
+    self.action_send_email()
+    return

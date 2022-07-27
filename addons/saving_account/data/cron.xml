@@ -35,4 +35,26 @@
             <field name="numbercall">-1</field>
   </record>
 
+  <record id="ir_cron_data_email_term_account" model="ir.cron">
+            <field name="name">Term Account: Send Email Automatically</field>
+            <field name="model_id" ref="model_term_account_report_wizard"/>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model._cron_send_email()</field>
+            <field name="interval_number">20</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+  </record>
+
+  <record id="ir_cron_data_email_term_individual_account" model="ir.cron">
+            <field name="name">Term Individual Account: Send Email Automatically</field>
+            <field name="model_id" ref="model_term_account_individual_report_wizard"/>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model._cron_send_email()</field>
+            <field name="interval_number">20</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+  </record>
+
 </odoo>

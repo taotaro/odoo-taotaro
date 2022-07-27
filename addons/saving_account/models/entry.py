@@ -16,10 +16,6 @@ ALL_SELECTION = [
     ('credit_interest', 'Credit Interest')
   ]
 
-def truncate(number: float, digits: int) -> float:
-  pow10 = 10 ** digits
-  return number * pow10 // 1 / pow10
-
 def truncate_number(f_number, n_decimals):
   strFormNum = "{0:." + str(n_decimals+5) + "f}"
   trunc_num = float(strFormNum.format(f_number)[:-5])
