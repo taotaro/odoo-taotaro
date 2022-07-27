@@ -1,32 +1,32 @@
 from odoo import models, fields, api
-import math
 import base64
+
+def truncate_number(f_number, n_decimals):
+  strFormNum = "{0:." + str(n_decimals+5) + "f}"
+  trunc_num = float(strFormNum.format(f_number)[:-5])
+  return(trunc_num)
 
 class TermIndividualAccountWizard(models.TransientModel):
   _name="term_individual_account.report.wizard"
   _description="Print Term Individual Account Report Wizard"
 
-  account_type_filter = fields.Selection([
-    ('normal', 'Normal'), 
-    ('vip', 'VIP')
-  ], string="Account Type Filter")
-  account_id = fields.Many2one('saving_account', 
-    string='Account', 
-    domain="[('account_type', '=', account_type_filter)]"
-  )
+  account_id = fields.Many2one('saving_account', string='Account')
   date_from=fields.Date(string="Date From", default=fields.Date.today())
   date_to=fields.Date(string="Date To", default=fields.Date.today())
   email_to=fields.Char(string="Email To")
 
   def generate_report(self):
+    # find entries within the specified date
     entries = self.env['saving_account.entry'].search_read([
       ('account_id','=', self.account_id.id), 
       ('ledger','=','principal'), 
       ('entry_date','>=',self.date_from), 
       ('entry_date','<=',self.date_to)
     ])
+    # find account information
     account = self.env['saving_account'].search_read([('id', '=', self.account_id.id)])
     
+    # find entries from before the specified time to calculate initial balance
     initial_entries = self.env['saving_account.entry'].search_read([
       ('account_id','=', self.account_id.id),
       ('ledger','=','principal'), 
@@ -40,6 +40,7 @@ class TermIndividualAccountWizard(models.TransientModel):
         else:
           initial_balance += entry['amount']
 
+    # declare first entry with initial balance
     initial_entry = {
       "entry_type": "initial",
       "balance": 0,
@@ -49,6 +50,7 @@ class TermIndividualAccountWizard(models.TransientModel):
 
     entries.insert(0, initial_entry)
 
+    # arrange entries according to type
     for entry in entries:
       if entry['entry_type'] == 'withdraw':
         initial_balance -= entry['amount']
@@ -60,7 +62,7 @@ class TermIndividualAccountWizard(models.TransientModel):
         initial_balance += entry['amount']
       else:
         continue
-      entry['balance'] = math.floor(initial_balance * 100) / 100.0
+      entry['balance'] = truncate_number(initial_balance, 2)
 
     data = { 
       'form': self.read()[0],
