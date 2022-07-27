@@ -131,3 +131,5 @@ class SavingAccountEntry(models.Model):
     for rec in self:
       if rec.account_id.close_date:
         rec.warning = True
+      else:
+        rec.warning = False
