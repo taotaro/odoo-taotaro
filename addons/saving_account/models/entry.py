@@ -3,7 +3,6 @@
 from email.policy import default
 from tkinter import ALL
 from odoo import models, fields, api
-import math
 
 PRINCIPAL_SELECTION = [
     ('deposit', 'Deposit'),
@@ -16,6 +15,15 @@ ALL_SELECTION = [
     ('interest', 'Interest'),
     ('credit_interest', 'Credit Interest')
   ]
+
+def truncate(number: float, digits: int) -> float:
+  pow10 = 10 ** digits
+  return number * pow10 // 1 / pow10
+
+def truncate_number(f_number, n_decimals):
+  strFormNum = "{0:." + str(n_decimals+5) + "f}"
+  trunc_num = float(strFormNum.format(f_number)[:-5])
+  return(trunc_num)
 
 class SavingAccountEntry(models.Model):
   _name = "saving_account.entry"
@@ -46,8 +54,10 @@ class SavingAccountEntry(models.Model):
 
   @api.model
   def create(self, vals):
+    # create unique id for each entry
     vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry')
 
+    # fill entry type field if there is any special conditions
     try:
       if vals['entry_type_principal']:
         self['entry_type'] = self['entry_type_principal']
@@ -55,6 +65,7 @@ class SavingAccountEntry(models.Model):
     except:
       print("no entry_type_principal")
 
+    # fill reference number according to entry type
     if vals['entry_type']:
       if vals['entry_type'] == 'deposit':
         vals['ref_no'] = 'DP'
@@ -66,21 +77,25 @@ class SavingAccountEntry(models.Model):
         vals['ref_no'] = 'CI'
     return super(SavingAccountEntry, self).create(vals)
 
+  # calculates daily interest with specified rate
   @api.model
   def _cron_daily_interest(self):
     print("Calculating daily interest")
+    # search for accounts that are still open
     accounts = self.env['saving_account'].search([('close_date','=',False)])
-    rate = self.env['interest.rate'].search([('start_date','<=',fields.Date.today())])[-1]
     if accounts:
       for account in accounts:
         account_type = account.account_type
+        # find rate to calculate daily interest
         rate = self.env['interest.rate'].search([
           ('start_date','<=',fields.Date.today()),
           ('account_type','=',account_type)], 
           order='start_date'
         )[-1]
+        # if no rate, then no calculation
         if not rate:
           rate.annual_rate = 0
+        # if rate is found, create the interest record
         if rate:
           interest_amount = (account.total_principal * (rate.annual_rate / 100)) / 365
           list = {
@@ -93,26 +108,30 @@ class SavingAccountEntry(models.Model):
           self.create(list)
     return
 
+  # moving credit interests from interest to principal by creating records
   @api.model
   def _cron_credit_interest(self):
     accounts = self.env['saving_account'].search([('close_date','=',False)])
     if accounts:
       for account in accounts:
+        # value to deduct from interest
         deduct = {
           'ledger': 'interest',
           'entry_type': 'credit_interest',
           'account_id': account.id,
           'amount': account.total_interest,
         }
+        # value to add to principal
         add = {
           'ledger': 'principal',
           'entry_type': 'credit_interest',
           'account_id': account.id,
-          'amount': math.floor(account.total_interest * 100) / 100.0,
+          'amount': truncate_number(account.total_interest, 2)
         }
         self.create([deduct, add])
     return
   
+  # displays negative values in the tree view
   @api.depends('amount')
   def _compute_amount_signed(self):
     for rec in self:
@@ -124,8 +143,10 @@ class SavingAccountEntry(models.Model):
         rec.amount_signed = rec.amount
       
       if rec.ledger == 'principal':
-        rec.amount_signed = math.floor(rec.amount_signed * 100) / 100.0
+        rec.amount_signed = truncate_number(rec.amount_signed, 2)
+        print("truncated", truncate_number(rec.amount_signed, 2))
 
+  # produce warning for disabled deposit if account is closed
   @api.depends('entry_type_principal')
   def _compute_warning(self):
     for rec in self:
