@@ -29,9 +29,14 @@
       <form>
         <sheet>
           <div class="alert alert-info text-center" role="alert"
-              attrs="{'invisible': [('warning', '=', False)]}">
+              attrs="{'invisible': [('warning', '!=', 'account_closed')]}">
               <a class="close" data-dismiss="alert" href="#">x</a>
               <div>Cannot deposit because account is closed</div>
+          </div>
+          <div class="alert alert-info text-center" role="alert"
+              attrs="{'invisible': [('warning', '!=', 'amount_limit')]}">
+              <a class="close" data-dismiss="alert" href="#">x</a>
+              <div>Amount is too much</div>
           </div>
           <group>
             <field name="account_id" string="Account" attrs="{'readonly': 1}"/>

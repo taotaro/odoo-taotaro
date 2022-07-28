@@ -48,7 +48,7 @@ class SavingAccountEntry(models.Model):
     ('WD', 'WD'),
     ('CI', 'CI')
   ], string='Ref. No.')
-  warning = fields.Boolean(default=False, compute='_compute_warning')
+  warning = fields.Char(default='no', compute='_compute_warning')
 
   @api.model
   def create(self, vals):
@@ -155,13 +155,13 @@ class SavingAccountEntry(models.Model):
     for rec in self:
       # check if account is closed or not
       if rec.account_id.close_date:
-        rec.warning = True
+        rec.warning = 'account_closed'
       else:
-        rec.warning = False
+        rec.warning = 'no'
 
       #check if amount is greater than total money in account
       if rec.amount > rec.account_id.total_principal:
-        rec. warning = True
+        rec.warning = 'amount_limit'
       else:
-        rec.warning = False
+        rec.warning = 'no'
       
