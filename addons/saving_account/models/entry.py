@@ -36,6 +36,8 @@ class SavingAccountEntry(models.Model):
   account_id = fields.Many2one('saving_account', string='Account')
   account_no = fields.Char(related='account_id.account_no', string='Account No')
   account_type = fields.Selection(related='account_id.account_type', string='Account Type')
+  account_total_principal = fields.Float(related='account_id.total_principal', string='Account Total Principal')
+  
   amount = fields.Float(string='Amount', digits=(16, 4))
   amount_signed = fields.Float(compute='_compute_amount_signed', string='Amount', digits=(16, 4))
   description = fields.Text(string='Description')
@@ -71,6 +73,11 @@ class SavingAccountEntry(models.Model):
         vals['ledger'] = 'principal'
       if vals['entry_type'] == 'credit_interest':
         vals['ref_no'] = 'CI'
+
+    # print("self close", self.account_id.close_date)
+    # print("self total principal", self.account_id.total_principal)
+    # print("self total principal", self.account_total_principal)
+
     return super(SavingAccountEntry, self).create(vals)
 
   # calculates daily interest with specified rate
@@ -143,10 +150,18 @@ class SavingAccountEntry(models.Model):
         print("truncated", truncate_number(rec.amount_signed, 2))
 
   # produce warning for disabled deposit if account is closed
-  @api.depends('entry_type_principal')
+  @api.depends('entry_type_principal', 'amount')
   def _compute_warning(self):
     for rec in self:
+      # check if account is closed or not
       if rec.account_id.close_date:
         rec.warning = True
       else:
         rec.warning = False
+
+      #check if amount is greater than total money in account
+      if rec.amount > rec.account_id.total_principal:
+        rec. warning = True
+      else:
+        rec.warning = False
+      

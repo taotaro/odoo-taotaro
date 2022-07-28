@@ -48,7 +48,7 @@
 
   <record id="ir_cron_data_email_term_individual_account" model="ir.cron">
             <field name="name">Term Individual Account: Send Email Automatically</field>
-            <field name="model_id" ref="model_term_account_individual_report_wizard"/>
+            <field name="model_id" ref="model_term_individual_account_report_wizard"/>
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
             <field name="code">model._cron_send_email()</field>

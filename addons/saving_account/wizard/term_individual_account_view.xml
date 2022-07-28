@@ -7,7 +7,6 @@
     <field name="arch" type="xml">
       <form string="Print Term Individual Account Report">
         <group>
-          <field name="account_type_filter"/>
           <field name="account_id"/>
           <field name="date_from"/>
           <field name="date_to"/>
