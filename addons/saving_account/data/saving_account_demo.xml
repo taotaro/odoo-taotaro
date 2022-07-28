@@ -14,7 +14,6 @@
       <field name="email">lisadoe@taotaro.app</field>
       <field name="phone">23482932</field>
       <field name="open_date" eval="time.strftime('%Y')+'-1-1'"/>
-      <field name="close_date" eval="time.strftime('%Y')+'-12-31'"/>
     </record>
   </data>
 </odoo>
