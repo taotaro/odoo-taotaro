@@ -160,7 +160,7 @@ class SavingAccountEntry(models.Model):
         rec.warning = 'no'
 
       #check if amount is greater than total money in account
-      if rec.entry_type == 'Withdraw' and rec.amount > rec.account_id.total_principal:
+      if rec.entry_type == 'withdraw' and rec.amount > rec.account_id.total_principal:
         rec.warning = 'amount_limit'
       else:
         rec.warning = 'no'
