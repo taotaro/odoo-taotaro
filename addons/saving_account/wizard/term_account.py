@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 import base64
 
 class TermAccountWizard(models.TransientModel):
