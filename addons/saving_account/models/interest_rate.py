@@ -1,4 +1,5 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 class InterestRate(models.Model):
     _name = 'interest.rate'
@@ -10,3 +11,9 @@ class InterestRate(models.Model):
       ('vip', 'VIP')
     ], string='Account Type')
     annual_rate = fields.Float(string='Annual Interest Rate', digits=(16, 4))
+
+    @api.constrains('annual_rate')
+    def _check_annual_rate(self):
+      for rec in self:
+        if rec.annual_rate < 0:
+          raise ValidationError(_("No negative amount allowed"))

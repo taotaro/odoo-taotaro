@@ -155,4 +155,6 @@ class SavingAccountEntry(models.Model):
       #check if amount is greater than total money in account
       elif rec.entry_type == 'withdraw' and rec.amount > rec.account_id.total_principal:
         raise ValidationError(_("Amount is too much"))
+      elif rec.amount < 0:
+        raise ValidationError(_("No negative amount allowed"))
      
