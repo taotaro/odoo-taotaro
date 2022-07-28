@@ -44,23 +44,23 @@
             <tr>
               <td>Total Interest</td>
               <td><t t-esc="report['total_interest_transaction']"/></td>
-              <td><t t-esc="round(report['total_interest_vip'], 4)"/></td>
-              <td><t t-esc="round(report['total_interest_normal'], 4)"/></td>
-              <td><t t-esc="round(report['total_interest_amount'], 4)"/></td>
+              <td><t t-esc="round(report['total_interest_vip'], 2)"/></td>
+              <td><t t-esc="round(report['total_interest_normal'], 2)"/></td>
+              <td><t t-esc="round(report['total_interest_amount'], 2)"/></td>
             </tr>
             <tr>
               <td>Accrued Interest</td>
               <td><t t-esc="report['accrued_interest_transaction']"/></td>
-              <td><t t-esc="round(report['accrued_interest_vip'], 4)"/></td>
-              <td><t t-esc="round(report['accrued_interest_normal'], 4)"/></td>
-              <td><t t-esc="round(report['accrued_interest_amount'], 4)"/></td>
+              <td><t t-esc="round(report['accrued_interest_vip'], 2)"/></td>
+              <td><t t-esc="round(report['accrued_interest_normal'], 2)"/></td>
+              <td><t t-esc="round(report['accrued_interest_amount'], 2)"/></td>
             </tr>
             <tr>
               <td>Interest Credit</td>
               <td><t t-esc="report['interest_credit_transaction']"/></td>
-              <td><t t-esc="round(report['interest_credit_vip'], 4)"/></td>
-              <td><t t-esc="round(report['interest_credit_normal'], 4)"/></td>
-              <td><t t-esc="round(report['interest_credit_amount'], 4)"/></td>
+              <td><t t-esc="round(report['interest_credit_vip'], 2)"/></td>
+              <td><t t-esc="round(report['interest_credit_normal'], 2)"/></td>
+              <td><t t-esc="round(report['interest_credit_amount'], 2)"/></td>
             </tr>
           </table>
         </div>
