@@ -2,7 +2,8 @@
 
 from email.policy import default
 from tkinter import ALL
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 PRINCIPAL_SELECTION = [
     ('deposit', 'Deposit'),
@@ -36,8 +37,8 @@ class SavingAccountEntry(models.Model):
   account_id = fields.Many2one('saving_account', string='Account')
   account_no = fields.Char(related='account_id.account_no', string='Account No')
   account_type = fields.Selection(related='account_id.account_type', string='Account Type')
-  account_total_principal = fields.Float(related='account_id.total_principal', string='Account Total Principal')
-  
+  account_close_date = fields.Date(related='account_id.close_date', string='Account Close Date')
+   
   amount = fields.Float(string='Amount', digits=(16, 4))
   amount_signed = fields.Float(compute='_compute_amount_signed', string='Amount', digits=(16, 4))
   description = fields.Text(string='Description')
@@ -48,13 +49,9 @@ class SavingAccountEntry(models.Model):
     ('WD', 'WD'),
     ('CI', 'CI')
   ], string='Ref. No.')
-  warning = fields.Char(default='no', compute='_compute_warning')
 
   @api.model
   def create(self, vals):
-    # create unique id for each entry
-    vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry')
-
     # fill entry type field if there is any special conditions
     try:
       if vals['entry_type_principal']:
@@ -74,9 +71,8 @@ class SavingAccountEntry(models.Model):
       if vals['entry_type'] == 'credit_interest':
         vals['ref_no'] = 'CI'
 
-    # print("self close", self.account_id.close_date)
-    # print("self total principal", self.account_id.total_principal)
-    # print("self total principal", self.account_total_principal)
+    # create unique id for each entry
+    vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry')
 
     return super(SavingAccountEntry, self).create(vals)
 
@@ -149,19 +145,14 @@ class SavingAccountEntry(models.Model):
         rec.amount_signed = truncate_number(rec.amount_signed, 2)
         print("truncated", truncate_number(rec.amount_signed, 2))
 
-  # produce warning for disabled deposit if account is closed
-  @api.depends('entry_type_principal', 'amount')
-  def _compute_warning(self):
+  # check for validity and produce errors
+  @api.constrains('entry_type_principal', 'entry_type', 'amount')
+  def _check_amount(self):
     for rec in self:
       # check if account is closed or not
-      if rec.account_id.close_date:
-        rec.warning = 'account_closed'
-      else:
-        rec.warning = 'no'
-
+      if rec.entry_type == 'deposit' and rec.account_id.close_date != False:
+        raise ValidationError(_("Cannot deposit because account is closed"))
       #check if amount is greater than total money in account
-      if rec.entry_type == 'withdraw' and rec.amount > rec.account_id.total_principal:
-        rec.warning = 'amount_limit'
-      else:
-        rec.warning = 'no'
-      
+      elif rec.entry_type == 'withdraw' and rec.amount > rec.account_id.total_principal:
+        raise ValidationError(_("Amount is too much"))
+     
