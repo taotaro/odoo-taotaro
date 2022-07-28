@@ -4,14 +4,14 @@
     <record id="base_john_deposit" model="saving_account.entry">
       <field name="entry_date" eval="time.strftime('%Y')+'-1-1'"/>
       <field name="account_id" ref="account_john"/>
-      <field name="amount">20000</field>
+      <field name="amount">30000</field>
       <field name="ledger">principal</field>
       <field name="entry_type">deposit</field>
       <field name="entry_type_principal">deposit</field>
       <field name="ref_no">DP</field>
       <field name="description">this is a deposit of 20000</field>
     </record>
-    <record id="base_lisa_deposit" model="saving_account.entry">
+    <!-- <record id="base_lisa_deposit" model="saving_account.entry">
       <field name="entry_date" eval="time.strftime('%Y')+'-1-1'"/>
       <field name="account_id" ref="account_lisa"/>
       <field name="amount">30000</field>
@@ -28,6 +28,6 @@
       <field name="ledger">principal</field>
       <field name="entry_type">withdraw</field>
       <field name="entry_type_principal">withdraw</field>
-    </record>
+    </record> -->
   </data>
 </odoo>

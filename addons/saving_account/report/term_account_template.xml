@@ -26,8 +26,8 @@
                 <td><t t-esc="line['account_no']"/></td>
                 <td><t t-esc="line['account_type']"/></td>
                 <td><t t-esc="line['name']"/></td>
-                <td><t t-esc="round(line['total_principal'], 2)"/></td>
-                <td><t t-esc="round(line['total_interest'], 2)"/></td>
+                <td><t t-esc="'{0:,.2f}'.format(int(line['total_principal']))"/></td>
+                <td><t t-esc="'{0:,.2f}'.format(int(line['total_interest']))"/></td>
               </tr>
             </t>
           </table>
