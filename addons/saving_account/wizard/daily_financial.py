@@ -150,25 +150,25 @@ class DailyFinancialWizard(models.TransientModel):
     try:
       self.action_send_email()
 
-      message = _("Email sent!")
+      message = "Email sent!"
       return {
           'type': 'ir.actions.client',
           'tag': 'display_notification',
           'params': {
-              'message': message,
-              'type': 'success',
-              'sticky': False,
+            'title': _('Success'),
+            'message': message,
+            'sticky': True,
           }
       }
     except:
-      message = _("Email failed to send!")
+      message = "Email failed to send!"
       return {
           'type': 'ir.actions.client',
           'tag': 'display_notification',
           'params': {
-              'message': message,
-              'type': 'warning',
-              'sticky': False,
+            'title': _('Warning'),
+            'message': message,
+            'sticky': True,
           }
       }
     
