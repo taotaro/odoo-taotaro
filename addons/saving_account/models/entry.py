@@ -105,7 +105,7 @@ class SavingAccountEntry(models.Model):
             'ledger': 'interest',
             'entry_type': 'interest',
             'account_id': account.id,
-            'amount': interest_amount,
+            'amount': truncate_number(interest_amount, 4),
             'description': 'Daily Interest - Base Amount: %.2f' % account.total_principal
           }
           self.create(list)
