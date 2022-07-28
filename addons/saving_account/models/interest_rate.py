@@ -16,4 +16,4 @@ class InterestRate(models.Model):
     def _check_annual_rate(self):
       for rec in self:
         if rec.annual_rate < 0:
-          raise ValidationError(_("No negative amount allowed"))
+          raise ValidationError(_("Value must not be negative. 數值不能為負值。"))

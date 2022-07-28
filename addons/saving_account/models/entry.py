@@ -150,10 +150,10 @@ class SavingAccountEntry(models.Model):
     for rec in self:
       # check if account is closed or not
       if rec.entry_type == 'deposit' and rec.account_id.close_date != False:
-        raise ValidationError(_("Cannot deposit because account is closed"))
+        raise ValidationError(_("Deposit is not allowed for closed account. 不能為已關閉的帳戶進行存款操作。"))
       #check if amount is greater than total money in account
       elif rec.entry_type == 'withdraw' and rec.amount > rec.account_id.total_principal:
-        raise ValidationError(_("Amount is too much"))
+        raise ValidationError(_("Withdraw Amount must not be larger than Principal Amount. 提款金額不能高於帳戶本金金額。"))
       elif rec.amount < 0:
-        raise ValidationError(_("No negative amount allowed"))
+        raise ValidationError(_("Value must not be negative. 數值不能為負值。"))
      
