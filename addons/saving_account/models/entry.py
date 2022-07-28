@@ -37,7 +37,6 @@ class SavingAccountEntry(models.Model):
   account_id = fields.Many2one('saving_account', string='Account')
   account_no = fields.Char(related='account_id.account_no', string='Account No')
   account_type = fields.Selection(related='account_id.account_type', string='Account Type')
-  account_close_date = fields.Date(related='account_id.close_date', string='Account Close Date')
    
   amount = fields.Float(string='Amount', digits=(16, 4))
   amount_signed = fields.Float(compute='_compute_amount_signed', string='Amount', digits=(16, 4))
