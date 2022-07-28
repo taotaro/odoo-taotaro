@@ -147,5 +147,28 @@ class DailyFinancialWizard(models.TransientModel):
 
   @api.model
   def _cron_send_email(self):
-    self.action_send_email()
-    return
+    try:
+      self.action_send_email()
+
+      message = _("Email sent!")
+      return {
+          'type': 'ir.actions.client',
+          'tag': 'display_notification',
+          'params': {
+              'message': message,
+              'type': 'success',
+              'sticky': False,
+          }
+      }
+    except:
+      message = _("Email failed to send!")
+      return {
+          'type': 'ir.actions.client',
+          'tag': 'display_notification',
+          'params': {
+              'message': message,
+              'type': 'warning',
+              'sticky': False,
+          }
+      }
+    
