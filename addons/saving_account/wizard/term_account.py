@@ -41,9 +41,27 @@ class TermAccountWizard(models.TransientModel):
     report_template_id = self.env.ref('saving_account.mail_template_term_account')
     report_template_id.attachment_ids = [(6, 0, [attachment.id])]
     report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
-    return
+    return {
+      'type': 'ir.actions.client',
+      'tag': 'display_notification',
+      'params': {
+        'title': _('Success'),
+        'message': 'Email sent!',
+        'sticky': True,
+      }
+    }
 
   @api.model
   def _cron_send_email(self):
-    self.action_send_email()
-    return
+    try:
+      self.action_send_email()
+    except:
+      return {
+          'type': 'ir.actions.client',
+          'tag': 'display_notification',
+          'params': {
+            'title': _('Warning'),
+            'message': 'Email failed to send',
+            'sticky': True,
+          }
+      }
