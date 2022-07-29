@@ -23,7 +23,7 @@
             <tr>
               <td>Total Accounts</td>
               <td><t t-esc="report['account_transaction']"/></td>
-              <td><t t-esc="'{0:,.2f}'.format(int(report['account_vip'], 2)"/></td>
+              <td><t t-esc="'{0:,.2f}'.format(int(report['account_vip']))"/></td>
               <td><t t-esc="'{0:,.2f}'.format(int(report['account_normal']))"/></td>
               <td><t t-esc="'{0:,.2f}'.format(int(report['account_amount']))"/></td>
             </tr>
