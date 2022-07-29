@@ -6,7 +6,7 @@
       <t t-call="web.external_layout">
         <div class="page">
         <div class="text-right">
-          <table style="table-layout:fixed; table-width:full; text: right">
+          <table style="table-layout:fixed; table-width:full; text:center">
             <tr>
               <td>Yue Hwa Chinese Products Saving System</td>
               <td><t t-esc="form['date_from']"/></td>
@@ -19,7 +19,7 @@
             </tr>
           </table>
           <h5><center>Term Individual Account Summary</center></h5>
-          <table class="table table-bordered" style="table-layout:fixed">
+          <table class="table table-bordered" style="table-layout:fixed; text:right">
             <tr>
               <th>Date</th>
               <th>Withdrawals</th>
