@@ -142,16 +142,19 @@ class DailyFinancialWizard(models.TransientModel):
 
     report_template_id = self.env.ref('saving_account.mail_template_daily_financial_statement')
     report_template_id.attachment_ids = [(6, 0, [attachment.id])]
-    report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
-    return {
-      'type': 'ir.actions.client',
-      'tag': 'display_notification',
-      'params': {
-        'title': _('Success'),
-        'message': 'Email sent!',
-        'sticky': True,
+    try:
+      report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
+      return {
+        'type': 'ir.actions.client',
+        'tag': 'display_notification',
+        'params': {
+          'title': _('Success'),
+          'message': 'Email sent!',
+          'sticky': True,
+        }
       }
-    }
+    except:
+      return
 
   @api.model
   def _cron_send_email(self):
