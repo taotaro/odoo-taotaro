@@ -47,20 +47,20 @@ class SavingAccount(models.Model):
       principal_list = rec.env['saving_account.entry'].search([
         ('account_id','=',rec.id), 
         ('ledger','=','principal'),
-        ('entry_type','in',['deposit', 'withdraw', 'credit_interest'])
       ])
       # tally the accumulated total
       if principal_list:
         for principal in principal_list:
           if principal.entry_type == "deposit":
             current_total = current_total + principal.amount
-          if principal.entry_type == "withdraw":
+          elif principal.entry_type == "withdraw":
             current_total = current_total - principal.amount
-          if principal.entry_type == "credit_interest":
+          elif principal.entry_type == "credit_interest":
             current_total = current_total + principal.amount
 
       # update the amount
       rec.total_principal = rec.total_principal + current_total
+      rec.total_principal = truncate_number(rec.total_principal, 2)
 
   # calculate total interest of each account
   @api.onchange('interest_list_ids')
@@ -83,6 +83,7 @@ class SavingAccount(models.Model):
 
       # update the amount
       rec.total_interest = rec.total_interest + current_total
+      rec.total_interest = truncate_number(rec.total_interest, 2)
   
   # add a sign to unique account id according to account type
   @api.depends('account_no')

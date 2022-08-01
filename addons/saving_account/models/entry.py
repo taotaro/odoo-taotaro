@@ -49,8 +49,44 @@ class SavingAccountEntry(models.Model):
     ('CI', 'CI')
   ], string='Ref. No.')
 
+  # calculate the current principal ammount
+  def calculate_total_principal(self):
+    current_total = 0
+    # search principal entries of account
+    principal_list = self.env['saving_account.entry'].search([
+      ('account_id','=',self.account_id.id), 
+      ('ledger','=','principal'),
+    ])
+    # tally the accumulated total
+    if principal_list:
+      for principal in principal_list:
+        if principal.entry_type == "deposit":
+          current_total = current_total + principal.amount
+        elif principal.entry_type == "withdraw":
+          current_total = current_total - principal.amount
+        elif principal.entry_type == "credit_interest":
+          current_total = current_total + principal.amount
+    
+    return current_total
+
+  # check for validity and produce errors
+  @api.constrains('entry_type_principal', 'entry_type', 'amount')
+  def _check_amount(self):
+    print("calling check amount")
+    for rec in self:
+      current_total = rec.account_id.total_principal + rec.amount
+      # check if account is closed or not
+      if rec.entry_type == 'deposit' and rec.account_id.close_date != False:
+        raise ValidationError(_("Deposit is not allowed for closed account. 不能為已關閉的帳戶進行存款操作。"))
+      #check if amount is greater than total money in account
+      elif rec.entry_type == 'withdraw' and rec.amount > current_total:
+        raise ValidationError(_("Withdraw Amount must not be larger than Principal Amount. 提款金額不能高於帳戶本金金額。"))
+      elif rec.amount < 0:
+        raise ValidationError(_("Value must not be negative. 數值不能為負值。"))
+
   @api.model
   def create(self, vals):
+    print("calling create")
     # fill entry type field if there is any special conditions
     try:
       if vals['entry_type_principal']:
@@ -143,17 +179,4 @@ class SavingAccountEntry(models.Model):
       if rec.ledger == 'principal':
         rec.amount_signed = truncate_number(rec.amount_signed, 2)
         print("truncated", truncate_number(rec.amount_signed, 2))
-
-  # check for validity and produce errors
-  @api.constrains('entry_type_principal', 'entry_type', 'amount')
-  def _check_amount(self):
-    for rec in self:
-      # check if account is closed or not
-      if rec.entry_type == 'deposit' and rec.account_id.close_date != False:
-        raise ValidationError(_("Deposit is not allowed for closed account. 不能為已關閉的帳戶進行存款操作。"))
-      #check if amount is greater than total money in account
-      elif rec.entry_type == 'withdraw' and rec.amount > rec.account_id.total_principal:
-        raise ValidationError(_("Withdraw Amount must not be larger than Principal Amount. 提款金額不能高於帳戶本金金額。"))
-      elif rec.amount < 0:
-        raise ValidationError(_("Value must not be negative. 數值不能為負值。"))
      
