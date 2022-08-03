@@ -8,7 +8,6 @@
       <form string="Print Term Account Report">
         <group>
           <field name="date_from"/>
-          <field name="date_to"/>
           <field name="email_to"/>
         </group>
         <footer>
