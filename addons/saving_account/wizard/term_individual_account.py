@@ -56,8 +56,6 @@ class TermIndividualAccountWizard(models.TransientModel):
         initial_balance -= entry['amount']
       elif entry['entry_type'] == 'deposit':
         initial_balance += entry['amount']
-      elif entry['entry_type'] == 'interest':
-        initial_balance += entry['amount']
       elif entry['entry_type'] == 'credit_interest':
         initial_balance += entry['amount']
       else:
