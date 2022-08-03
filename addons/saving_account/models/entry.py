@@ -177,6 +177,4 @@ class SavingAccountEntry(models.Model):
         rec.amount_signed = rec.amount
       
       if rec.ledger == 'principal':
-        rec.amount_signed = truncate_number(rec.amount_signed, 2)
-        print("truncated", truncate_number(rec.amount_signed, 2))
-     
+        rec.amount_signed = truncate_number(rec.amount_signed, 2)     

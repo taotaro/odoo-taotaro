@@ -24,7 +24,7 @@ class TermIndividualAccountWizard(models.TransientModel):
       ('entry_date','<=',self.date_to)
     ])
     # find account information
-    account = self.env['saving_account'].search_read([('id', '=', self.account_id.id)])
+    account = self.env['saving_account'].search_read([('id','=',self.account_id.id)])
     
     # find entries from before the specified time to calculate initial balance
     initial_entries = self.env['saving_account.entry'].search_read([
@@ -47,7 +47,6 @@ class TermIndividualAccountWizard(models.TransientModel):
       "create_date": self.date_from,
       "ref_no": "BF"
       }
-
     entries.insert(0, initial_entry)
 
     # arrange entries according to type
