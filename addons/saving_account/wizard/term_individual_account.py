@@ -1,3 +1,4 @@
+from math import trunc
 from odoo import models, fields, api, _
 import base64
 
@@ -51,6 +52,7 @@ class TermIndividualAccountWizard(models.TransientModel):
 
     # arrange entries according to type
     for entry in entries:
+      # entry['amount'] = truncate_number(entry['amount'], 2)
       if entry['entry_type'] == 'withdraw':
         initial_balance -= entry['amount']
       elif entry['entry_type'] == 'deposit':

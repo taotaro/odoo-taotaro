@@ -32,24 +32,24 @@
               <tr>
                 <td><t t-esc="line['create_date']" t-options="{'widget': 'date', 'format': 'dd MMMM y'}"/></td>
                   <t t-if="line.get('entry_type')=='withdraw'">
-                    <td><t t-esc="'{0:,.2f}'.format(int(line['amount']))"/></td>
+                    <td><t t-esc="line['amount']"/></td>
                   </t>
                   <t t-else="">
                     <td></td>
                   </t>
                   <t t-if="line.get('entry_type')=='deposit'">
-                    <td><t t-esc="'{0:,.2f}'.format(int(line['amount']))"/></td>
+                    <td><t t-esc="line['amount']"/></td>
                   </t>
                   <t t-else="">
                     <td></td>
                   </t>
                   <t t-if="line.get('entry_type')=='credit_interest'">
-                    <td><t t-esc="'{0:,.2f}'.format(int(line['amount']))"/></td>
+                    <td><t t-esc="line['amount']"/></td>
                   </t>
                   <t t-else="">
                     <td></td>
                   </t>
-                <td><t t-esc="'{0:,.2f}'.format(int(line['balance']))"/></td>
+                <td><t t-esc="line['balance']"/></td>
                 <td><t t-esc="line['ref_no']"/></td>
               </tr>
             </t>
