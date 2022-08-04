@@ -57,7 +57,7 @@ class DailyFinancialWizard(models.TransientModel):
         if entry['account_type'] == 'vip':
           cash_out_vip += entry['amount']
 
-      if entry['entry_type'] == 'interest':
+      if entry['entry_type'] == 'interest' and entry['amount'] > 0:
         total_interest_transaction += 1
         total_interest_amount += entry['amount']
         if entry['account_type'] == 'normal':
