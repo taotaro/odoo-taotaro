@@ -13,9 +13,7 @@ class DailyFinancialWizard(models.TransientModel):
 
   def generate_report(self):
     # get records
-    accounts = self.env['saving_account'].search_read([
-      ('open_date','<=',self.date_from),
-    ])
+    accounts = self.env['saving_account'].search_read([('open_date','<=',self.date_from)])
 
     # initialize
     account_total_principal_amount, account_total_interest_amount = 0, 0
@@ -39,7 +37,7 @@ class DailyFinancialWizard(models.TransientModel):
     cash_in_transaction, cash_out_transaction, total_interest_transaction, credit_interest_transaction = 0, 0, 0, 0
     total_interest_vip, total_interest_normal, credit_interest_vip, credit_interest_normal = 0, 0, 0, 0
 
-    entries = self.env['saving_account.entry'].search_read([('create_date','>=',self.date_from)])
+    entries = self.env['saving_account.entry'].search_read([('create_date','=',self.date_from)])
     
     for entry in entries:
       if entry['entry_type'] == 'deposit':
