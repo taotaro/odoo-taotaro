@@ -44,6 +44,7 @@ class TermIndividualAccountWizard(models.TransientModel):
     # declare first entry with initial balance
     initial_entry = {
       "entry_type": "initial",
+      "amount": 0,
       "balance": 0,
       "create_date": self.date_from,
       "ref_no": "BF"
@@ -52,7 +53,7 @@ class TermIndividualAccountWizard(models.TransientModel):
 
     # arrange entries according to type
     for entry in entries:
-      print(f"entry {entry['entry_type']} | {entry['ref_no']}")
+      entry['amount'] = truncate_number(entry['amount'], 2)
       if entry['entry_type'] == 'withdraw':
         initial_balance -= entry['amount']
       elif entry['entry_type'] == 'deposit':
