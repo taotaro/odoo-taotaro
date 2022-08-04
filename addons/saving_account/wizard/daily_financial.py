@@ -3,6 +3,11 @@ from markupsafe import escape
 import base64
 import datetime
 
+def truncate_number(f_number, n_decimals):
+  strFormNum = "{0:." + str(n_decimals+5) + "f}"
+  trunc_num = float(strFormNum.format(f_number)[:-5])
+  return(trunc_num)
+
 class DailyFinancialWizard(models.TransientModel):
   _name="daily_financial.report.wizard"
   _description="Print Daily Financial Summary Report Wizard"
@@ -18,20 +23,6 @@ class DailyFinancialWizard(models.TransientModel):
     # initialize
     account_total_principal_amount, account_total_interest_amount = 0, 0
     vip_total_principal_amount, normal_total_principal_amount = 0, 0
-
-    # calculate total accounts
-    for account in accounts:
-      if account['total_principal']:
-        account_total_principal_amount += account['total_principal']
-        if account['account_type'] == 'normal':
-          normal_total_principal_amount += account_total_principal_amount
-        if account['account_type'] == 'vip':
-          vip_total_principal_amount += account_total_principal_amount
-
-      if account['total_interest']:
-        account_total_interest_amount += account['total_interest']
-
-    # initialize
     cash_in_amount, cash_out_amount, total_interest_amount, credit_interest_amount = 0, 0, 0, 0
     cash_in_vip, cash_in_normal, cash_out_vip, cash_out_normal = 0, 0, 0, 0
     cash_in_transaction, cash_out_transaction, total_interest_transaction, credit_interest_transaction = 0, 0, 0, 0
@@ -73,6 +64,11 @@ class DailyFinancialWizard(models.TransientModel):
         if entry['account_type'] == 'vip':
           credit_interest_vip += entry['amount']
 
+    # calculate total accounts
+    normal_total_principal_amount = cash_out_normal - cash_in_normal
+    vip_total_principal_amount = cash_out_vip - cash_in_vip
+    account_total_principal_amount = normal_total_principal_amount + vip_total_principal_amount
+
     report = {
      "account_transaction": len(accounts),
      "account_amount": account_total_principal_amount,
@@ -87,13 +83,13 @@ class DailyFinancialWizard(models.TransientModel):
      "cash_out_vip": cash_out_vip,
      "cash_out_normal": cash_out_normal,
      "total_interest_transaction": total_interest_transaction,
-     "total_interest_amount": total_interest_amount, 
-     "total_interest_vip": total_interest_vip,
-     "total_interest_normal": total_interest_normal,
+     "total_interest_amount": truncate_number(total_interest_amount, 2), 
+     "total_interest_vip": truncate_number(total_interest_vip, 2),
+     "total_interest_normal": truncate_number(total_interest_normal, 2),
      "accrued_interest_transaction": len(accounts),
-     "accrued_interest_amount": account_total_interest_amount,
-     "accrued_interest_vip": vip_total_principal_amount,
-     "accrued_interest_normal": normal_total_principal_amount,
+     "accrued_interest_amount": truncate_number(total_interest_amount, 2),
+     "accrued_interest_vip": truncate_number(total_interest_vip, 2),
+     "accrued_interest_normal": truncate_number(total_interest_normal, 2),
      "interest_credit_transaction": credit_interest_transaction,
      "interest_credit_amount": credit_interest_amount,
      "interest_credit_vip": credit_interest_vip,

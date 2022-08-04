@@ -44,9 +44,9 @@
             <tr>
               <td>Total Interest</td>
               <td><t t-esc="report['total_interest_transaction']"/></td>
-              <td><t t-esc="'{0:,.2f}'.format(int(report['total_interest_vip']))"/></td>
-              <td><t t-esc="'{0:,.2f}'.format(int(report['total_interest_normal']))"/></td>
-              <td><t t-esc="'{0:,.2f}'.format(int(report['total_interest_amount']))"/></td>
+              <td><t t-esc="report['total_interest_vip']"/></td>
+              <td><t t-esc="report['total_interest_normal']"/></td>
+              <td><t t-esc="report['total_interest_amount']"/></td>
             </tr>
             <tr>
               <td>Accrued Interest</td>
