@@ -12,7 +12,7 @@ class DailyFinancialWizard(models.TransientModel):
   email_to=fields.Char(string="Email To")
 
   def generate_report(self):
-    # get records
+    # get record of total accounts
     accounts = self.env['saving_account'].search_read([('open_date','<=',self.date_from)])
 
     # initialize
@@ -37,7 +37,8 @@ class DailyFinancialWizard(models.TransientModel):
     cash_in_transaction, cash_out_transaction, total_interest_transaction, credit_interest_transaction = 0, 0, 0, 0
     total_interest_vip, total_interest_normal, credit_interest_vip, credit_interest_normal = 0, 0, 0, 0
 
-    entries = self.env['saving_account.entry'].search_read([('create_date','=',self.date_from)])
+    #get record of entries
+    entries = self.env['saving_account.entry'].search_read([('entry_date','=',self.date_from)])
     
     for entry in entries:
       if entry['entry_type'] == 'deposit':
