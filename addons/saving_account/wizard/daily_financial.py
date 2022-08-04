@@ -72,8 +72,8 @@ class DailyFinancialWizard(models.TransientModel):
     report = {
      "account_transaction": len(accounts),
      "account_amount": account_total_principal_amount,
-     "account_vip": vip_total_principal_amount,
-     "account_normal": normal_total_principal_amount,
+     "account_vip": abs(vip_total_principal_amount),
+     "account_normal": abs(normal_total_principal_amount),
      "cash_in_transaction": cash_in_transaction,
      "cash_in_amount": cash_in_amount,
      "cash_in_vip": cash_in_vip,
