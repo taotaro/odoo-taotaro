@@ -26,7 +26,7 @@ class DailyFinancialWizard(models.TransientModel):
     cash_in_vip, cash_in_normal, cash_out_vip, cash_out_normal = 0, 0, 0, 0
     cash_in_transaction, cash_out_transaction, total_interest_transaction, credit_interest_transaction = 0, 0, 0, 0
     total_interest_vip, total_interest_normal, credit_interest_vip, credit_interest_normal = 0, 0, 0, 0
-    accrued_interest_transaction, accrued_interest_amount = 0, 0
+    accrued_interest_transaction, accrued_interest_amount, accrued_interest_vip, accrued_interest_normal = 0, 0, 0, 0
 
     #get record of entries
     entries = self.env['saving_account.entry'].search_read([('entry_date','=',self.date_from)])
@@ -73,6 +73,10 @@ class DailyFinancialWizard(models.TransientModel):
       if account['total_interest'] > 0:
         accrued_interest_transaction += 1
         accrued_interest_amount += account['total_interest']
+        if account['account_type'] == 'normal':
+          accrued_interest_normal += account['total_interest']
+        if account['account_type'] == 'vip':
+          accrued_interest_vip += account['total_interest']
 
     # calculate total accounts
     normal_total_principal_amount = cash_out_normal - cash_in_normal
@@ -98,8 +102,8 @@ class DailyFinancialWizard(models.TransientModel):
      "total_interest_normal": truncate_number(total_interest_normal, 2),
      "accrued_interest_transaction": len(accounts),
      "accrued_interest_amount": truncate_number(accrued_interest_amount, 2),
-     "accrued_interest_vip": truncate_number(total_interest_vip, 2),
-     "accrued_interest_normal": truncate_number(total_interest_normal, 2),
+     "accrued_interest_vip": truncate_number(accrued_interest_vip, 2),
+     "accrued_interest_normal": truncate_number(accrued_interest_normal, 2),
      "interest_credit_transaction": credit_interest_transaction,
      "interest_credit_amount": credit_interest_amount,
      "interest_credit_vip": credit_interest_vip,
