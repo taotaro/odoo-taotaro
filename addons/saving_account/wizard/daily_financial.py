@@ -12,15 +12,17 @@ class DailyFinancialWizard(models.TransientModel):
   email_to=fields.Char(string="Email To")
 
   def generate_report(self):
+    # get records
     accounts = self.env['saving_account'].search_read([
-      ('open_date','>=',self.date_from), 
-      ('open_date','<=',self.date_to)
+      ('open_date','>=',self.date_from),
+      ('close_date','=',False) 
     ])
 
+    # initialize
     account_total_principal_amount, account_total_interest_amount = 0, 0
     vip_total_principal_amount, normal_total_principal_amount = 0, 0
 
-
+    # calculate total accounts
     for account in accounts:
       if account['total_principal']:
         account_total_principal_amount += account['total_principal']
@@ -32,6 +34,7 @@ class DailyFinancialWizard(models.TransientModel):
       if account['total_interest']:
         account_total_interest_amount += account['total_interest']
 
+    # initialize
     cash_in_amount, cash_out_amount, total_interest_amount, credit_interest_amount = 0, 0, 0, 0
     cash_in_vip, cash_in_normal, cash_out_vip, cash_out_normal = 0, 0, 0, 0
     cash_in_transaction, cash_out_transaction, total_interest_transaction, credit_interest_transaction = 0, 0, 0, 0
