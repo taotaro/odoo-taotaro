@@ -21,17 +21,18 @@ class DailyFinancialWizard(models.TransientModel):
     accounts = self.env['saving_account'].search_read([('open_date','<=',self.date_from)])
 
     # initialize
-    account_total_principal_amount, account_total_interest_amount = 0, 0
-    vip_total_principal_amount, normal_total_principal_amount = 0, 0
+    account_total_principal_amount, vip_total_principal_amount, normal_total_principal_amount = 0, 0, 0
     cash_in_amount, cash_out_amount, total_interest_amount, credit_interest_amount = 0, 0, 0, 0
     cash_in_vip, cash_in_normal, cash_out_vip, cash_out_normal = 0, 0, 0, 0
     cash_in_transaction, cash_out_transaction, total_interest_transaction, credit_interest_transaction = 0, 0, 0, 0
     total_interest_vip, total_interest_normal, credit_interest_vip, credit_interest_normal = 0, 0, 0, 0
+    accrued_interest_transaction, accrued_interest_amount = 0, 0
 
     #get record of entries
     entries = self.env['saving_account.entry'].search_read([('entry_date','=',self.date_from)])
     
     for entry in entries:
+      # cash in fields
       if entry['entry_type'] == 'deposit':
         cash_in_transaction += 1
         cash_in_amount += entry['amount']
@@ -40,6 +41,7 @@ class DailyFinancialWizard(models.TransientModel):
         if entry['account_type'] == 'vip':
           cash_in_vip += entry['amount']
 
+      # cash out fields
       if entry['entry_type'] == 'withdraw':
         cash_out_transaction += 1
         cash_out_amount += entry['amount']
@@ -48,6 +50,7 @@ class DailyFinancialWizard(models.TransientModel):
         if entry['account_type'] == 'vip':
           cash_out_vip += entry['amount']
 
+      # total interest fields
       if entry['entry_type'] == 'interest' and entry['amount'] > 0:
         total_interest_transaction += 1
         total_interest_amount += entry['amount']
@@ -55,7 +58,8 @@ class DailyFinancialWizard(models.TransientModel):
           total_interest_normal += entry['amount']
         if entry['account_type'] == 'vip':
           total_interest_vip += entry['amount']
-
+      
+      # credit interest fields
       if entry['entry_type'] == 'credit_interest':
         credit_interest_transaction += 1
         credit_interest_amount += entry['amount']
@@ -63,6 +67,12 @@ class DailyFinancialWizard(models.TransientModel):
           credit_interest_normal += entry['amount']
         if entry['account_type'] == 'vip':
           credit_interest_vip += entry['amount']
+    
+    # accrued interest fields
+    for account in accounts:
+      if account['total_interest'] > 0:
+        accrued_interest_transaction += 1
+        accrued_interest_amount += account['total_interest']
 
     # calculate total accounts
     normal_total_principal_amount = cash_out_normal - cash_in_normal
@@ -87,7 +97,7 @@ class DailyFinancialWizard(models.TransientModel):
      "total_interest_vip": truncate_number(total_interest_vip, 2),
      "total_interest_normal": truncate_number(total_interest_normal, 2),
      "accrued_interest_transaction": len(accounts),
-     "accrued_interest_amount": truncate_number(total_interest_amount, 2),
+     "accrued_interest_amount": truncate_number(accrued_interest_amount, 2),
      "accrued_interest_vip": truncate_number(total_interest_vip, 2),
      "accrued_interest_normal": truncate_number(total_interest_normal, 2),
      "interest_credit_transaction": credit_interest_transaction,
