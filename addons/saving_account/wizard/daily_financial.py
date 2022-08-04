@@ -14,8 +14,7 @@ class DailyFinancialWizard(models.TransientModel):
   def generate_report(self):
     # get records
     accounts = self.env['saving_account'].search_read([
-      ('open_date','>=',self.date_from),
-      ('close_date','=',False) 
+      ('open_date','<=',self.date_from),
     ])
 
     # initialize
