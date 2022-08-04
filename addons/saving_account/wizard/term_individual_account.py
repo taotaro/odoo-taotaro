@@ -2,9 +2,18 @@ from math import trunc
 from odoo import models, fields, api, _
 import base64
 
+# def truncate_number(f_number, n_decimals):
+#   strFormNum = "{0:." + str(n_decimals+5) + "f}"
+#   print("strForNum", strFormNum)
+#   trunc_num = float(strFormNum.format(f_number)[:-5])
+#   print("trunc_num", trunc_num)
+#   return(trunc_num)
+
 def truncate_number(f_number, n_decimals):
-  strFormNum = "{0:." + str(n_decimals+5) + "f}"
-  trunc_num = float(strFormNum.format(f_number)[:-5])
+  strFormNum = "{0:,." + str(n_decimals) + "f}"
+  print("strForNum", strFormNum)
+  trunc_num = strFormNum.format(int(f_number))
+  print("trunc_num", trunc_num)
   return(trunc_num)
 
 class TermIndividualAccountWizard(models.TransientModel):
