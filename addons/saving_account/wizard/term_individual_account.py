@@ -1,13 +1,6 @@
-from math import trunc
 from odoo import models, fields, api, _
 import base64
-
-def truncate_number(f_number, n_decimals):
-  strFormNum = "{0:." + str(n_decimals+5) + "f}"
-  print("strForNum", strFormNum)
-  trunc_num = float(strFormNum.format(f_number)[:-5])
-  print("trunc_num", trunc_num)
-  return(trunc_num)
+from ..helper import truncate_number
 
 class TermIndividualAccountWizard(models.TransientModel):
   _name="term_individual_account.report.wizard"

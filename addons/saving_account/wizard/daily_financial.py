@@ -1,12 +1,7 @@
 from odoo import models, fields, api, _
-from markupsafe import escape
 import base64
 import datetime
-
-def truncate_number(f_number, n_decimals):
-  strFormNum = "{0:." + str(n_decimals+5) + "f}"
-  trunc_num = float(strFormNum.format(f_number)[:-5])
-  return(trunc_num)
+from ..helper import truncate_number
 
 class DailyFinancialWizard(models.TransientModel):
   _name="daily_financial.report.wizard"

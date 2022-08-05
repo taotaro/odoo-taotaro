@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from email.policy import default
-from tkinter import ALL
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from ..helper import truncate_number
+
 
 PRINCIPAL_SELECTION = [
     ('deposit', 'Deposit'),
@@ -16,11 +16,6 @@ ALL_SELECTION = [
     ('interest', 'Interest'),
     ('credit_interest', 'Credit Interest')
   ]
-
-def truncate_number(f_number, n_decimals):
-  strFormNum = "{0:." + str(n_decimals+5) + "f}"
-  trunc_num = float(strFormNum.format(f_number)[:-5])
-  return(trunc_num)
 
 class SavingAccountEntry(models.Model):
   _name = "saving_account.entry"
