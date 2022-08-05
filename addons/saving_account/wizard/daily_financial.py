@@ -18,7 +18,10 @@ class DailyFinancialWizard(models.TransientModel):
 
   def generate_report(self):
     # get record of total accounts
-    accounts = self.env['saving_account'].search_read([('open_date','<=',self.date_from)])
+    accounts = self.env['saving_account'].search_read([
+      ('open_date','<=',self.date_from), 
+      ('close_date','=',False)
+    ])
 
     # initialize
     account_total_principal_amount, vip_total_principal_amount, normal_total_principal_amount = 0, 0, 0
@@ -100,7 +103,7 @@ class DailyFinancialWizard(models.TransientModel):
      "total_interest_amount": truncate_number(total_interest_amount, 4), 
      "total_interest_vip": truncate_number(total_interest_vip, 4),
      "total_interest_normal": truncate_number(total_interest_normal, 4),
-     "accrued_interest_transaction": len(accounts),
+     "accrued_interest_transaction": accrued_interest_transaction,
      "accrued_interest_amount": truncate_number(accrued_interest_amount, 2),
      "accrued_interest_vip": truncate_number(accrued_interest_vip, 2),
      "accrued_interest_normal": truncate_number(accrued_interest_normal, 2),
