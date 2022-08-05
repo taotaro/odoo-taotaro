@@ -10,7 +10,10 @@ class TermAccountWizard(models.TransientModel):
   email_to=fields.Char(string="Email To")
 
   def generate_report(self):
-    accounts = self.env['saving_account'].search_read([('open_date','>=',self.date_from)])
+    accounts = self.env['saving_account'].search_read([
+      ('open_date','<=',self.date_from),
+      ('close_date','=',False)
+    ])
     data = { 
       'form': self.read()[0],
       'accounts': accounts
