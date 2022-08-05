@@ -58,7 +58,7 @@ class DailyFinancialWizard(models.TransientModel):
           total_interest_vip += entry['amount']
       
       # credit interest fields
-      if entry['entry_type'] == 'credit_interest':
+      if entry['entry_type'] == 'credit_interest' and entry['ledger'] == 'principal':
         credit_interest_transaction += 1
         credit_interest_amount += entry['amount']
         if entry['account_type'] == 'normal':
