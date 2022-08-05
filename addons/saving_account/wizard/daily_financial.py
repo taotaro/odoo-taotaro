@@ -66,7 +66,7 @@ class DailyFinancialWizard(models.TransientModel):
         elif entry['account_type'] == 'vip':
           credit_interest_vip += entry['amount']
         else:
-          print("account skip", account)
+          print("account skip", entry)
     
     # accrued interest fields
     for account in accounts:
