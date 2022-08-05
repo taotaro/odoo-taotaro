@@ -95,17 +95,17 @@ class DailyFinancialWizard(models.TransientModel):
      "cash_out_vip": truncate_number(cash_out_vip, 2),
      "cash_out_normal": truncate_number(cash_out_normal, 2),
      "total_interest_transaction": total_interest_transaction,
-     "total_interest_amount": truncate_number(total_interest_amount, 4), 
-     "total_interest_vip": truncate_number(total_interest_vip, 4),
-     "total_interest_normal": truncate_number(total_interest_normal, 4),
+     "total_interest_amount": truncate_number(total_interest_amount, 2), 
+     "total_interest_vip": truncate_number(total_interest_vip, 2),
+     "total_interest_normal": truncate_number(total_interest_normal, 2),
      "accrued_interest_transaction": accrued_interest_transaction,
      "accrued_interest_amount": truncate_number(accrued_interest_amount, 2),
      "accrued_interest_vip": truncate_number(accrued_interest_vip, 2),
      "accrued_interest_normal": truncate_number(accrued_interest_normal, 2),
      "interest_credit_transaction": credit_interest_transaction,
-     "interest_credit_amount": credit_interest_amount,
-     "interest_credit_vip": credit_interest_vip,
-     "interest_credit_normal": credit_interest_normal
+     "interest_credit_amount": truncate_number(credit_interest_amount, 2),
+     "interest_credit_vip": truncate_number(credit_interest_vip, 2),
+     "interest_credit_normal": truncate_number(credit_interest_normal, 2)
     }
 
     print("self read", self.read())
