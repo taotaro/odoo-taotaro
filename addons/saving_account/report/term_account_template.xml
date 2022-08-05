@@ -27,8 +27,8 @@
                 <td><t t-esc="line['account_no']"/></td>
                 <td><t t-esc="line['account_type']"/></td>
                 <td><t t-esc="line['name']"/></td>
-                <td><t t-esc="'{0:,.2f}'.format(int(line['total_principal']))"/></td>
-                <td><t t-esc="'{0:,.2f}'.format(int(line['total_interest']))"/></td>
+                <td><t t-esc="line['total_principal']"/></td>
+                <td><t t-esc="line['last_interest']"/></td>
               </tr>
             </t>
           </table>

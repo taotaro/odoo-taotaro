@@ -1,3 +1,4 @@
+from ..helper import truncate_number
 from odoo import models, fields, api, _
 import base64
 
@@ -5,7 +6,7 @@ class TermAccountWizard(models.TransientModel):
   _name="term_account.report.wizard"
   _description="Print Term Account Report Wizard"
 
-  date_from=fields.Date(string="Date From")
+  date_from=fields.Date(string="Date as of")
   date_to=fields.Date(string="Date To")
   email_to=fields.Char(string="Email To")
 
@@ -14,6 +15,18 @@ class TermAccountWizard(models.TransientModel):
       ('open_date','<=',self.date_from),
       ('close_date','=',False)
     ])
+
+    # truncate properly
+    for account in accounts:
+      account['total_principal'] = truncate_number(account['total_principal'], 2)
+      account['total_interest'] = truncate_number(account['total_interest'], 2)
+      # entry = self.env['saving_account.entry'].search([
+      #   ('account_id','=',rec[1])
+      #   ('ledger','=','principal'),
+      #   ('entry_type','=','credit_interest')
+      # ])
+      # account['last_interest'] = truncate_number(entry['amount'][-1], 2)
+    
     data = { 
       'form': self.read()[0],
       'accounts': accounts
