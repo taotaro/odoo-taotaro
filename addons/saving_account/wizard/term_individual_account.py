@@ -56,6 +56,8 @@ class TermIndividualAccountWizard(models.TransientModel):
         initial_balance += entry['amount']
       else:
         continue
+      # truncate for display
+      entry['amount'] = truncate_number(entry['amount'], 2)
       entry['balance'] = truncate_number(initial_balance, 2)
 
     data = { 
