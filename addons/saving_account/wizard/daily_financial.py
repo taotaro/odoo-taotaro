@@ -49,7 +49,7 @@ class DailyFinancialWizard(models.TransientModel):
           cash_out_vip += entry['amount']
 
       # total interest fields
-      if entry['entry_type'] == 'interest' and entry['amount'] > 0:
+      if entry['entry_type'] == 'interest':
         total_interest_transaction += 1
         total_interest_amount += entry['amount']
         if entry['account_type'] == 'normal':
@@ -68,7 +68,7 @@ class DailyFinancialWizard(models.TransientModel):
     
     # accrued interest fields
     for account in accounts:
-      if account['total_interest'] > 0:
+      if account['total_interest']:
         accrued_interest_transaction += 1
         accrued_interest_amount += account['total_interest']
         if account['account_type'] == 'normal':
