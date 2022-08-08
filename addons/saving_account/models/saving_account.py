@@ -98,7 +98,6 @@ class SavingAccount(models.Model):
         ('entry_type','=','credit_interest'), 
         ('ledger','=','principal')
       ])
-      print("interest credit", interest_credit[-1])
       if interest_credit:
         rec.last_interest_credit = interest_credit[-1].amount
       else:
