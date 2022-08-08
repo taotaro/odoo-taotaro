@@ -24,7 +24,7 @@ class SavingAccount(models.Model):
   interest_list_ids = fields.One2many('saving_account.entry', 'entry_no', string="Interest Lists", domain=[('entry_type','=','interest')])
   total_principal = fields.Float(compute='_compute_total_principal', compute_sudo=True, string='Principal')
   total_interest = fields.Float(compute='_compute_total_interest', compute_sudo=True, string='Interest', digits=(16, 4))
-  # last_interest_credit = fields.Float(compute='_compute_last_interest_credit', compute_sudo=True, string='Last Interest Credit')
+  last_interest_credit = fields.Float(compute='_compute_last_interest_credit', compute_sudo=True, string='Last Interest Credit')
   custom1 = fields.Text(string='Custom 1')
   custom2 = fields.Text(string='Custom 2')
 
@@ -89,6 +89,20 @@ class SavingAccount(models.Model):
         rec.account_no_signed = rec.account_no + 'N'
       if rec.account_type == 'vip':
         rec.account_no_signed = rec.account_no + 'V'
+
+  @api.depends('last_interest_credit')
+  def _compute_last_interest_credit(self):
+    for rec in self:
+      interest_credit = rec.env['saving_account.entry'].search([
+        ('account_id','=',rec.id), 
+        ('entry_type','=','credit_interest'), 
+        ('ledger','=','principal')
+      ])
+      print("interest credit", interest_credit[-1])
+      if interest_credit:
+        rec.last_interest_credit = interest_credit[-1].amount
+      else:
+        rec.last_interest_credit = 0.0
 
   # button to open the deposit/withdraw form of an account
   def open_deposit_withdraw_form(self):
@@ -156,7 +170,7 @@ class SavingAccount(models.Model):
           'default_account_id': account.id,
           'default_ledger': 'principal',
           'default_entry_type_principal': 'withdraw',
-          'default_amount': account.total_principal
+          'default_amount': account.total_principal + account.total_interest
         }
       }
     
