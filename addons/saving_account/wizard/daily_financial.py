@@ -110,8 +110,6 @@ class DailyFinancialWizard(models.TransientModel):
      "interest_credit_normal": truncate_number(credit_interest_normal, 2)
     }
 
-    print("self read", self.read())
-
     if self.read():
       data = { 
         'form': self.read()[0],
@@ -170,6 +168,7 @@ class DailyFinancialWizard(models.TransientModel):
   @api.model
   def _cron_send_email(self):
     try:
+      print("cron email_to", self.email_to)
       self.action_send_email()
     except:
       return {

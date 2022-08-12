@@ -59,4 +59,10 @@
               action="action_report_term_individual_account"
               sequence="3"/>
 
+    <menuitem id="email_setup_menu"
+              name="Email Setup"
+              parent="report_menu_master"
+              action="action_email_setup"
+              sequence="4"/>
+
 </odoo>

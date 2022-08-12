@@ -36,6 +36,7 @@
       'views/saving_account_view.xml',
       'views/entry_view.xml',
       'views/rate_view.xml',
+      'views/email_setup_view.xml',
       'views/menu.xml',
       'report/term_account_template.xml',
       'report/term_individual_account_template.xml',
