@@ -9,7 +9,13 @@ class DailyFinancialWizard(models.TransientModel):
 
   date_from=fields.Date(string="Date From", default=fields.Date.today())
   date_to=fields.Date(string="Date To", default=fields.Date.today())
-  email_to=fields.Char(string="Email To")
+  email_to=fields.Char(string="Email To", _compute="_get_default_email")
+
+  @api.onchange('email_to')
+  def _get_default_email(self):
+    email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
+    for rec in self:
+      rec.email_to = email_to_send
 
   def generate_report(self):
     # get record of total accounts
@@ -147,7 +153,9 @@ class DailyFinancialWizard(models.TransientModel):
             'mimetype': 'application/x-pdf'
         })
 
-    email_values = {'email_to': self.email_to}
+    email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
+    email_values = {'email_to': email_to_send}
+    print("Sending email to", email_to_send)
 
     report_template_id = self.env.ref('saving_account.mail_template_daily_financial_statement')
     report_template_id.attachment_ids = [(6, 0, [attachment.id])]
@@ -168,7 +176,6 @@ class DailyFinancialWizard(models.TransientModel):
   @api.model
   def _cron_send_email(self):
     try:
-      print("cron email_to", self.email_to)
       self.action_send_email()
     except:
       return {
