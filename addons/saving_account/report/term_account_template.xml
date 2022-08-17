@@ -30,7 +30,7 @@
                 <td><t t-esc="line['name']"/></td>
                 <td><t t-esc="'{:,.2f}'.format(float(line['total_principal']))"/></td>
                 <td><t t-esc="'{:,.2f}'.format(float(line['last_interest_credit']))"/></td>
-                <td></td>
+                <td><t t-esc="'{:,.2f}'.format(float(line['total_interest_credit']))"/></td>
               </tr>
             </t>
           </table>

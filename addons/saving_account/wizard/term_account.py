@@ -1,5 +1,7 @@
 from ..helper import truncate_number
 from odoo import models, fields, api, _
+from datetime import datetime, date
+from dateutil.relativedelta import relativedelta 
 import base64
 
 class TermAccountWizard(models.TransientModel):
@@ -17,6 +19,16 @@ class TermAccountWizard(models.TransientModel):
       rec.email_to = email_to_send
 
   def generate_report(self):
+    #find last 1 april
+    found_april = False
+    april = datetime(year=date.today().year, month=4, day=1).date()
+    while found_april == False:
+      if april > self.date_from:
+        april = april - relativedelta(years = 1)
+      else:
+        found_april = True
+
+    # find accounts in specified term
     accounts = self.env['saving_account'].search_read([
       ('open_date','<=',self.date_from),
       ('close_date','=',False)
@@ -26,7 +38,19 @@ class TermAccountWizard(models.TransientModel):
     for account in accounts:
       account['total_principal'] = truncate_number(account['total_principal'], 2)
       account['last_interest_credit'] = truncate_number(account['last_interest_credit'], 2)
-      # entries = self.env['saving_account.entry'].search_read(['account_id','=', account.id], ['entry_date'])
+
+      # find total interest credit
+      entries = self.env['saving_account.entry'].search_read([
+        ('account_id','=', account.id),
+        ('entry_type','=','credit_interest'), 
+        ('ledger','=','principal'),
+        ('entry_date','>=',april), 
+        ('entry_date','<=',self.date_from)
+      ])
+      total_interest_credit = 0
+      for entry in entries:
+        total_interest_credit += entry['amount']
+      account['total_interest_credit'] = truncate_number(total_interest_credit, 2)
     
     data = { 
       'form': self.read()[0],
