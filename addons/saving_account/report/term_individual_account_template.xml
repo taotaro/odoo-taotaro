@@ -53,6 +53,12 @@
                 <td><t t-esc="line['ref_no']"/></td>
               </tr>
             </t>
+            <tr>
+              <td>Total</td>
+              <td><t t-esc="total_withdraw"/></td>
+              <td><t t-esc="total_deposit"/></td>
+              <td><t t-esc="total_interest"/></td>
+            </tr>
           </table>
         </div>
         </div>

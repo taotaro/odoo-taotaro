@@ -46,20 +46,26 @@ class TermIndividualAccountWizard(models.TransientModel):
     initial_entry = {
       "entry_type": "initial",
       "amount": 0,
-      "balance": 0,
+      "balance": initial_balance,
       "create_date": self.date_from,
       "ref_no": "BF"
       }
     entries.insert(0, initial_entry)
 
+    #initialize total values
+    total_withdraw, total_deposit, total_interest = 0, 0, 0
+
     # arrange entries according to type
     for entry in entries:
       if entry['entry_type'] == 'withdraw':
         initial_balance -= entry['amount']
+        total_withdraw += entry['amount']
       elif entry['entry_type'] == 'deposit':
         initial_balance += entry['amount']
+        total_deposit += entry['amount']
       elif entry['entry_type'] == 'credit_interest':
         initial_balance += entry['amount']
+        total_interest += entry['amount']
       else:
         continue
       # truncate for display
@@ -69,7 +75,10 @@ class TermIndividualAccountWizard(models.TransientModel):
     data = { 
       'form': self.read()[0],
       'entry': entries,
-      'account_no': account[0]['account_no_signed']
+      'account_no': account[0]['account_no_signed'],
+      'total_withdraw': truncate_number(total_withdraw, 2),
+      'total_deposit': truncate_number(total_deposit, 2),
+      'total_interest': truncate_number(total_interest, 2)
     }
     
     return data
