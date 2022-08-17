@@ -20,6 +20,7 @@
               <th>Name</th>
               <th>Balance</th>
               <th>Last Int. Crdt.</th>
+              <th>Year-to-Day Int. Crdt.</th>
         
             </tr>
             <t t-foreach="accounts" t-as="line">
@@ -29,6 +30,7 @@
                 <td><t t-esc="line['name']"/></td>
                 <td><t t-esc="'{:,.2f}'.format(float(line['total_principal']))"/></td>
                 <td><t t-esc="'{:,.2f}'.format(float(line['last_interest_credit']))"/></td>
+                <td></td>
               </tr>
             </t>
           </table>

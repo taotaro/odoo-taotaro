@@ -63,6 +63,20 @@
               <td><t t-esc="'{:,.2f}'.format(float(report['interest_credit_normal']))"/></td>
               <td><t t-esc="'{:,.2f}'.format(float(report['interest_credit_amount']))"/></td>
             </tr>
+            <tr>
+              <td>Total Interest Credit</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Total Amount</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
           </table>
         </div>
       </t>

@@ -42,7 +42,7 @@
             <field name="state">code</field>
             <field name="code">model._cron_send_email()</field>
             <field name="interval_number">1</field>
-            <field name="interval_type">week</field>
+            <field name="interval_type">weeks</field>
             <field name="numbercall">-1</field>
   </record>
 
@@ -53,7 +53,7 @@
             <field name="state">code</field>
             <field name="code">model._cron_send_email()</field>
             <field name="interval_number">1</field>
-            <field name="interval_type">week</field>
+            <field name="interval_type">weeks</field>
             <field name="numbercall">-1</field>
   </record>
 
