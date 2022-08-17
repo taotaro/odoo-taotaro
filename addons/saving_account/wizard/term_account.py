@@ -8,6 +8,11 @@ class TermAccountWizard(models.TransientModel):
   _name="term_account.report.wizard"
   _description="Print Term Account Report Wizard"
 
+  account_type = fields.Selection([
+    ('all', 'All'),
+    ('normal', 'Normal'), 
+    ('vip', 'VIP')
+  ], default='all', string="Account Type")
   date_from=fields.Date(string="Date as of", default=fields.Date.today())
   date_to=fields.Date(string="Date To")
   email_to=fields.Char(string="Email To", _compute="_get_default_email")
@@ -28,18 +33,25 @@ class TermAccountWizard(models.TransientModel):
       else:
         found_april = True
     
-    # find accounts in specified term
-    accounts = self.env['saving_account'].search_read([
-      ('open_date','<=',self.date_from),
-      ('close_date','=',False)
-    ])
+    # find accounts in specified term and types
+    accounts = {}
+    if self.account_type == all:
+      accounts = self.env['saving_account'].search_read([
+        ('open_date','<=',self.date_from),
+        ('close_date','=',False)
+      ])
+    else:
+      accounts = self.env['saving_account'].search_read([
+        ('account_type','=',self.account_type),
+        ('open_date','<=',self.date_from),
+        ('close_date','=',False)
+      ])
 
     # truncate properly
     for account in accounts:
       account['total_principal'] = truncate_number(account['total_principal'], 2)
       account['last_interest_credit'] = truncate_number(account['last_interest_credit'], 2)
 
-      print("what account", account)
       # find total interest credit
       entries = self.env['saving_account.entry'].search_read([
         ('account_id','=', account['id']),
