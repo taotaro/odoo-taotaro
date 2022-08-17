@@ -35,7 +35,7 @@ class TermAccountWizard(models.TransientModel):
     
     # find accounts in specified term and types
     accounts = {}
-    if self.account_type == all:
+    if self.account_type == 'all':
       accounts = self.env['saving_account'].search_read([
         ('open_date','<=',self.date_from),
         ('close_date','=',False)
