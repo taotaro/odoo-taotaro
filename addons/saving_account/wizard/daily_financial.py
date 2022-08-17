@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 import base64
-import datetime
+from datetime import datetime, date
+from dateutil.relativedelta import relativedelta 
 from ..helper import truncate_number
 
 class DailyFinancialWizard(models.TransientModel):
@@ -89,6 +90,48 @@ class DailyFinancialWizard(models.TransientModel):
     vip_total_principal_amount = cash_out_vip - cash_in_vip
     account_total_principal_amount = normal_total_principal_amount + vip_total_principal_amount
 
+    # initialize total interest credit and total amount
+    total_interest_credit_amount, total_interest_credit_vip, total_interest_credit_normal = 0, 0, 0
+    total_amount_amount, total_amount_vip, total_amount_normal = 0, 0, 0
+
+    #find last 1 april
+    found_april = False
+    april = datetime(year=date.today().year, month=4, day=1).date()
+    while found_april == False:
+      if april > self.date_from:
+        april = april - relativedelta(years = 1)
+      else:
+        found_april = True
+
+    # find interest credit entries and calculate total
+    interest_entries = self.env['saving_account.entry'].search_read([
+      ('entry_type','=','credit_interest'),
+      ('ledger','=','principal'),
+      ('entry_date','>=',april), 
+      ('entry_date','<=',self.date_from)
+    ])
+
+    for entry in interest_entries:
+      if entry['account_type'] == 'normal':
+        total_interest_credit_normal += entry['amount']
+      if entry['account_type'] == 'vip':
+        total_interest_credit_vip += entry['amount']
+
+    # find principal entries and calculate total
+    total_entries = self.env['saving_account.entry'].search_read([
+      ('ledger','=','principal'),
+      ('entry_date','<=',self.date_from)
+    ])
+
+    for entry in total_entries:
+      if entry['account_type'] == 'normal':
+        total_amount_normal += entry['amount']
+      if entry['account_type'] == 'vip':
+        total_amount_vip += entry['amount']
+
+    total_interest_credit_amount = total_interest_credit_vip + total_interest_credit_normal
+    total_amount_amount = total_amount_vip + total_amount_normal
+
     report = {
      "account_transaction": len(accounts),
      "account_amount": truncate_number(abs(account_total_principal_amount), 2),
@@ -113,7 +156,13 @@ class DailyFinancialWizard(models.TransientModel):
      "interest_credit_transaction": credit_interest_transaction,
      "interest_credit_amount": truncate_number(credit_interest_amount, 2),
      "interest_credit_vip": truncate_number(credit_interest_vip, 2),
-     "interest_credit_normal": truncate_number(credit_interest_normal, 2)
+     "interest_credit_normal": truncate_number(credit_interest_normal, 2),
+     "total_interest_credit_amount": truncate_number(total_interest_credit_amount, 2),
+     "total_interest_credit_vip": truncate_number(total_interest_credit_vip, 2),
+     "total_interest_credit_normal": truncate_number(total_interest_credit_normal, 2),
+     "total_amount_amount": truncate_number(total_amount_amount, 2),
+     "total_amount_vip": truncate_number(total_amount_vip, 2),
+     "total_amount_normal": truncate_number(total_amount_normal, 2)
     }
 
     if self.read():
