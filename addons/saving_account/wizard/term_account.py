@@ -26,7 +26,7 @@ class TermAccountWizard(models.TransientModel):
     for account in accounts:
       account['total_principal'] = truncate_number(account['total_principal'], 2)
       account['last_interest_credit'] = truncate_number(account['last_interest_credit'], 2)
-      entries = self.env['saving_account.entry'].search_read(['account_id','=', account.id], ['entry_date'])
+      # entries = self.env['saving_account.entry'].search_read(['account_id','=', account.id], ['entry_date'])
     
     data = { 
       'form': self.read()[0],
