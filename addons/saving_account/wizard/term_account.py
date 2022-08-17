@@ -110,6 +110,8 @@ class TermAccountWizard(models.TransientModel):
   @api.model
   def _cron_send_email(self):
     try:
+      self.account_type = 'all'
+      self.date_from = fields.Datetime.today()
       self.action_send_email()
     except:
       return {
