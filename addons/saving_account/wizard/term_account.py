@@ -6,7 +6,7 @@ class TermAccountWizard(models.TransientModel):
   _name="term_account.report.wizard"
   _description="Print Term Account Report Wizard"
 
-  date_from=fields.Date(string="Date as of")
+  date_from=fields.Date(string="Date as of", default=fields.Date.today())
   date_to=fields.Date(string="Date To")
   email_to=fields.Char(string="Email To", _compute="_get_default_email")
 
