@@ -22,7 +22,6 @@
             </tr>
             <tr>
               <td>Total Active Account</td>
-              '{:,}'.format(l.price_subtotal)
               <td><t t-esc="'{:,.2f}'.format(float(report['account_transaction']))"/></td>
               <td><t t-esc="'{:,.2f}'.format(float(report['account_vip']))"/></td>
               <td><t t-esc="'{:,.2f}'.format(float(report['account_normal']))"/></td>
