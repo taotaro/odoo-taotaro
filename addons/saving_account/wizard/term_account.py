@@ -27,7 +27,7 @@ class TermAccountWizard(models.TransientModel):
         april = april - relativedelta(years = 1)
       else:
         found_april = True
-
+    
     # find accounts in specified term
     accounts = self.env['saving_account'].search_read([
       ('open_date','<=',self.date_from),
@@ -39,9 +39,10 @@ class TermAccountWizard(models.TransientModel):
       account['total_principal'] = truncate_number(account['total_principal'], 2)
       account['last_interest_credit'] = truncate_number(account['last_interest_credit'], 2)
 
+      print("what account", account)
       # find total interest credit
       entries = self.env['saving_account.entry'].search_read([
-        ('account_id','=', account.id),
+        ('account_id','=', account['id']),
         ('entry_type','=','credit_interest'), 
         ('ledger','=','principal'),
         ('entry_date','>=',april), 
