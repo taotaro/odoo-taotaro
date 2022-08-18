@@ -25,16 +25,16 @@ class TermAccountWizard(models.TransientModel):
 
   def generate_report(self):
     from_date = ""
-    account_type = ""
+    type_account = ""
     if not self.date_from:
       from_date = fields.Date.today()
     else:
       from_date = self.date_from
 
     if not self.account_type:
-      account_type = 'all'
+      type_account = 'all'
     else:
-      account_type = self.account_type
+      type_account = self.account_type
 
     #find last 1 april
     found_april = False
@@ -46,10 +46,10 @@ class TermAccountWizard(models.TransientModel):
         found_april = True
     
     # find accounts in specified term and types
-    accounts = {}
-    if self.account_type != 'all':
+    accounts = []
+    if type_account != 'all':
       accounts = self.env['saving_account'].search_read([
-        ('account_type','=',account_type),
+        ('account_type','=',type_account),
         ('open_date','<=',from_date),
         ('close_date','=',False)
       ])
@@ -77,10 +77,17 @@ class TermAccountWizard(models.TransientModel):
         total_interest_credit += entry['amount']
       account['total_interest_credit'] = truncate_number(total_interest_credit, 2)
     
-    data = { 
-      'form': self.read()[0],
-      'accounts': accounts
-    }
+    if self.read():
+      data = { 
+        'form': self.read()[0],
+        'accounts': accounts
+      }
+    else:
+      data = {
+        'form': { 'date_from': from_date },
+        'accounts': accounts
+      }
+
     return data
 
   def action_print_report(self):
@@ -89,7 +96,7 @@ class TermAccountWizard(models.TransientModel):
 
   def action_send_email(self):
     data = self.generate_report()
-    report_id = self.env.ref('saving_account.action_term_account_report')._render(self.ids, data=data)
+    report_id = self.env.ref('saving_account.action_term_account_report')._render(self.ids, data)
     report_b64 = base64.b64encode(report_id[0])
     now = fields.Datetime.today().strftime('%Y%m%d')
     report_name = now + '_term_account.pdf'

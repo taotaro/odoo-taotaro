@@ -178,10 +178,7 @@ class DailyFinancialWizard(models.TransientModel):
       }
     else:
       data = {
-        'form': {
-            'date_from': fields.Date.today(), 
-            'date_to': fields.Date.today(), 
-          },
+        'form': { 'date_from': from_date },
         'report': report
       }
     
