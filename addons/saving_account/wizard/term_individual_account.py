@@ -20,6 +20,7 @@ class TermIndividualAccountWizard(models.TransientModel):
   def generate_report(self):
     from_date = ""
     to_date = ""
+    account_id = []
 
     if not self.date_from:
       from_date = fields.Date.today()
@@ -31,6 +32,11 @@ class TermIndividualAccountWizard(models.TransientModel):
     else:
       to_date = self.date_to
 
+    if not self.account_id:
+      account_id = self.env['saving_account'].search([], limit=1)
+    else:
+      account_id = self.account_id
+
     # find entries within the specified date
     entries = self.env['saving_account.entry'].search_read([
       ('account_id','=', self.account_id.id), 
@@ -39,11 +45,11 @@ class TermIndividualAccountWizard(models.TransientModel):
       ('entry_date','<=',to_date)
     ])
     # find account information
-    account = self.env['saving_account'].search_read([('id','=',self.account_id.id)])
+    account = self.env['saving_account'].search_read([('id','=',account_id.id)])
     
     # find entries from before the specified time to calculate initial balance
     initial_entries = self.env['saving_account.entry'].search_read([
-      ('account_id','=', self.account_id.id),
+      ('account_id','=', account_id.id),
       ('ledger','=','principal'), 
       ('entry_date','<',from_date)
     ])
@@ -85,20 +91,33 @@ class TermIndividualAccountWizard(models.TransientModel):
       entry['amount'] = truncate_number(entry['amount'], 2)
       entry['balance'] = truncate_number(initial_balance, 2)
 
-    data = { 
-      'form': self.read()[0],
-      'entry': entries,
-      'account_no': account[0]['account_no_signed'],
-      'total_withdraw': truncate_number(total_withdraw, 2),
-      'total_deposit': truncate_number(total_deposit, 2),
-      'total_interest': truncate_number(total_interest, 2)
-    }
-    
+    if self.read():
+      data = { 
+        'form': self.read()[0],
+        'entry': entries,
+        'account_no': account[0]['account_no_signed'],
+        'total_withdraw': truncate_number(total_withdraw, 2),
+        'total_deposit': truncate_number(total_deposit, 2),
+        'total_interest': truncate_number(total_interest, 2)
+      }
+    else:
+      data = {
+        'form': {
+          'date_from': from_date,
+          'date_to': to_date,
+          'account_id': [account_id.id, account_id.name]
+        },
+        'entry': entries,
+        'account_no': account[0]['account_no_signed'],
+        'total_withdraw': truncate_number(total_withdraw, 2),
+        'total_deposit': truncate_number(total_deposit, 2),
+        'total_interest': truncate_number(total_interest, 2)
+      }
+
     return data
 
   def action_print_report(self):
     data = self.generate_report()
-
     return self.env.ref('saving_account.action_term_individual_account_report').report_action(self, data=data)
 
   def action_send_email(self):
@@ -152,6 +171,7 @@ class TermIndividualAccountWizard(models.TransientModel):
   @api.model
   def _cron_send_email(self):
     try:
+      print("Sending scheduled email...")
       self.action_send_email()
     except:
       return {
