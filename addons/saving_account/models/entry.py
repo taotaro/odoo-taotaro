@@ -165,9 +165,9 @@ class SavingAccountEntry(models.Model):
   def _compute_amount_signed(self):
     for rec in self:
       if rec.entry_type == 'withdraw':
-        rec.amount_signed = - rec.amount
+        rec.amount_signed = - truncate_number(rec.amount, 2)
       elif rec.entry_type == 'credit_interest' and rec.ledger == 'interest':
-        rec.amount_signed = - rec.amount
+        rec.amount_signed = - truncate_number(rec.amount, 4)
       else:
         rec.amount_signed = truncate_number(rec.amount, 4)
       
