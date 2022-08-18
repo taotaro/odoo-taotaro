@@ -34,21 +34,21 @@ class TermAccountWizard(models.TransientModel):
     found_april = False
     april = datetime(year=date.today().year, month=4, day=1).date()
     while found_april == False:
-      if april > self.date_from:
+      if april > from_date:
         april = april - relativedelta(years = 1)
       else:
         found_april = True
     
     # find accounts in specified term and types
     accounts = {}
-    if self.account_type == 'all':
+    if self.account_type != 'all':
       accounts = self.env['saving_account'].search_read([
+        ('account_type','=',self.account_type),
         ('open_date','<=',from_date),
         ('close_date','=',False)
       ])
     else:
       accounts = self.env['saving_account'].search_read([
-        ('account_type','=',self.account_type),
         ('open_date','<=',from_date),
         ('close_date','=',False)
       ])
@@ -83,7 +83,7 @@ class TermAccountWizard(models.TransientModel):
 
   def action_send_email(self):
     data = self.generate_report()
-    report_id = self.env.ref('saving_account.action_term_account_report')._render(self.ids, data)
+    report_id = self.env.ref('saving_account.action_term_account_report')._render(self.ids, data=data)
     report_b64 = base64.b64encode(report_id[0])
     now = fields.Datetime.today().strftime('%Y%m%d')
     report_name = now + '_term_account.pdf'
@@ -102,22 +102,34 @@ class TermAccountWizard(models.TransientModel):
 
     report_template_id = self.env.ref('saving_account.mail_template_term_account')
     report_template_id.attachment_ids = [(6, 0, [attachment.id])]
-    report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
-    return {
-      'type': 'ir.actions.client',
-      'tag': 'display_notification',
-      'params': {
-        'title': _('Success'),
-        'message': 'Email sent!',
-        'sticky': True,
+    try:
+      # send confirmation message when successful
+      report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
+      return {
+        'type': 'ir.actions.client',
+        'tag': 'display_notification',
+        'params': {
+          'title': _('Success'),
+          'message': 'Email sent!',
+          'sticky': True,
+        }
       }
-    }
+    except:
+      # send warning message when fail
+      return {
+          'type': 'ir.actions.client',
+          'tag': 'display_notification',
+          'params': {
+            'title': _('Warning'),
+            'message': 'Email failed to send',
+            'sticky': True,
+          }
+      }
 
   @api.model
   def _cron_send_email(self):
     try:
-      self.account_type = 'all'
-      self.date_from = fields.Datetime.today()
+      print("Sending scheduled email...")
       self.action_send_email()
     except:
       return {
