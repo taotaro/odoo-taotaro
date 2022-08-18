@@ -19,9 +19,15 @@ class DailyFinancialWizard(models.TransientModel):
       rec.email_to = email_to_send
 
   def generate_report(self):
+    from_date = ""
+    if not self.date_from:
+      from_date = fields.Date.today()
+    else:
+      from_date = self.date_from
+    
     # get record of total accounts
     accounts = self.env['saving_account'].search_read([
-      ('open_date','<=',self.date_from), 
+      ('open_date','<=',from_date), 
       ('close_date','=',False)
     ])
 
@@ -98,7 +104,7 @@ class DailyFinancialWizard(models.TransientModel):
     found_april = False
     april = datetime(year=date.today().year, month=4, day=1).date()
     while found_april == False:
-      if april > self.date_from:
+      if april > from_date:
         april = april - relativedelta(years = 1)
       else:
         found_april = True
@@ -108,7 +114,7 @@ class DailyFinancialWizard(models.TransientModel):
       ('entry_type','=','credit_interest'),
       ('ledger','=','principal'),
       ('entry_date','>=',april), 
-      ('entry_date','<=',self.date_from)
+      ('entry_date','<=',from_date)
     ])
 
     for entry in interest_entries:
@@ -120,7 +126,7 @@ class DailyFinancialWizard(models.TransientModel):
     # find principal entries and calculate total
     total_entries = self.env['saving_account.entry'].search_read([
       ('ledger','=','principal'),
-      ('entry_date','<=',self.date_from)
+      ('entry_date','<=',from_date)
     ])
 
     for entry in total_entries:
@@ -240,6 +246,7 @@ class DailyFinancialWizard(models.TransientModel):
   def _cron_send_email(self):
     # send scheduled email
     try:
+      print("Sending scheduled email...")
       self.action_send_email()
     except:
       return {
@@ -248,7 +255,7 @@ class DailyFinancialWizard(models.TransientModel):
           'params': {
             'title': _('Warning'),
             'message': 'Email failed to send',
-            'sticky': True,
+            'sticky': False,
           }
       }
     

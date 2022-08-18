@@ -24,6 +24,12 @@ class TermAccountWizard(models.TransientModel):
       rec.email_to = email_to_send
 
   def generate_report(self):
+    from_date = ""
+    if not self.date_from:
+      from_date = fields.Date.today()
+    else:
+      from_date = self.date_from
+
     #find last 1 april
     found_april = False
     april = datetime(year=date.today().year, month=4, day=1).date()
@@ -37,13 +43,13 @@ class TermAccountWizard(models.TransientModel):
     accounts = {}
     if self.account_type == 'all':
       accounts = self.env['saving_account'].search_read([
-        ('open_date','<=',self.date_from),
+        ('open_date','<=',from_date),
         ('close_date','=',False)
       ])
     else:
       accounts = self.env['saving_account'].search_read([
         ('account_type','=',self.account_type),
-        ('open_date','<=',self.date_from),
+        ('open_date','<=',from_date),
         ('close_date','=',False)
       ])
 
@@ -58,7 +64,7 @@ class TermAccountWizard(models.TransientModel):
         ('entry_type','=','credit_interest'), 
         ('ledger','=','principal'),
         ('entry_date','>=',april), 
-        ('entry_date','<=',self.date_from)
+        ('entry_date','<=',from_date)
       ])
       total_interest_credit = 0
       for entry in entries:

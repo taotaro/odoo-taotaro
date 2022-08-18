@@ -18,12 +18,25 @@ class TermIndividualAccountWizard(models.TransientModel):
       rec.email_to = email_to_send
 
   def generate_report(self):
+    from_date = ""
+    to_date = ""
+
+    if not self.date_from:
+      from_date = fields.Date.today()
+    else:
+      from_date = self.date_from
+
+    if not self.date_to:
+      to_date = fields.Date.today()
+    else:
+      to_date = self.date_to
+
     # find entries within the specified date
     entries = self.env['saving_account.entry'].search_read([
       ('account_id','=', self.account_id.id), 
       ('ledger','=','principal'), 
-      ('entry_date','>=',self.date_from), 
-      ('entry_date','<=',self.date_to)
+      ('entry_date','>=',from_date), 
+      ('entry_date','<=',to_date)
     ])
     # find account information
     account = self.env['saving_account'].search_read([('id','=',self.account_id.id)])
@@ -32,7 +45,7 @@ class TermIndividualAccountWizard(models.TransientModel):
     initial_entries = self.env['saving_account.entry'].search_read([
       ('account_id','=', self.account_id.id),
       ('ledger','=','principal'), 
-      ('entry_date','<',self.date_from)
+      ('entry_date','<',from_date)
     ])
     initial_balance = 0
     for entry in initial_entries:
@@ -47,7 +60,7 @@ class TermIndividualAccountWizard(models.TransientModel):
       "entry_type": "initial",
       "amount": 0,
       "balance": initial_balance,
-      "create_date": self.date_from,
+      "create_date": from_date,
       "ref_no": "BF"
       }
     entries.insert(0, initial_entry)
