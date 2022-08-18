@@ -169,7 +169,7 @@ class SavingAccountEntry(models.Model):
       elif rec.entry_type == 'credit_interest' and rec.ledger == 'interest':
         rec.amount_signed = - rec.amount
       else:
-        rec.amount_signed = rec.amount
+        rec.amount_signed = truncate_number(rec.amount, 4)
       
       if rec.ledger == 'principal':
         rec.amount_signed = truncate_number(rec.amount_signed, 2)     
