@@ -79,7 +79,7 @@ class SavingAccount(models.Model):
 
       # update the amount
       rec.total_interest = rec.total_interest + current_total
-      rec.total_interest = truncate_number(rec.total_interest, 2)
+      rec.total_interest = truncate_number(rec.total_interest, 4)
   
   # add a sign to unique account id according to account type
   @api.depends('account_no')

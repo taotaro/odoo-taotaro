@@ -25,10 +25,16 @@ class TermAccountWizard(models.TransientModel):
 
   def generate_report(self):
     from_date = ""
+    account_type = ""
     if not self.date_from:
       from_date = fields.Date.today()
     else:
       from_date = self.date_from
+
+    if not self.account_type:
+      account_type = 'all'
+    else:
+      account_type = self.account_type
 
     #find last 1 april
     found_april = False
@@ -43,7 +49,7 @@ class TermAccountWizard(models.TransientModel):
     accounts = {}
     if self.account_type != 'all':
       accounts = self.env['saving_account'].search_read([
-        ('account_type','=',self.account_type),
+        ('account_type','=',account_type),
         ('open_date','<=',from_date),
         ('close_date','=',False)
       ])
