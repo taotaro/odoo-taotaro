@@ -52,9 +52,24 @@
             <tr>
               <td>Cash Out</td>
               <td><t t-esc="report['cash_out_transaction']"/></td>
-              <td><t t-esc="'({:,.2f})'.format(float(report['cash_out_vip']))"/></td>
-              <td><t t-esc="'({:,.2f})'.format(float(report['cash_out_normal']))"/></td>
-              <td><t t-esc="'({:,.2f})'.format(float(report['cash_out_amount']))"/></td>
+              <t t-if="float(report['cash_out_vip']) >= 0">
+                <td><t t-esc="'{:,.2f}'.format(float(report['cash_out_vip']))"/></td>
+              </t>
+              <t t-else="">
+                <td><t t-esc="'({:,.2f})'.format(float(report['cash_out_vip']))"/></td>
+              </t>
+              <t t-if="float(report['cash_out_normal']) >= 0">
+                <td><t t-esc="'{:,.2f}'.format(float(report['cash_out_normal']))"/></td>
+              </t>
+              <t t-else="">
+                <td><t t-esc="'({:,.2f})'.format(float(report['cash_out_normal']))"/></td>
+              </t>
+              <t t-if="float(report['cash_out_amount']) >= 0">
+                <td><t t-esc="'{:,.2f}'.format(float(report['cash_out_amount']))"/></td>
+              </t>
+              <t t-else="">
+                <td><t t-esc="'({:,.2f})'.format(float(report['cash_out_amount']))"/></td>
+              </t>
             </tr>
             <tr>
               <td>Total Interest</td>
