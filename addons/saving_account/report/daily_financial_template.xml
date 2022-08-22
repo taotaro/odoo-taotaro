@@ -44,7 +44,7 @@
             </tr>
             <tr>
               <td>Cash In</td>
-              <td><t t-esc="report['cash_in_transaction'"/></td>
+              <td><t t-esc="report['cash_in_transaction']"/></td>
               <td><t t-esc="'{:,.2f}'.format(float(report['cash_in_vip']))"/></td>
               <td><t t-esc="'{:,.2f}'.format(float(report['cash_in_normal']))"/></td>
               <td><t t-esc="'{:,.2f}'.format(float(report['cash_in_amount']))"/></td>
