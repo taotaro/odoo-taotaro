@@ -20,7 +20,7 @@ def find_last_1april(from_date):
       found_april = True
   return april
 
-#function to find what year is the most recent 1 oct
+#function to find what year is the most recent 1 
 def find_last_1oct(from_date):
   found_oct = False
   oct = datetime(year=date.today().year, month=10, day=1).date()

@@ -111,9 +111,15 @@ class DailyFinancialWizard(models.TransientModel):
 
     for entry in interest_entries:
       if entry['account_type'] == 'normal':
-        total_interest_credit_normal += entry['amount']
+        if entry['entry_type'] != 'withdraw':
+          total_interest_credit_normal += entry['amount']
+        else:
+          total_interest_credit_normal -= entry['amount']
       if entry['account_type'] == 'vip':
-        total_interest_credit_vip += entry['amount']
+        if entry['entry_type'] != 'withdraw':
+          total_interest_credit_vip += entry['amount']
+        else:
+          total_interest_credit_vip -= entry['amount']
 
     # find principal entries and calculate total
     total_entries = self.env['saving_account.entry'].search_read([
@@ -123,9 +129,15 @@ class DailyFinancialWizard(models.TransientModel):
 
     for entry in total_entries:
       if entry['account_type'] == 'normal':
-        total_amount_normal += entry['amount']
+        if entry['entry_type'] != 'withdraw':
+          total_amount_normal += entry['amount']
+        else:
+          total_amount_normal -= entry['amount']
       if entry['account_type'] == 'vip':
-        total_amount_vip += entry['amount']
+        if entry['entry_type'] != 'withdraw':
+          total_amount_vip += entry['amount']
+        else:
+          total_amount_vip -= entry['amount']
 
     total_interest_credit_amount = total_interest_credit_vip + total_interest_credit_normal
     total_amount_amount = total_amount_vip + total_amount_normal
