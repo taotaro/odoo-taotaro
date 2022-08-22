@@ -1,8 +1,6 @@
 from odoo import models, fields, api, _
 import base64
-from datetime import datetime, date
-from dateutil.relativedelta import relativedelta 
-from ..helper import truncate_number
+from ..helper import truncate_number, find_last_1april
 
 class DailyFinancialWizard(models.TransientModel):
   _name="daily_financial.report.wizard"
@@ -101,13 +99,7 @@ class DailyFinancialWizard(models.TransientModel):
     total_amount_amount, total_amount_vip, total_amount_normal = 0, 0, 0
 
     #find last 1 april
-    found_april = False
-    april = datetime(year=date.today().year, month=4, day=1).date()
-    while found_april == False:
-      if april > from_date:
-        april = april - relativedelta(years = 1)
-      else:
-        found_april = True
+    april = find_last_1april(from_date)
 
     # find interest credit entries and calculate total
     interest_entries = self.env['saving_account.entry'].search_read([
