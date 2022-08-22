@@ -53,11 +53,11 @@ class DailyFinancialWizard(models.TransientModel):
       # cash out fields
       if entry['entry_type'] == 'withdraw':
         cash_out_transaction += 1
-        cash_out_amount += entry['amount']
+        cash_out_amount -= entry['amount']
         if entry['account_type'] == 'normal':
-          cash_out_normal += entry['amount']
+          cash_out_normal -= entry['amount']
         if entry['account_type'] == 'vip':
-          cash_out_vip += entry['amount']
+          cash_out_vip -= entry['amount']
 
       # total interest fields
       if entry['entry_type'] == 'interest':
