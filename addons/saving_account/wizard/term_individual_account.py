@@ -193,8 +193,10 @@ class TermIndividualAccountWizard(models.TransientModel):
       }
 
   def action_send_all_emails(self):
+    from_date = self._compute_date_from()
     account_ids = self.env['saving_account'].search([])
     for account_id in account_ids:
+      self.date_from = from_date
       self.account_id = account_id
       data = self.generate_report()
       try:
