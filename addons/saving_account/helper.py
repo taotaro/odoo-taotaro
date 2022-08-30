@@ -30,3 +30,17 @@ def find_last_1oct(from_date):
     else:
       found_oct = True
   return oct
+
+#function to get latest starting date of term
+def find_date_from():
+  from_date = date.today()
+  print("from_date", from_date)
+  april = find_last_1april(from_date)
+  oct = find_last_1oct(from_date)
+  sept = datetime(year=april.year, month=9, day=30).date()
+  mar = datetime(year=oct.year+1, month=3, day=31).date()
+  if april <= from_date and from_date <= sept:
+    date_from = april
+  elif oct <= from_date and from_date <= mar:
+    date_from = oct
+  return date_from

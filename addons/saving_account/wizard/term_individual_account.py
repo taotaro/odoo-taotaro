@@ -1,7 +1,7 @@
 from datetime import datetime
 from odoo import models, fields, api, _
 import base64
-from ..helper import find_last_1april, find_last_1oct, truncate_number
+from ..helper import find_last_1april, find_last_1oct, truncate_number, find_date_from
 
 class TermIndividualAccountWizard(models.TransientModel):
   _name="term_individual_account.report.wizard"
@@ -33,13 +33,9 @@ class TermIndividualAccountWizard(models.TransientModel):
     for rec in self:
       rec.email_to = email_to_send
 
-  def generate_report(self):
-    from_date = ""
-    to_date = ""
-    account_id = []
-
-    if not self.date_from:
-      from_date = self._compute_date_from()
+  def generate_report(self, account_id=False):
+    if not self.date_from or self.date_from == False:
+      from_date = find_date_from()
     else:
       from_date = self.date_from
 
@@ -48,15 +44,10 @@ class TermIndividualAccountWizard(models.TransientModel):
     else:
       to_date = self.date_to
 
-    if not self.account_id:
-      account_id = self.env['saving_account'].search([])
-      print("automatic", account_id)
-    else:
-      account_id = self.account_id
-      print("manual", account_id)
+    if not account_id:
+      account_id = self.account_id 
 
     for acc in account_id:
-      print("account here", acc)
       # find entries within the specified date
       entries = self.env['saving_account.entry'].search_read([
         ('account_id','=', acc.id), 
@@ -149,7 +140,7 @@ class TermIndividualAccountWizard(models.TransientModel):
       print(e)
     report_b64 = base64.b64encode(report_id[0])
     now = fields.Datetime.today().strftime('%Y%m%d')
-    report_name = now + '_term_individual_account.pdf'
+    report_name = now + '_' + str(self.account_id.account_no) + '_term_individual_account.pdf'
     
     # create email attachment
     attachment = self.env['ir.attachment'].create({
@@ -193,19 +184,18 @@ class TermIndividualAccountWizard(models.TransientModel):
       }
 
   def action_send_all_emails(self):
-    from_date = self._compute_date_from()
     account_ids = self.env['saving_account'].search([])
     for account_id in account_ids:
-      self.date_from = from_date
+      print("account id here", account_id)
       self.account_id = account_id
-      data = self.generate_report()
+      data = self.generate_report(account_id=account_id)
       try:
         report_id = self.env.ref('saving_account.action_term_individual_account_report')._render(self.ids, data=data)
       except Exception as e:
         print(e)
       report_b64 = base64.b64encode(report_id[0])
       now = fields.Datetime.today().strftime('%Y%m%d')
-      report_name = now + '_term_individual_account.pdf'
+      report_name = now + '_' + str(account_id.account_no) + '_term_individual_account.pdf'
       
       # create email attachment
       attachment = self.env['ir.attachment'].create({
@@ -215,6 +205,7 @@ class TermIndividualAccountWizard(models.TransientModel):
               'store_fname': report_name,
               'mimetype': 'application/x-pdf'
           })
+      print("attachment made", report_name)
 
       # find email to send to
       email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
