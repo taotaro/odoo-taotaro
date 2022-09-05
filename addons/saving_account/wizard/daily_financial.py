@@ -38,7 +38,7 @@ class DailyFinancialWizard(models.TransientModel):
     accrued_interest_transaction, accrued_interest_amount, accrued_interest_vip, accrued_interest_normal = 0, 0, 0, 0
 
     #get record of entries
-    entries = self.env['saving_account.entry'].search_read([('entry_date','=',self.date_from)])
+    entries = self.env['saving_account.entry'].search_read([('entry_date','=',from_date)])
     
     for entry in entries:
       # cash in fields
