@@ -13,19 +13,19 @@ class TermIndividualAccountWizard(models.TransientModel):
   date_to=fields.Date(string="Date To", default=fields.Date.today())
   email_to=fields.Char(string="Email To", _compute="_get_default_email")
 
-  #find the financial term start date
-  @api.onchange('date_from')
-  def _compute_date_from(self):
-    for rec in self:
-      from_date = fields.Date.today()
-      april = find_last_1april(from_date)
-      oct = find_last_1oct(from_date)
-      sept = datetime(year=april.year, month=9, day=30).date()
-      mar = datetime(year=oct.year+1, month=3, day=31).date()
-      if april <= from_date and from_date <= sept:
-        rec.date_from = april
-      elif oct <= from_date and from_date <= mar:
-        rec.date_from = oct
+  # #find the financial term start date
+  # @api.onchange('date_from')
+  # def _compute_date_from(self):
+  #   for rec in self:
+  #     from_date = fields.Date.today()
+  #     april = find_last_1april(from_date)
+  #     oct = find_last_1oct(from_date)
+  #     sept = datetime(year=april.year, month=9, day=30).date()
+  #     mar = datetime(year=oct.year+1, month=3, day=31).date()
+  #     if april <= from_date and from_date <= sept:
+  #       rec.date_from = april
+  #     elif oct <= from_date and from_date <= mar:
+  #       rec.date_from = oct
       
 
   @api.onchange('email_to')
