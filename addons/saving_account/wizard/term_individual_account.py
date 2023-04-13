@@ -9,7 +9,7 @@ class TermIndividualAccountWizard(models.TransientModel):
 
   account_id = fields.Many2one('saving_account', string='Account')
   # date_from=fields.Date(string="Date From", _compute='_compute_date_from', compute_sudo=True)
-  date_from=fields.Date(string="Date From", compute_sudo=True)
+  date_from=fields.Date(string="Date From")
   date_to=fields.Date(string="Date To", default=fields.Date.today())
   email_to=fields.Char(string="Email To", _compute="_get_default_email")
 
