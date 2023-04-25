@@ -44,6 +44,7 @@ package.json
 /man/
 /share/
 /src/
+odoo-venv/
 
 # avoid adding it after generation from tsconfig command
 tsconfig.json

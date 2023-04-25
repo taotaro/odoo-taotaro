@@ -15,6 +15,7 @@
         <footer>
           <button name="action_print_report" type="object" string="Print" class="btn-primary"/>
           <button name="action_send_email" type="object" string="Send Email" class="btn-primary"/>
+          <button name="action_send_all_emails" type="object" string="Send All Accounts" class="btn-primary"/>
           <button string="Cancel" class="btn-secondary" special="cancel"/>
         </footer>
       </form>

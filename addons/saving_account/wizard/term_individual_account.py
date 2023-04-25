@@ -229,6 +229,7 @@ class TermIndividualAccountWizard(models.TransientModel):
     try:
       print("Sending scheduled email...")
       self.action_send_all_emails()
+      return
     except:
       return {
           'type': 'ir.actions.client',
