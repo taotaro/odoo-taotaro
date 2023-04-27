@@ -235,10 +235,7 @@ class TermIndividualAccountWizard(models.TransientModel):
             print("Sent email to", email_to_send)
         except:
           print("Email failed to send")
-<<<<<<< HEAD
-=======
-    return
->>>>>>> a7b23322092 (testing runtime of email send)
+
         
 
   @api.model
