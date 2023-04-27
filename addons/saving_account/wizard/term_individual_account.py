@@ -275,19 +275,6 @@ class TermIndividualAccountWizard(models.TransientModel):
         except:
           print("Email failed to send")
 
-
-      # # send email template
-      # report_template_id = self.env.ref('saving_account.mail_template_term_individual_account')
-      # report_template_id.attachment_ids = [(6, 0, [attachment.id])]
-      # try:
-      #   # send confirmation message when successful
-      #   ### CHATGPT used 'with_context' method to add data dictionary to email template's context (easier to access data)
-      #   # report_template_id.with_context(data=report).send_mail(self.id, email_values=email_values, force_send=True)
-      #   report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
-      #   print("Sent email to", email_to_send)
-      # except:
-      #   # send warning message when fail
-      #   print("Email failed to send")
         
 
   @api.model
