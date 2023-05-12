@@ -235,7 +235,7 @@ class TermIndividualAccountWizard(models.TransientModel):
         except:
           print("Email failed to send")
     return 
-        
+
 
   @api.model
   def _cron_send_email(self):
