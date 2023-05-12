@@ -9,25 +9,25 @@ class TermIndividualAccountWizard(models.TransientModel):
 
   account_id = fields.Many2one('saving_account', string='Account')
   # date_from=fields.Date(string="Date From", _compute='_compute_date_from', compute_sudo=True)
-  date_from=fields.Date(string="Date From", compute_sudo=True)
+  date_from=fields.Date(string="Date From")
   date_to=fields.Date(string="Date To", default=fields.Date.today())
   email_to=fields.Char(string="Email To", _compute="_get_default_email")
 
   # find the financial term start date (if date is after april and before sept, then start date is april, else october)
-  @api.onchange('date_from')
-  def _compute_date_from(self):
-    for rec in self:
-      from_date = fields.Date.today()
-      april = find_last_1april(from_date)
-      oct = find_last_1oct(from_date)
-      sept = datetime(year=april.year, month=9, day=30).date()
-      mar = datetime(year=oct.year+1, month=3, day=31).date()
+  # @api.onchange('date_from')
+  # def _compute_date_from(self):
+  #   for rec in self:
+  #     from_date = fields.Date.today()
+  #     april = find_last_1april(from_date)
+  #     oct = find_last_1oct(from_date)
+  #     sept = datetime(year=april.year, month=9, day=30).date()
+  #     mar = datetime(year=oct.year+1, month=3, day=31).date()
       
-      ### CHATGPT- rephrased to remove if else statement
-      if april <= from_date and from_date <= sept:
-        rec.date_from = april
-      elif oct <= from_date and from_date <= mar:
-        rec.date_from = oct
+  #     ### CHATGPT- rephrased to remove if else statement
+  #     if april <= from_date and from_date <= sept:
+  #       rec.date_from = april
+  #     elif oct <= from_date and from_date <= mar:
+  #       rec.date_from = oct
       
   # set email address
   @api.onchange('email_to')
