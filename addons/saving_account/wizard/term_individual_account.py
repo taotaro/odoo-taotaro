@@ -196,46 +196,6 @@ class TermIndividualAccountWizard(models.TransientModel):
 
   # get all accounts under self, generate report for each account, create email template and send out emails
   def action_send_all_emails(self):
-    # account_ids = self.env['saving_account'].search([])
-    # ### CHATGPT use 'mapped' method to generate reports for all accounts at once (make it faster)
-    # # reports = account_ids.mapped(lambda account_id: self.generate_report(account_id=account_id))
-    # # for account_id, report in zip(account_ids, reports):
-    # #     try:
-    # #         report_pdf = self.env.ref('saving_account.action_term_individual_account_report').render_qweb_pdf(self.ids, data=report)[0]
-    # #     except Exception as e:
-    # #         print(e)
-    # for account_id in account_ids:
-    #   print("account id here", account_id)
-    #   self.account_id = account_id
-    #   data = self.generate_report(account_id=account_id)
-    #   try:
-    #     ### CHATGPT used 'render_qweb_pdf' method to generate PDF report directly (could make it faster)
-    #     report_id = self.env.ref('saving_account.action_term_individual_account_report')._render(self.ids, data=data)
-    #   except Exception as e:
-    #     print(e)
-
-        
-    #   report_b64 = base64.b64encode(report_id[0])
-    #   now = fields.Datetime.today().strftime('%Y%m%d')
-    #   report_name = now + '_' + str(account_id.account_no) + '_term_individual_account.pdf'
-      
-    #   # create email attachment
-    #   attachment = self.env['ir.attachment'].create({
-    #           'name': report_name,
-    #           'type': 'binary',
-    #           'datas': report_b64,
-    #           'store_fname': report_name,
-    #           'mimetype': 'application/x-pdf'
-    #       })
-    #   print("attachment made", report_name)
-
-    #   # find email to send to
-    #   ### CHATGPT use sudo method to search for email setup (ensure user has necessary access rights to read email setup record)
-    #   # email_setup = self.env['email_setup'].sudo().search([], limit=1, order='create_date desc')
-    #   # email_to_send = email_setup.email_to
-    #   email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
-    #   email_values = {'email_to': email_to_send}
-    #   print("Sending email to", email_to_send)
     account_ids = self.env['saving_account'].search([])
     reports = account_ids.mapped(lambda account_id: self.generate_report(account_id=account_id))
 
@@ -274,7 +234,6 @@ class TermIndividualAccountWizard(models.TransientModel):
             print("Sent email to", email_to_send)
         except:
           print("Email failed to send")
-
         
 
   @api.model
