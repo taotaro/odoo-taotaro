@@ -198,15 +198,19 @@ class TermIndividualAccountWizard(models.TransientModel):
   # get all accounts under self, generate report for each account, create email template and send out emails
   def action_send_all_emails(self):
     account_ids = self.env['saving_account'].search([])
-    reports = account_ids.mapped(lambda account_id: self.generate_report(account_id=account_id))
+    report_id_ref = self.env.ref('saving_account.action_term_individual_account_report')
+    email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
 
-    for account_id, report in zip(account_ids, reports):
+    for account_id in account_ids:
+        print("account id here", account_id)
+        data = self.generate_report(account_id=account_id)
         try:
-            report_pdf = self.env.ref('saving_account.action_term_individual_account_report').render_qweb_pdf(self.ids, data=report)[0]
+            report_id = report_id_ref._render(self.ids, data=data)
         except Exception as e:
             print(e)
+            continue
 
-        report_b64 = base64.b64encode(report_pdf)
+        report_b64 = base64.b64encode(report_id[0])
         now = fields.Datetime.today().strftime('%Y%m%d')
         report_name = now + '_' + str(account_id.account_no) + '_term_individual_account.pdf'
 
@@ -219,23 +223,17 @@ class TermIndividualAccountWizard(models.TransientModel):
             'mimetype': 'application/x-pdf'
         })
         print("attachment made", report_name)
-
-        # find email to send to
-        email_setup = self.env['email_setup'].sudo().search([], limit=1, order='create_date desc')
-        email_to_send = email_setup.email_to
         email_values = {'email_to': email_to_send}
         print("Sending email to", email_to_send)
-
-      # send email template
         report_template_id = self.env.ref('saving_account.mail_template_term_individual_account')
         report_template_id.attachment_ids = [(6, 0, [attachment.id])]
         try:
-            # send confirmation message when successful
-            report_template_id.with_context(data=report).send_mail(self.id, email_values=email_values, force_send=True)
+            report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
             print("Sent email to", email_to_send)
         except:
-          print("Email failed to send")
-    return 
+            # send warning message when fail
+            print("Email failed to send")
+
 
 
   @api.model
