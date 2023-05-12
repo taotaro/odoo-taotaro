@@ -196,7 +196,6 @@ class TermIndividualAccountWizard(models.TransientModel):
 
   # get all accounts under self, generate report for each account, create email template and send out emails
   def action_send_all_emails(self):
-   
     account_ids = self.env['saving_account'].search([])
     reports = account_ids.mapped(lambda account_id: self.generate_report(account_id=account_id))
 
@@ -235,7 +234,7 @@ class TermIndividualAccountWizard(models.TransientModel):
             print("Sent email to", email_to_send)
         except:
           print("Email failed to send")
-
+    return 
         
 
   @api.model
