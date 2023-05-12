@@ -8,25 +8,26 @@ class TermIndividualAccountWizard(models.TransientModel):
   _description="Print Term Individual Account Report Wizard"
 
   account_id = fields.Many2one('saving_account', string='Account')
-  date_from=fields.Date(string="Date From", _compute='_compute_date_from', compute_sudo=True)
+  # date_from=fields.Date(string="Date From", _compute='_compute_date_from', compute_sudo=True)
+  date_from=fields.Date(string="Date From")
   date_to=fields.Date(string="Date To", default=fields.Date.today())
   email_to=fields.Char(string="Email To", _compute="_get_default_email")
 
   # find the financial term start date (if date is after april and before sept, then start date is april, else october)
-  @api.onchange('date_from')
-  def _compute_date_from(self):
-    for rec in self:
-      from_date = fields.Date.today()
-      april = find_last_1april(from_date)
-      oct = find_last_1oct(from_date)
-      sept = datetime(year=april.year, month=9, day=30).date()
-      mar = datetime(year=oct.year+1, month=3, day=31).date()
+  # @api.onchange('date_from')
+  # def _compute_date_from(self):
+  #   for rec in self:
+  #     from_date = fields.Date.today()
+  #     april = find_last_1april(from_date)
+  #     oct = find_last_1oct(from_date)
+  #     sept = datetime(year=april.year, month=9, day=30).date()
+  #     mar = datetime(year=oct.year+1, month=3, day=31).date()
       
-      ### CHATGPT- rephrased to remove if else statement
-      if april <= from_date and from_date <= sept:
-        rec.date_from = april
-      elif oct <= from_date and from_date <= mar:
-        rec.date_from = oct
+  #     ### CHATGPT- rephrased to remove if else statement
+  #     if april <= from_date and from_date <= sept:
+  #       rec.date_from = april
+  #     elif oct <= from_date and from_date <= mar:
+  #       rec.date_from = oct
       
   # set email address
   @api.onchange('email_to')
@@ -196,45 +197,42 @@ class TermIndividualAccountWizard(models.TransientModel):
 
   # get all accounts under self, generate report for each account, create email template and send out emails
   def action_send_all_emails(self):
-    account_ids = self.env['saving_account'].search([])
-    reports = account_ids.mapped(lambda account_id: self.generate_report(account_id=account_id))
+   account_ids = self.env['saving_account'].search([])
+   for account_id in account_ids:
+      print("account id here", account_id)
+      self.account_id = account_id
+      data = self.generate_report(account_id=account_id)
+      try:
+        ### CHATGPT used 'render_qweb_pdf' method to generate PDF report directly (could make it faster)
+        report_id = self.env.ref('saving_account.action_term_individual_account_report')._render(self.ids, data=data)
+      except Exception as e:
+        print(e)
 
-    for account_id, report in zip(account_ids, reports):
-        try:
-            report_pdf = self.env.ref('saving_account.action_term_individual_account_report').render_qweb_pdf(self.ids, data=report)[0]
-        except Exception as e:
-            print(e)
-
-        report_b64 = base64.b64encode(report_pdf)
-        now = fields.Datetime.today().strftime('%Y%m%d')
-        report_name = now + '_' + str(account_id.account_no) + '_term_individual_account.pdf'
-
-        # create email attachment
-        attachment = self.env['ir.attachment'].create({
-            'name': report_name,
-            'type': 'binary',
-            'datas': report_b64,
-            'store_fname': report_name,
-            'mimetype': 'application/x-pdf'
-        })
-        print("attachment made", report_name)
-
-        # find email to send to
-        email_setup = self.env['email_setup'].sudo().search([], limit=1, order='create_date desc')
-        email_to_send = email_setup.email_to
-        email_values = {'email_to': email_to_send}
-        print("Sending email to", email_to_send)
-
-      # send email template
-        report_template_id = self.env.ref('saving_account.mail_template_term_individual_account')
-        report_template_id.attachment_ids = [(6, 0, [attachment.id])]
-        try:
-            # send confirmation message when successful
-            report_template_id.with_context(data=report).send_mail(self.id, email_values=email_values, force_send=True)
-            print("Sent email to", email_to_send)
-        except:
-          print("Email failed to send")
-    return 
+        
+      report_b64 = base64.b64encode(report_id[0])
+      now = fields.Datetime.today().strftime('%Y%m%d')
+      report_name = now + '_' + str(account_id.account_no) + '_term_individual_account.pdf'
+      
+      # create email attachment
+      attachment = self.env['ir.attachment'].create({
+              'name': report_name,
+              'type': 'binary',
+              'datas': report_b64,
+              'store_fname': report_name,
+              'mimetype': 'application/x-pdf'
+          })
+      print("attachment made", report_name)
+      email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
+      email_values = {'email_to': email_to_send}
+      print("Sending email to", email_to_send)
+      report_template_id = self.env.ref('saving_account.mail_template_term_individual_account')
+      report_template_id.attachment_ids = [(6, 0, [attachment.id])]
+      try:
+        report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
+        print("Sent email to", email_to_send)
+      except:
+        # send warning message when fail
+        print("Email failed to send")
 
 
   @api.model
