@@ -143,6 +143,7 @@ class TermIndividualAccountWizard(models.TransientModel):
 
   def action_send_email(self):
     data = self.generate_report()
+    report_id = 'test'
     try:
       ### CHATGPT used 'render_qweb_pdf' method to generate PDF report directly (could make it faster)
       report_id = self.env.ref('saving_account.action_term_individual_account_report')._render(self.ids, data=data)
