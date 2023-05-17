@@ -414,7 +414,6 @@ class TermIndividualAccountWizard(models.TransientModel):
       }
 
 
-  @api.multi
   def thread_test(self):
     test = threading.Thread(target=self.action_send_all_emails)
     test.start()
