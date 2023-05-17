@@ -235,6 +235,11 @@ class TermIndividualAccountWizard(models.TransientModel):
     return True
 
 
+
+    
+
+
+
   @api.model
   def _cron_send_email(self):
     try:
