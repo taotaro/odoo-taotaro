@@ -349,6 +349,19 @@ class TermIndividualAccountWizard(models.TransientModel):
     return reports
 
 
+  def get_all_pdfs(self, reports, report_id_ref):
+    pdfs = []
+    for report in reports:
+      try:
+        report_id = report_id_ref._render(self.ids, data=report)
+      except Exception as e:
+          print(e)
+          continue
+      report_b64 = base64.b64encode(report_id[0])
+      pdfs.append(report_b64)
+    _logger.info('get all pdfs: {local_time} ' )  
+    return pdfs
+
 
   def action_send_all_emails(self):
     # _logger.debug('this is a test message')
@@ -358,6 +371,7 @@ class TermIndividualAccountWizard(models.TransientModel):
     email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
 
     all_reports = self.get_all_reports(account_ids=account_ids)
+    # all_pdfs = self.get_all_pdfs(reports=all_reports, report_id_ref=report_id_ref)
 
     for i in range(len(all_reports)):
       try:
@@ -365,28 +379,9 @@ class TermIndividualAccountWizard(models.TransientModel):
       except Exception as e:
           print(e)
           continue
-      _logger.info('rendered pdf: {local_time} ' )
       report_b64 = base64.b64encode(report_id[0])
-      _logger.info('encode pdf: {local_time} ' )
       now = fields.Datetime.today().strftime('%Y%m%d')
       report_name = now + '_' + str(account_ids[i].account_no) + '_term_individual_account.pdf'
-
-    # for account_id in account_ids:
-
-    #     _logger.info('for loop account_ids: {local_time}' )
-    #     print("account id here", account_id)
-    #     data = self.generate_report(account_id=account_id)
-    #     try:
-    #         report_id = report_id_ref._render(self.ids, data=data)
-    #     except Exception as e:
-    #         print(e)
-    #         continue
-    #     _logger.info('rendered pdf: {local_time} ' )
-    #     report_b64 = base64.b64encode(report_id[0])
-    #     _logger.info('encode pdf: {local_time} ' )
-    #     now = fields.Datetime.today().strftime('%Y%m%d')
-    #     report_name = now + '_' + str(account_id.account_no) + '_term_individual_account.pdf'
-
         # create email attachment
       attachment = self.env['ir.attachment'].create({
             'name': report_name,
@@ -402,7 +397,7 @@ class TermIndividualAccountWizard(models.TransientModel):
       report_template_id = self.env.ref('saving_account.mail_template_term_individual_account')
       report_template_id.attachment_ids = [(6, 0, [attachment.id])]
       try:
-          report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
+          report_template_id.send_mail(self.id, email_values=email_values)
           _logger.info('send email: {local_time} ')
           print("Sent email to", email_to_send)
       except:
