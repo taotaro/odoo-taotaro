@@ -4,6 +4,7 @@ import base64
 from ..helper import find_last_1april, find_last_1oct, truncate_number, find_date_from
 from collections import defaultdict
 import time
+import threading
 
 class TermIndividualAccountWizard(models.TransientModel):
   _name="term_individual_account.report.wizard"
@@ -73,6 +74,7 @@ class TermIndividualAccountWizard(models.TransientModel):
     to_date = self.date_to or fields.Date.today()
     account_id = account_id or self.account_id
 
+    
     for acc in account_id:
         # find all entries for the account
         all_entries = self.env['saving_account.entry'].search_read([
@@ -82,9 +84,7 @@ class TermIndividualAccountWizard(models.TransientModel):
 
         # partition entries into those within the specified date and those before it
         initial_balance = 0
-        initial_balance_original = 0
         entries = []
-        initial_entries = []
         total_values = defaultdict(int)
 
         # get initial balance and entries before specified date
@@ -92,7 +92,7 @@ class TermIndividualAccountWizard(models.TransientModel):
           if from_date <= entry['entry_date'] <= to_date:
             entries.append(entry)
           elif entry['entry_date'] < from_date:
-            initial_entries.append(entry)
+            # initial_entries.append(entry)
             if entry['entry_type'] == 'withdraw':
               initial_balance -= entry['amount']
             else:
@@ -412,3 +412,10 @@ class TermIndividualAccountWizard(models.TransientModel):
             'sticky': True,
           }
       }
+
+
+  @api.multi
+  def thread_test(self):
+    test = threading.Thread(target=self.action_send_all_emails)
+    test.start()
+    return True
