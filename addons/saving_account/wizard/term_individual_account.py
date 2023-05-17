@@ -58,7 +58,7 @@ class TermIndividualAccountWizard(models.TransientModel):
         ('account_id','=', account_id.id), 
         ('ledger','=','principal'), 
     ])
-    _logger.info('all entries: ', local_time )
+    _logger.info('all entries: {local_time}')
 
     # partition entries into those within the specified date and those before it
     initial_balance = 0
@@ -76,7 +76,7 @@ class TermIndividualAccountWizard(models.TransientModel):
           initial_balance -= entry['amount']
         else:
           initial_balance += entry['amount']
-    _logger.info('for loop all entries: ', local_time )
+    _logger.info('for loop all entries: {local_time} ' )
     # entries = [entry for entry in all_entries if from_date <= entry['entry_date'] <= to_date]
     # initial_entries = [entry for entry in all_entries if entry['entry_date'] < from_date]
 
@@ -102,10 +102,10 @@ class TermIndividualAccountWizard(models.TransientModel):
             total_values[entry['entry_type']] += amount
             entry['amount'] = truncate_number(amount, 2)
             entry['balance'] = truncate_number(initial_balance, 2)
-    _logger.info('for loop entries: ', local_time )
+    _logger.info('for loop entries: {local_time} ' )
 
     account = self.env['saving_account'].search_read([('id','=',account_id.id)])
-    _logger.info('account: ', local_time )
+    _logger.info('account: {local_time}' )
     form_data = self.read()[0] if self.read() else {
         'date_from': from_date,
         'date_to': to_date,
@@ -120,7 +120,7 @@ class TermIndividualAccountWizard(models.TransientModel):
         'total_deposit': truncate_number(total_values['deposit'], 2),
         'total_interest': truncate_number(total_values['credit_interest'], 2),
     }
-    _logger.info('structure data: ', local_time )
+    _logger.info('structure data: {local_time}' )
 
     return data
 
@@ -371,7 +371,7 @@ class TermIndividualAccountWizard(models.TransientModel):
             'store_fname': report_name,
             'mimetype': 'application/x-pdf'
         })
-        _logger.info('attachment made: ', local_time )
+        _logger.info('attachment made: {local_time} ' )
         print("attachment made", report_name)
         email_values = {'email_to': email_to_send}
         print("Sending email to", email_to_send)
@@ -379,7 +379,7 @@ class TermIndividualAccountWizard(models.TransientModel):
         report_template_id.attachment_ids = [(6, 0, [attachment.id])]
         try:
             report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
-            _logger.info('send email: ', local_time )
+            _logger.info('send email: {local_time} ')
             print("Sent email to", email_to_send)
         except:
             # send warning message when fail
