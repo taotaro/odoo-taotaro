@@ -124,7 +124,7 @@ class TermIndividualAccountWizard(models.TransientModel):
                 entry['amount'] = truncate_number(amount, 2)
                 entry['balance'] = truncate_number(initial_balance, 2)
 
-        account = self.env['saving_account'].search_read([('id','=',acc.id)])
+#        account = self.env['saving_account'].search_read([('id','=',acc.id)])
         form_data = self.read()[0] if self.read() else {
             'date_from': from_date,
             'date_to': to_date,
@@ -134,7 +134,7 @@ class TermIndividualAccountWizard(models.TransientModel):
         data = {
             'form': form_data,
             'entry': entries,
-            'account_no': account[0]['account_no_signed'],
+#            'account_no': account[0]['account_no_signed'],
             'total_withdraw': truncate_number(total_values['withdraw'], 2),
             'total_deposit': truncate_number(total_values['deposit'], 2),
             'total_interest': truncate_number(total_values['credit_interest'], 2),
