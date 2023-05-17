@@ -75,72 +75,72 @@ class TermIndividualAccountWizard(models.TransientModel):
     account_id = account_id or self.account_id
 
     
-    for acc in account_id:
+    # for acc in account_id:
         # find all entries for the account
-        all_entries = self.env['saving_account.entry'].search_read([
-            ('account_id','=', acc.id), 
-            ('ledger','=','principal'), 
-        ])
+    all_entries = self.env['saving_account.entry'].search_read([
+        ('account_id','=', account_id.id), 
+        ('ledger','=','principal'), 
+    ])
 
-        # partition entries into those within the specified date and those before it
-        initial_balance = 0
-        entries = []
-        total_values = defaultdict(int)
+    # partition entries into those within the specified date and those before it
+    initial_balance = 0
+    entries = []
+    total_values = defaultdict(int)
 
-        # get initial balance and entries before specified date
-        for entry in all_entries:
-          if from_date <= entry['entry_date'] <= to_date:
-            entries.append(entry)
-          elif entry['entry_date'] < from_date:
-            # initial_entries.append(entry)
+    # get initial balance and entries before specified date
+    for entry in all_entries:
+      if from_date <= entry['entry_date'] <= to_date:
+        entries.append(entry)
+      elif entry['entry_date'] < from_date:
+        # initial_entries.append(entry)
+        if entry['entry_type'] == 'withdraw':
+          initial_balance -= entry['amount']
+        else:
+          initial_balance += entry['amount']
+
+    # entries = [entry for entry in all_entries if from_date <= entry['entry_date'] <= to_date]
+    # initial_entries = [entry for entry in all_entries if entry['entry_date'] < from_date]
+
+    # initial_balance = sum(entry['amount'] if entry['entry_type'] != 'withdraw' else -entry['amount'] for entry in initial_entries)
+
+    initial_entry = {
+        "entry_type": "initial",
+        "amount": 0,
+        "balance": initial_balance,
+        "create_date": from_date,
+        "ref_no": "BF"
+    }
+    entries.insert(0, initial_entry)
+
+    total_values = defaultdict(int)
+    for entry in entries:
+        if entry['entry_type'] in {'withdraw', 'deposit', 'credit_interest'}:
+            amount = entry['amount']
             if entry['entry_type'] == 'withdraw':
-              initial_balance -= entry['amount']
+                initial_balance -= amount
             else:
-              initial_balance += entry['amount']
+                initial_balance += amount
+            total_values[entry['entry_type']] += amount
+            entry['amount'] = truncate_number(amount, 2)
+            entry['balance'] = truncate_number(initial_balance, 2)
 
-        # entries = [entry for entry in all_entries if from_date <= entry['entry_date'] <= to_date]
-        # initial_entries = [entry for entry in all_entries if entry['entry_date'] < from_date]
+    account = self.env['saving_account'].search_read([('id','=',acc.id)])
+    form_data = self.read()[0] if self.read() else {
+        'date_from': from_date,
+        'date_to': to_date,
+        'account_id': [account_id.id, account_id.name]
+    }
 
-        # initial_balance = sum(entry['amount'] if entry['entry_type'] != 'withdraw' else -entry['amount'] for entry in initial_entries)
+    data = {
+        'form': form_data,
+        'entry': entries,
+        'account_no': account[0]['account_no_signed'],
+        'total_withdraw': truncate_number(total_values['withdraw'], 2),
+        'total_deposit': truncate_number(total_values['deposit'], 2),
+        'total_interest': truncate_number(total_values['credit_interest'], 2),
+    }
 
-        initial_entry = {
-            "entry_type": "initial",
-            "amount": 0,
-            "balance": initial_balance,
-            "create_date": from_date,
-            "ref_no": "BF"
-        }
-        entries.insert(0, initial_entry)
-
-        total_values = defaultdict(int)
-        for entry in entries:
-            if entry['entry_type'] in {'withdraw', 'deposit', 'credit_interest'}:
-                amount = entry['amount']
-                if entry['entry_type'] == 'withdraw':
-                    initial_balance -= amount
-                else:
-                    initial_balance += amount
-                total_values[entry['entry_type']] += amount
-                entry['amount'] = truncate_number(amount, 2)
-                entry['balance'] = truncate_number(initial_balance, 2)
-
-#        account = self.env['saving_account'].search_read([('id','=',acc.id)])
-        form_data = self.read()[0] if self.read() else {
-            'date_from': from_date,
-            'date_to': to_date,
-            'account_id': [acc.id, acc.name]
-        }
-
-        data = {
-            'form': form_data,
-            'entry': entries,
-#            'account_no': account[0]['account_no_signed'],
-            'total_withdraw': truncate_number(total_values['withdraw'], 2),
-            'total_deposit': truncate_number(total_values['deposit'], 2),
-            'total_interest': truncate_number(total_values['credit_interest'], 2),
-        }
-
-        return data
+    return data
 
 
 
