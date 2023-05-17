@@ -255,61 +255,119 @@ class TermIndividualAccountWizard(models.TransientModel):
       }
 
   # get all accounts under self, generate report for each account, create email template and send out emails
+  # def action_send_all_emails(self):
+  #   account_ids = self.env['saving_account'].search([])
+  #   report_id_ref = self.env.ref('saving_account.action_term_individual_account_report')
+  #   email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
+  #   report_template_id = self.env.ref('saving_account.mail_template_term_individual_account')
+
+  #   time_limit = 800
+  #   start_time = time.time()
+  #   current_time = time.time()
+  #   remaining_account_ids = account_ids
+
+  #   while len(remaining_account_ids) > 0:
+  #       loop_start_time = time.time()
+  #       for account_id in remaining_account_ids:
+  #           current_time = time.time()
+  #           if current_time - loop_start_time >= time_limit:
+  #               break
+
+  #           data = self.generate_report(account_id=account_id)
+  #           try:
+  #               report_id = report_id_ref._render(self.ids, data=data)
+  #               report_b64 = base64.b64encode(report_id[0])
+  #               now = fields.Datetime.today().strftime('%Y%m%d')
+  #               report_name = now + '_' + str(account_id.account_no) + '_term_individual_account.pdf'
+
+  #               # create email attachment
+  #               attachment = self.env['ir.attachment'].create({
+  #                   'name': report_name,
+  #                   'type': 'binary',
+  #                   'datas': report_b64,
+  #                   'store_fname': report_name,
+  #                   'mimetype': 'application/x-pdf'
+  #               })
+  #               print("Attachment made:", report_name)
+  #               email_values = {'email_to': email_to_send}
+  #               print("Sending email to:", email_to_send)
+  #               report_template_id.attachment_ids = [(6, 0, [attachment.id])]
+  #               try:
+  #                   report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
+  #                   print("Sent email to:", email_to_send)
+  #               except:
+  #                   # send warning message when failed
+  #                   print("Email failed to send")
+  #           except Exception as e:
+  #               print(e)
+  #               continue
+
+  #       remaining_account_ids = account_ids[len(remaining_account_ids):]  # Update the remaining account IDs
+
+  #       current_time = time.time()
+  #       if current_time - start_time >= time_limit:
+  #           break
+
+  #   return
+
   def action_send_all_emails(self):
     account_ids = self.env['saving_account'].search([])
     report_id_ref = self.env.ref('saving_account.action_term_individual_account_report')
     email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
     report_template_id = self.env.ref('saving_account.mail_template_term_individual_account')
 
-    time_limit = 800
+    time_limit = 900  # Time limit in seconds
     start_time = time.time()
     current_time = time.time()
-    remaining_account_ids = account_ids
 
-    while len(remaining_account_ids) > 0:
-        loop_start_time = time.time()
-        for account_id in remaining_account_ids:
-            current_time = time.time()
-            if current_time - loop_start_time >= time_limit:
-                break
-
-            data = self.generate_report(account_id=account_id)
-            try:
-                report_id = report_id_ref._render(self.ids, data=data)
-                report_b64 = base64.b64encode(report_id[0])
-                now = fields.Datetime.today().strftime('%Y%m%d')
-                report_name = now + '_' + str(account_id.account_no) + '_term_individual_account.pdf'
-
-                # create email attachment
-                attachment = self.env['ir.attachment'].create({
-                    'name': report_name,
-                    'type': 'binary',
-                    'datas': report_b64,
-                    'store_fname': report_name,
-                    'mimetype': 'application/x-pdf'
-                })
-                print("Attachment made:", report_name)
-                email_values = {'email_to': email_to_send}
-                print("Sending email to:", email_to_send)
-                report_template_id.attachment_ids = [(6, 0, [attachment.id])]
-                try:
-                    report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
-                    print("Sent email to:", email_to_send)
-                except:
-                    # send warning message when failed
-                    print("Email failed to send")
-            except Exception as e:
-                print(e)
-                continue
-
-        remaining_account_ids = account_ids[len(remaining_account_ids):]  # Update the remaining account IDs
-
+    for account_id in account_ids:
         current_time = time.time()
         if current_time - start_time >= time_limit:
-            break
+            # Schedule another job to continue processing remaining account IDs
+            self.env['ir.cron'].sudo().create({
+                'name': 'Send Remaining Emails',
+                'model_id': self.env.ref('saving_account.action_term_individual_account_report').id,
+                'state': 'code',
+                'code': "action_term_individual_account_report.action_send_all_emails()",
+                'numbercall': 1,
+                'doall': False,
+                'priority': 5,
+                'active': True,
+                'interval_number': 1,
+                'interval_type': 'minutes'
+            })
+            return
+
+        data = self.generate_report(account_id=account_id)
+        try:
+            report_id = report_id_ref._render(self.ids, data=data)
+            report_b64 = base64.b64encode(report_id[0])
+            now = fields.Datetime.today().strftime('%Y%m%d')
+            report_name = now + '_' + str(account_id.account_no) + '_term_individual_account.pdf'
+
+            # create email attachment
+            attachment = self.env['ir.attachment'].create({
+                'name': report_name,
+                'type': 'binary',
+                'datas': report_b64,
+                'store_fname': report_name,
+                'mimetype': 'application/x-pdf'
+            })
+            print("Attachment made:", report_name)
+            email_values = {'email_to': email_to_send}
+            print("Sending email to:", email_to_send)
+            report_template_id.attachment_ids = [(6, 0, [attachment.id])]
+            try:
+                report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
+                print("Sent email to:", email_to_send)
+            except:
+                # send warning message when failed
+                print("Email failed to send")
+        except Exception as e:
+            print(e)
+            continue
 
     return
-
 
 
   @api.model
