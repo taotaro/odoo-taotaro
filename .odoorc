@@ -1,3 +1,4 @@
 [options]
 limit_time_cpu = 100000
 limit_time_real = 0
+log_level = debug

@@ -5,6 +5,8 @@ from ..helper import find_last_1april, find_last_1oct, truncate_number, find_dat
 from collections import defaultdict
 import time
 # import threading
+import logging
+_logger = logging.getLogger(__name__)
 
 class TermIndividualAccountWizard(models.TransientModel):
   _name="term_individual_account.report.wizard"
@@ -331,6 +333,7 @@ class TermIndividualAccountWizard(models.TransientModel):
   #   return
 
   def action_send_all_emails(self):
+    _logger.debug('this is a test message')
     account_ids = self.env['saving_account'].search([])
     report_id_ref = self.env.ref('saving_account.action_term_individual_account_report')
     email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
