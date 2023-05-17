@@ -39,34 +39,7 @@ class TermIndividualAccountWizard(models.TransientModel):
     for rec in self:
       rec.email_to = email_to_send
 
-  def get_all_entries(self, account_id=False):
-    from_date = self.date_from or find_date_from()
-    to_date = self.date_to or fields.Date.today()
-    account_id = account_id or self.account_id
-
-    for acc in account_id:
-        # find all entries for the account
-        all_entries = self.env['saving_account.entry'].search_read([
-            ('account_id','=', acc.id), 
-            ('ledger','=','principal'), 
-        ])
-
-        # partition entries into those within the specified date and those before it
-        entries = [entry for entry in all_entries if from_date <= entry['entry_date'] <= to_date]
-        initial_entries = [entry for entry in all_entries if entry['entry_date'] < from_date]
-
-        initial_balance = sum(entry['amount'] if entry['entry_type'] != 'withdraw' else -entry['amount'] for entry in initial_entries)
-
-        initial_entry = {
-            "entry_type": "initial",
-            "amount": 0,
-            "balance": initial_balance,
-            "create_date": from_date,
-            "ref_no": "BF"
-        }
-        entries.insert(0, initial_entry)
-
-        return entries
+ 
 
 
   def generate_report(self, account_id=False):
@@ -124,7 +97,7 @@ class TermIndividualAccountWizard(models.TransientModel):
             entry['amount'] = truncate_number(amount, 2)
             entry['balance'] = truncate_number(initial_balance, 2)
 
-    account = self.env['saving_account'].search_read([('id','=',acc.id)])
+    account = self.env['saving_account'].search_read([('id','=',account_id.id)])
     form_data = self.read()[0] if self.read() else {
         'date_from': from_date,
         'date_to': to_date,
