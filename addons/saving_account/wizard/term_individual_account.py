@@ -2,6 +2,7 @@ from datetime import datetime
 from odoo import models, fields, api, _
 import base64
 from ..helper import find_last_1april, find_last_1oct, truncate_number, find_date_from
+from collections import defaultdict
 
 class TermIndividualAccountWizard(models.TransientModel):
   _name="term_individual_account.report.wizard"
