@@ -326,9 +326,9 @@ class TermIndividualAccountWizard(models.TransientModel):
             # Schedule another job to continue processing remaining account IDs
             self.env['ir.cron'].sudo().create({
                 'name': 'Send Remaining Emails',
-                'model_id': self.env.ref('saving_account.action_term_individual_account_report').id,
+                'model_id': self.env.ref('saving_account.term_individual_account.report.wizard').id,
                 'state': 'code',
-                'code': "action_term_individual_account_report.action_send_all_emails()",
+                'code': "term_individual_account.report.wizard.action_send_all_emails()",
                 'numbercall': 1,
                 'doall': False,
                 'priority': 5,
