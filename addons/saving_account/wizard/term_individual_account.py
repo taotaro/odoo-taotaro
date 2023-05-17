@@ -350,7 +350,7 @@ class TermIndividualAccountWizard(models.TransientModel):
 
     for account_id in account_ids:
 
-        _logger.info('for loop account_ids: ' %local_time )
+        _logger.info('for loop account_ids: {local_time}' )
         print("account id here", account_id)
         data = self.generate_report(account_id=account_id)
         try:
