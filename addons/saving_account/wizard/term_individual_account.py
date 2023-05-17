@@ -201,6 +201,7 @@ class TermIndividualAccountWizard(models.TransientModel):
     account_ids = self.env['saving_account'].search([])
     report_id_ref = self.env.ref('saving_account.action_term_individual_account_report')
     email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
+    report_template_id = self.env.ref('saving_account.mail_template_term_individual_account')
 
     all_reports = self.get_all_reports(account_ids=account_ids)
 
