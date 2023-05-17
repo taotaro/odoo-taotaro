@@ -358,8 +358,9 @@ class TermIndividualAccountWizard(models.TransientModel):
         except Exception as e:
             print(e)
             continue
-
+        _logger.info('rendered pdf: {local_time} ' )
         report_b64 = base64.b64encode(report_id[0])
+        _logger.info('encode pdf: {local_time} ' )
         now = fields.Datetime.today().strftime('%Y%m%d')
         report_name = now + '_' + str(account_id.account_no) + '_term_individual_account.pdf'
 
