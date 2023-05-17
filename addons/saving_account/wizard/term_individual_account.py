@@ -4,7 +4,7 @@ import base64
 from ..helper import find_last_1april, find_last_1oct, truncate_number, find_date_from
 from collections import defaultdict
 import time
-import threading
+# import threading
 
 class TermIndividualAccountWizard(models.TransientModel):
   _name="term_individual_account.report.wizard"
@@ -414,7 +414,7 @@ class TermIndividualAccountWizard(models.TransientModel):
       }
 
 
-  def thread_test(self):
-    test = threading.Thread(target=self.action_send_all_emails)
-    test.start()
-    return True
+  # def thread_test(self):
+  #   test = threading.Thread(target=self.action_send_all_emails)
+  #   test.start()
+  #   return True
