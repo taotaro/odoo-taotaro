@@ -340,10 +340,11 @@ class TermIndividualAccountWizard(models.TransientModel):
   #   return
 
   def get_all_reports(self, account_ids):
-    reports = {}
+    reports = []
     for account_id in account_ids:
       data = self.generate_report(account_id=account_id)
-      reports.append({'account_id':account_id,'report':data})
+      reports.append(data)
+      # reports.append({'account_id':account_id,'report':data})
     _logger.info('get all reports: {local_time} ' )
     return reports
 
@@ -358,9 +359,9 @@ class TermIndividualAccountWizard(models.TransientModel):
 
     all_reports = self.get_all_reports(account_ids=account_ids)
 
-    for report in all_reports:
+    for i in range(len(all_reports)):
       try:
-        report_id = report_id_ref._render(self.ids, data=report['report'])
+        report_id = report_id_ref._render(self.ids, data=all_reports[i])
       except Exception as e:
           print(e)
           continue
@@ -368,8 +369,8 @@ class TermIndividualAccountWizard(models.TransientModel):
       report_b64 = base64.b64encode(report_id[0])
       _logger.info('encode pdf: {local_time} ' )
       now = fields.Datetime.today().strftime('%Y%m%d')
-      report_name = now + '_' + str(report['account_id'].account_no) + '_term_individual_account.pdf'
-      
+      report_name = now + '_' + str(account_ids[i].account_no) + '_term_individual_account.pdf'
+
     # for account_id in account_ids:
 
     #     _logger.info('for loop account_ids: {local_time}' )
