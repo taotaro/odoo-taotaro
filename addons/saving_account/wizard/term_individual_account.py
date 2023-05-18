@@ -112,6 +112,7 @@ class TermIndividualAccountWizard(models.TransientModel):
         'total_deposit': truncate_number(total_values['deposit'], 2),
         'total_interest': truncate_number(total_values['credit_interest'], 2),
     }
+    _logger.info(f'data: {data}')
 
     return data
 
@@ -211,7 +212,6 @@ class TermIndividualAccountWizard(models.TransientModel):
       report_b64 = base64.b64encode(report_id[0])
       now = fields.Datetime.today().strftime('%Y%m%d')
       report_name = now + '_' + str(account_ids[i].account_no) + '_term_individual_account.pdf'
-      _logger.info(f'logger name of account : {account_ids[i].account_name}')
         # create email attachment
       attachment = self.env['ir.attachment'].create({
             'name': report_name,
