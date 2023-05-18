@@ -51,14 +51,12 @@ class TermIndividualAccountWizard(models.TransientModel):
     to_date = self.date_to or fields.Date.today()
     account_id = account_id or self.account_id
 
-    
-    # for acc in account_id:
+    _logger.info(f'logger account id: {account_id}')
         # find all entries for the account
     all_entries = self.env['saving_account.entry'].search_read([
         ('account_id','=', account_id.id), 
         ('ledger','=','principal'), 
     ])
-    _logger.info('all entries: {local_time}')
 
     # partition entries into those within the specified date and those before it
     initial_balance = 0
@@ -76,12 +74,7 @@ class TermIndividualAccountWizard(models.TransientModel):
           initial_balance -= entry['amount']
         else:
           initial_balance += entry['amount']
-    _logger.info('for loop all entries: {local_time} ' )
-    # entries = [entry for entry in all_entries if from_date <= entry['entry_date'] <= to_date]
-    # initial_entries = [entry for entry in all_entries if entry['entry_date'] < from_date]
-
-    # initial_balance = sum(entry['amount'] if entry['entry_type'] != 'withdraw' else -entry['amount'] for entry in initial_entries)
-
+   
     initial_entry = {
         "entry_type": "initial",
         "amount": 0,
@@ -102,15 +95,14 @@ class TermIndividualAccountWizard(models.TransientModel):
             total_values[entry['entry_type']] += amount
             entry['amount'] = truncate_number(amount, 2)
             entry['balance'] = truncate_number(initial_balance, 2)
-    _logger.info('for loop entries: {local_time} ' )
 
     account = self.env['saving_account'].search_read([('id','=',account_id.id)])
-    _logger.info('account: {local_time}' )
     form_data = self.read()[0] if self.read() else {
         'date_from': from_date,
         'date_to': to_date,
         'account_id': [account_id.id, account_id.name]
     }
+    _logger.info(f'logger name of account: {account_id.name}')
 
     data = {
         'form': form_data,
@@ -120,110 +112,9 @@ class TermIndividualAccountWizard(models.TransientModel):
         'total_deposit': truncate_number(total_values['deposit'], 2),
         'total_interest': truncate_number(total_values['credit_interest'], 2),
     }
-    _logger.info('structure data: {local_time}' )
 
     return data
 
-
-
-    # # if from date not specified
-    # if not self.date_from or self.date_from == False:
-    #   from_date = find_date_from()
-    # else:
-    #   from_date = self.date_from
-
-    # # if to date not specified
-    # if not self.date_to:
-    #   to_date = fields.Date.today()
-    # else:
-    #   to_date = self.date_to
-
-    # # if account id not specified
-    # if not account_id:
-    #   account_id = self.account_id 
-
-    # for acc in account_id:
-    #   # find entries within the specified date
-    #   entries = self.env['saving_account.entry'].search_read([
-    #     ('account_id','=', acc.id), 
-    #     ('ledger','=','principal'), 
-    #     ('entry_date','>=',from_date), 
-    #     ('entry_date','<=',to_date)
-    #   ])
-    #   # find account information
-    #   account = self.env['saving_account'].search_read([('id','=',acc.id)])
-      
-    #   # find entries from before the specified time to calculate initial balance
-    #   initial_entries = self.env['saving_account.entry'].search_read([
-    #     ('account_id','=', acc.id),
-    #     ('ledger','=','principal'), 
-    #     ('entry_date','<',from_date)
-    #   ])
-
-    #   initial_balance = 0
-    #   for entry in initial_entries:
-    #     if entry['ledger'] == 'principal':
-    #       if entry['entry_type'] == 'withdraw':
-    #         initial_balance -= entry['amount']
-    #       else:
-    #         initial_balance += entry['amount']
-
-    #   # declare first entry with initial balance
-    #   initial_entry = {
-    #     "entry_type": "initial",
-    #     "amount": 0,
-    #     "balance": initial_balance,
-    #     "create_date": from_date,
-    #     "ref_no": "BF"
-    #     }
-    #   entries.insert(0, initial_entry)
-
-    #   #initialize total values
-    #   total_withdraw, total_deposit, total_interest = 0, 0, 0
-
-    #   # arrange entries according to type
-    #   for entry in entries:
-    #     if entry['entry_type'] == 'withdraw':
-    #       initial_balance -= entry['amount']
-    #       total_withdraw += entry['amount']
-    #     elif entry['entry_type'] == 'deposit':
-    #       initial_balance += entry['amount']
-    #       total_deposit += entry['amount']
-    #     elif entry['entry_type'] == 'credit_interest':
-    #       initial_balance += entry['amount']
-    #       total_interest += entry['amount']
-    #     else:
-    #       continue
-    #     # truncate for display
-    #     entry['amount'] = truncate_number(entry['amount'], 2)
-    #     entry['balance'] = truncate_number(initial_balance, 2)
-
-    #   data = []
-    #   # if values are already set in self
-    #   if self.read():
-    #     data = { 
-    #       'form': self.read()[0],
-    #       'entry': entries,
-    #       'account_no': account[0]['account_no_signed'],
-    #       'total_withdraw': truncate_number(total_withdraw, 2),
-    #       'total_deposit': truncate_number(total_deposit, 2),
-    #       'total_interest': truncate_number(total_interest, 2)
-    #     }
-    #   else:
-    #     data = {
-    #       'form': {
-    #         'date_from': from_date,
-    #         'date_to': to_date,
-    #         'account_id': [acc.id, acc.name]
-    #       },
-    #       'entry': entries,
-    #       'account_no': account[0]['account_no_signed'],
-    #       'total_withdraw': truncate_number(total_withdraw, 2),
-    #       'total_deposit': truncate_number(total_deposit, 2),
-    #       'total_interest': truncate_number(total_interest, 2)
-    #     }
-        
-      # return data
 
   def action_print_report(self):
     data = self.generate_report()
@@ -232,7 +123,6 @@ class TermIndividualAccountWizard(models.TransientModel):
   def action_send_email(self):
     data = self.generate_report()
     try:
-      ### CHATGPT used 'render_qweb_pdf' method to generate PDF report directly (could make it faster)
       report_id = self.env.ref('saving_account.action_term_individual_account_report')._render(self.ids, data=data)
     except Exception as e:
       print(e)
@@ -250,7 +140,6 @@ class TermIndividualAccountWizard(models.TransientModel):
         })
 
     # find email to send to
-    ### CHATGPT use sudo method to search for email setup (ensure user has necessary access rights to read email setup record)
     email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
     email_values = {'email_to': email_to_send}
     print("Sending email to", email_to_send)
@@ -283,69 +172,11 @@ class TermIndividualAccountWizard(models.TransientModel):
           }
       }
 
-  # get all accounts under self, generate report for each account, create email template and send out emails
-  # def action_send_all_emails(self):
-  #   account_ids = self.env['saving_account'].search([])
-  #   report_id_ref = self.env.ref('saving_account.action_term_individual_account_report')
-  #   email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
-  #   report_template_id = self.env.ref('saving_account.mail_template_term_individual_account')
-
-  #   time_limit = 800
-  #   start_time = time.time()
-  #   current_time = time.time()
-  #   remaining_account_ids = account_ids
-
-  #   while len(remaining_account_ids) > 0:
-  #       loop_start_time = time.time()
-  #       for account_id in remaining_account_ids:
-  #           current_time = time.time()
-  #           if current_time - loop_start_time >= time_limit:
-  #               break
-
-  #           data = self.generate_report(account_id=account_id)
-  #           try:
-  #               report_id = report_id_ref._render(self.ids, data=data)
-  #               report_b64 = base64.b64encode(report_id[0])
-  #               now = fields.Datetime.today().strftime('%Y%m%d')
-  #               report_name = now + '_' + str(account_id.account_no) + '_term_individual_account.pdf'
-
-  #               # create email attachment
-  #               attachment = self.env['ir.attachment'].create({
-  #                   'name': report_name,
-  #                   'type': 'binary',
-  #                   'datas': report_b64,
-  #                   'store_fname': report_name,
-  #                   'mimetype': 'application/x-pdf'
-  #               })
-  #               print("Attachment made:", report_name)
-  #               email_values = {'email_to': email_to_send}
-  #               print("Sending email to:", email_to_send)
-  #               report_template_id.attachment_ids = [(6, 0, [attachment.id])]
-  #               try:
-  #                   report_template_id.send_mail(self.id, email_values=email_values, force_send=True)
-  #                   print("Sent email to:", email_to_send)
-  #               except:
-  #                   # send warning message when failed
-  #                   print("Email failed to send")
-  #           except Exception as e:
-  #               print(e)
-  #               continue
-
-  #       remaining_account_ids = account_ids[len(remaining_account_ids):]  # Update the remaining account IDs
-
-  #       current_time = time.time()
-  #       if current_time - start_time >= time_limit:
-  #           break
-
-  #   return
-
   def get_all_reports(self, account_ids):
     reports = []
     for account_id in account_ids:
       data = self.generate_report(account_id=account_id)
       reports.append(data)
-      # reports.append({'account_id':account_id,'report':data})
-    _logger.info('get all reports: {local_time} ' )
     return reports
 
 
@@ -359,22 +190,19 @@ class TermIndividualAccountWizard(models.TransientModel):
           continue
       report_b64 = base64.b64encode(report_id[0])
       pdfs.append(report_b64)
-    _logger.info('get all pdfs: {local_time} ' )  
     return pdfs
 
 
   def action_send_all_emails(self):
-    # _logger.debug('this is a test message')
-    _logger.info('this is a test message')
+    _logger.info('logger this is a test message')
     account_ids = self.env['saving_account'].search([])
     report_id_ref = self.env.ref('saving_account.action_term_individual_account_report')
     email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
 
     all_reports = self.get_all_reports(account_ids=account_ids)
-    # all_pdfs = self.get_all_pdfs(reports=all_reports, report_id_ref=report_id_ref)
 
     for i in range(len(all_reports)):
-      _logger.info(f'loop number: {i}')
+      _logger.info(f'logger loop number: {i}')
       try:
         report_id = report_id_ref._render(self.ids, data=all_reports[i])
       except Exception as e:
@@ -383,6 +211,7 @@ class TermIndividualAccountWizard(models.TransientModel):
       report_b64 = base64.b64encode(report_id[0])
       now = fields.Datetime.today().strftime('%Y%m%d')
       report_name = now + '_' + str(account_ids[i].account_no) + '_term_individual_account.pdf'
+      _logger.info(f'logger name of account : {account_ids[i].account_name}')
         # create email attachment
       attachment = self.env['ir.attachment'].create({
             'name': report_name,
@@ -391,7 +220,6 @@ class TermIndividualAccountWizard(models.TransientModel):
             'store_fname': report_name,
             'mimetype': 'application/x-pdf'
         })
-      _logger.info('attachment made: {local_time} ' )
       print("attachment made", report_name)
       email_values = {'email_to': email_to_send}
       print("Sending email to", email_to_send)
@@ -399,7 +227,6 @@ class TermIndividualAccountWizard(models.TransientModel):
       report_template_id.attachment_ids = [(6, 0, [attachment.id])]
       try:
           report_template_id.send_mail(self.id, email_values=email_values)
-          _logger.info('send email: {local_time} ')
           print("Sent email to", email_to_send)
       except:
             # send warning message when fail
@@ -424,7 +251,3 @@ class TermIndividualAccountWizard(models.TransientModel):
       }
 
 
-  # def thread_test(self):
-  #   test = threading.Thread(target=self.action_send_all_emails)
-  #   test.start()
-  #   return True
