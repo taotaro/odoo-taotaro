@@ -97,13 +97,19 @@ class TermIndividualAccountWizard(models.TransientModel):
             entry['balance'] = truncate_number(initial_balance, 2)
 
     account = self.env['saving_account'].search_read([('id','=',account_id.id)])
-    form_data = self.read()[0] if self.read() else {
+    # form_data = self.read()[0] if self.read() else {
+    #     'date_from': from_date,
+    #     'date_to': to_date,
+    #     'account_id': [account_id.id, account_id.name]
+    # }
+    form_data =  {
         'date_from': from_date,
         'date_to': to_date,
         'account_id': [account_id.id, account_id.name]
     }
     _logger.info(f'logger form_data: {form_data}')
     _logger.info(f'logger name of account: {account_id.name}')
+    
 
     data = {
         'form': form_data,
