@@ -50,8 +50,6 @@ class TermIndividualAccountWizard(models.TransientModel):
     from_date = self.date_from or find_date_from()
     to_date = self.date_to or fields.Date.today()
     account_id = account_id or self.account_id
-
-    _logger.info(f'logger account id: {account_id}')
         # find all entries for the account
     all_entries = self.env['saving_account.entry'].search_read([
         ('account_id','=', account_id.id), 
@@ -107,8 +105,6 @@ class TermIndividualAccountWizard(models.TransientModel):
         'date_to': to_date,
         'account_id': [account_id.id, account_id.name]
     }
-    _logger.info(f'logger form_data: {form_data}')
-    _logger.info(f'logger name of account: {account_id.name}')
     
 
     data = {
@@ -119,7 +115,6 @@ class TermIndividualAccountWizard(models.TransientModel):
         'total_deposit': truncate_number(total_values['deposit'], 2),
         'total_interest': truncate_number(total_values['credit_interest'], 2),
     }
-    _logger.info(f'logger data: {data}')
 
     return data
 
@@ -210,7 +205,6 @@ class TermIndividualAccountWizard(models.TransientModel):
     all_reports = self.get_all_reports(account_ids=account_ids)
 
     for i in range(len(all_reports)):
-      _logger.info(f'logger loop number: {i}')
       try:
         report_id = report_id_ref._render(self.ids, data=all_reports[i])
       except Exception as e:
