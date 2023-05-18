@@ -374,6 +374,7 @@ class TermIndividualAccountWizard(models.TransientModel):
     # all_pdfs = self.get_all_pdfs(reports=all_reports, report_id_ref=report_id_ref)
 
     for i in range(len(all_reports)):
+      _logger.info(f'loop number: {i}')
       try:
         report_id = report_id_ref._render(self.ids, data=all_reports[i])
       except Exception as e:
@@ -390,7 +391,7 @@ class TermIndividualAccountWizard(models.TransientModel):
             'store_fname': report_name,
             'mimetype': 'application/x-pdf'
         })
-      _logger.info(f'attachment made: {local_time} ' )
+      _logger.info('attachment made: {local_time} ' )
       print("attachment made", report_name)
       email_values = {'email_to': email_to_send}
       print("Sending email to", email_to_send)
