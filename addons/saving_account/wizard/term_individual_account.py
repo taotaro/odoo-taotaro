@@ -102,6 +102,7 @@ class TermIndividualAccountWizard(models.TransientModel):
         'date_to': to_date,
         'account_id': [account_id.id, account_id.name]
     }
+    _logger.info(f'logger form_data: {form_data}')
     _logger.info(f'logger name of account: {account_id.name}')
 
     data = {
@@ -112,7 +113,7 @@ class TermIndividualAccountWizard(models.TransientModel):
         'total_deposit': truncate_number(total_values['deposit'], 2),
         'total_interest': truncate_number(total_values['credit_interest'], 2),
     }
-    _logger.info(f'data: {data}')
+    _logger.info(f'logger data: {data}')
 
     return data
 
