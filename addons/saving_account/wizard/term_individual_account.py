@@ -390,7 +390,7 @@ class TermIndividualAccountWizard(models.TransientModel):
             'store_fname': report_name,
             'mimetype': 'application/x-pdf'
         })
-      _logger.info('attachment made: {local_time} ' )
+      _logger.info(f'attachment made: {local_time} ' )
       print("attachment made", report_name)
       email_values = {'email_to': email_to_send}
       print("Sending email to", email_to_send)
@@ -403,6 +403,7 @@ class TermIndividualAccountWizard(models.TransientModel):
       except:
             # send warning message when fail
           print("Email failed to send")
+    return True
 
 
   @api.model
