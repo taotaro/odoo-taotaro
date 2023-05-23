@@ -65,7 +65,7 @@ class TermAccountWizard(models.TransientModel):
         ('account_id','=', account['id']),
         ('entry_type','=','credit_interest'), 
         ('ledger','=','principal'),
-        ('entry_date','>=',april), 
+        # ('entry_date','>=',april), 
         ('entry_date','<=',from_date)
       ])
       total_interest_credit = 0
