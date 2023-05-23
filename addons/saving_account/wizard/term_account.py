@@ -54,6 +54,7 @@ class TermAccountWizard(models.TransientModel):
         ('open_date','<=',from_date),
         ('close_date','=',False)
       ])
+    _logger.info(f'logger accounts: {accounts}')
 
     # truncate properly
     for account in accounts:
