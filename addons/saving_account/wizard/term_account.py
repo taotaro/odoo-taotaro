@@ -60,15 +60,17 @@ class TermAccountWizard(models.TransientModel):
     for account in accounts:
       total_principal = truncate_number(account['total_principal'], 2)
       last_interest_credit = truncate_number(account['last_interest_credit'], 2)
+      balance = truncate_number(account['balance'],2)
       account['total_principal'] = truncate_number(account['total_principal'], 2)
       account['last_interest_credit'] = truncate_number(account['last_interest_credit'], 2)
       _logger.info(f'logger amounts: {total_principal} and {last_interest_credit}')
+      _logger.info(f'balance: {balance}')
       # find total interest credit
       entries = self.env['saving_account.entry'].search_read([
         ('account_id','=', account['id']),
         ('entry_type','=','credit_interest'), 
         ('ledger','=','principal'),
-        ('entry_date','>=',april), 
+        # ('entry_date','>=',april), 
         ('entry_date','<=',from_date)
       ])
       # first_entry = entries[0]
