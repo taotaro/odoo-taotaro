@@ -72,7 +72,7 @@ class TermAccountWizard(models.TransientModel):
       for entry in entries:
         total_interest_credit += entry['amount']
       account['total_interest_credit'] = truncate_number(total_interest_credit, 2)
-    
+    _logger.info(f'logger accounts: {accounts}')
     if self.read():
       data = { 
         'form': self.read()[0],
