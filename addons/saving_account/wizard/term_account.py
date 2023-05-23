@@ -61,7 +61,7 @@ class TermAccountWizard(models.TransientModel):
       # _logger.info(f'account: {account}')
       total_principal = truncate_number(account['total_principal'], 2)
       last_interest_credit = truncate_number(account['last_interest_credit'], 2)
-      account['total_principal'] = truncate_number(account['total_principal'], 2)
+      # account['total_principal'] = truncate_number(account['total_principal'], 2)
       account['last_interest_credit'] = truncate_number(account['last_interest_credit'], 2)
       # _logger.info(f'logger balance: {total_principal}')
       # find total interest credit
@@ -81,6 +81,7 @@ class TermAccountWizard(models.TransientModel):
             current_total = current_total + principal.amount
       _logger.info(f'principal current: {current_total}')
       _logger.info(f'total principal: {total_principal}')
+      account['total_principal'] = truncate_number(current_total, 2)
       entries = self.env['saving_account.entry'].search_read([
         ('account_id','=', account['id']),
         ('entry_type','=','credit_interest'), 
