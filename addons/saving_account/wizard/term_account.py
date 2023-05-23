@@ -1,6 +1,8 @@
 from ..helper import truncate_number, find_last_1april
 from odoo import models, fields, api, _
 import base64
+import logging
+_logger = logging.getLogger(__name__)
 
 class TermAccountWizard(models.TransientModel):
   _name="term_account.report.wizard"
@@ -28,6 +30,8 @@ class TermAccountWizard(models.TransientModel):
       from_date = fields.Date.today()
     else:
       from_date = self.date_from
+
+    _logger.info(f'logger from date {from_date}')
 
     if not self.account_type:
       type_account = 'all'
