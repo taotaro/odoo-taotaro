@@ -71,10 +71,11 @@ class TermAccountWizard(models.TransientModel):
         ('entry_date','>=',april), 
         ('entry_date','<=',from_date)
       ])
-      first_entry = entries[0]
-      _logger.info(f'logger first entry: {first_entry}')
+      # first_entry = entries[0]
+      # _logger.info(f'logger first entry: {first_entry}')
       total_interest_credit = 0
       for entry in entries:
+        _logger.info(f'logger entry: {entry}')
         total_interest_credit += entry['amount']
         _logger.info(f'logger total interest: {total_interest_credit}')
 
