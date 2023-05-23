@@ -1,6 +1,8 @@
 from ..helper import truncate_number, find_last_1april
 from odoo import models, fields, api, _
 import base64
+import logging
+_logger = logging.getLogger(__name__)
 
 class TermAccountWizard(models.TransientModel):
   _name="term_account.report.wizard"
@@ -50,7 +52,7 @@ class TermAccountWizard(models.TransientModel):
         ('open_date','<=',from_date),
         ('close_date','=',False)
       ])
-
+    _logger.info(f'from date: {from_date} ')
     # truncate properly
     for account in accounts:
       account['total_principal'] = truncate_number(account['total_principal'], 2)
