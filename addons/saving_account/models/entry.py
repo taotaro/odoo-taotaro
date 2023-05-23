@@ -64,6 +64,14 @@ class SavingAccountEntry(models.Model):
     
     return current_total
 
+  def get_principal_entries(self):
+    principal_list = self.env['saving_account.entry'].search([
+      ('account_id','=',self.account_id.id), 
+      ('ledger','=','principal'),
+    ])
+
+    return principal_list
+    
   # check for validity and produce errors
   @api.constrains('entry_type_principal', 'entry_type', 'amount')
   def _check_amount(self):

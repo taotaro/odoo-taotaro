@@ -54,17 +54,33 @@ class TermAccountWizard(models.TransientModel):
         ('open_date','<=',from_date),
         ('close_date','=',False)
       ])
-    _logger.info(f'logger accounts: {accounts}')
+    # _logger.info(f'logger accounts: {accounts}')
 
     # truncate properly
     for account in accounts:
-      _logger.info(f'account: {account}')
+      # _logger.info(f'account: {account}')
       total_principal = truncate_number(account['total_principal'], 2)
       last_interest_credit = truncate_number(account['last_interest_credit'], 2)
       account['total_principal'] = truncate_number(account['total_principal'], 2)
       account['last_interest_credit'] = truncate_number(account['last_interest_credit'], 2)
       # _logger.info(f'logger balance: {total_principal}')
       # find total interest credit
+      principal_list = self.env['saving_account.entry'].search([
+      ('account_id','=',account['id']), 
+      ('ledger','=','principal'),
+      ('entry_date','<=',from_date)
+      ])
+      current_total = 0
+      if principal_list:
+        for principal in principal_list:
+          if principal.entry_type == "deposit":
+            current_total = current_total + principal.amount
+          elif principal.entry_type == "withdraw":
+            current_total = current_total - principal.amount
+          elif principal.entry_type == "credit_interest":
+            current_total = current_total + principal.amount
+      _logger.info(f'principal current: {current_total}')
+      _logger.info(f'total principal: {total_principal}')
       entries = self.env['saving_account.entry'].search_read([
         ('account_id','=', account['id']),
         ('entry_type','=','credit_interest'), 
