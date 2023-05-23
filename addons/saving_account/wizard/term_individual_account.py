@@ -197,7 +197,6 @@ class TermIndividualAccountWizard(models.TransientModel):
 
 
   def action_send_all_emails(self):
-
     _logger.info('logger this is a test message')
     account_ids = self.env['saving_account'].search([])
     report_id_ref = self.env.ref('saving_account.action_term_individual_account_report')
@@ -239,7 +238,6 @@ class TermIndividualAccountWizard(models.TransientModel):
 
 
     
-
 
 
 
