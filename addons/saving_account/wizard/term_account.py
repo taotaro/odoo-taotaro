@@ -54,17 +54,15 @@ class TermAccountWizard(models.TransientModel):
         ('open_date','<=',from_date),
         ('close_date','=',False)
       ])
-    # _logger.info(f'logger accounts: {accounts}')
 
     # truncate properly
     for account in accounts:
-      # _logger.info(f'account: {account}')
       total_principal = truncate_number(account['total_principal'], 2)
       last_interest_credit = truncate_number(account['last_interest_credit'], 2)
       # account['total_principal'] = truncate_number(account['total_principal'], 2)
       account['last_interest_credit'] = truncate_number(account['last_interest_credit'], 2)
-      # _logger.info(f'logger balance: {total_principal}')
-      # find total interest credit
+      
+      # calculate balance upto given date
       principal_list = self.env['saving_account.entry'].search([
       ('account_id','=',account['id']), 
       ('ledger','=','principal'),
@@ -82,23 +80,21 @@ class TermAccountWizard(models.TransientModel):
       _logger.info(f'principal current: {current_total}')
       _logger.info(f'total principal: {total_principal}')
       account['total_principal'] = truncate_number(current_total, 2)
+
+      # find total interest credit
       entries = self.env['saving_account.entry'].search_read([
         ('account_id','=', account['id']),
         ('entry_type','=','credit_interest'), 
         ('ledger','=','principal'),
-        # ('entry_date','>=',april), 
+        ('entry_date','>=',april), 
         ('entry_date','<=',from_date)
       ])
-      # first_entry = entries[0]
-      # _logger.info(f'logger first entry: {first_entry}')
       total_interest_credit = 0
       for entry in entries:
-        # _logger.info(f'logger entry: {entry}')
         total_interest_credit += entry['amount']
-        # _logger.info(f'logger total interest: {total_interest_credit}')
 
       account['total_interest_credit'] = truncate_number(total_interest_credit, 2)
-    # _logger.info(f'logger accounts: {accounts}')
+    
     if self.read():
       data = { 
         'form': self.read()[0],
