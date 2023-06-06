@@ -1,6 +1,8 @@
 from ..helper import truncate_number, find_last_1april
 from odoo import models, fields, api, _
 import base64
+import logging
+_logger = logging.getLogger(__name__)
 
 class TermAccountWizard(models.TransientModel):
   _name="term_account.report.wizard"
@@ -29,6 +31,8 @@ class TermAccountWizard(models.TransientModel):
     else:
       from_date = self.date_from
 
+    _logger.info(f'logger from date {from_date}')
+
     if not self.account_type:
       type_account = 'all'
     else:
@@ -53,8 +57,29 @@ class TermAccountWizard(models.TransientModel):
 
     # truncate properly
     for account in accounts:
-      account['total_principal'] = truncate_number(account['total_principal'], 2)
+      total_principal = truncate_number(account['total_principal'], 2)
+      last_interest_credit = truncate_number(account['last_interest_credit'], 2)
+      # account['total_principal'] = truncate_number(account['total_principal'], 2)
       account['last_interest_credit'] = truncate_number(account['last_interest_credit'], 2)
+      
+      # calculate balance upto given date
+      principal_list = self.env['saving_account.entry'].search([
+      ('account_id','=',account['id']), 
+      ('ledger','=','principal'),
+      ('entry_date','<=',from_date)
+      ])
+      current_total = 0
+      if principal_list:
+        for principal in principal_list:
+          if principal.entry_type == "deposit":
+            current_total = current_total + principal.amount
+          elif principal.entry_type == "withdraw":
+            current_total = current_total - principal.amount
+          elif principal.entry_type == "credit_interest":
+            current_total = current_total + principal.amount
+      _logger.info(f'principal current: {current_total}')
+      _logger.info(f'total principal: {total_principal}')
+      account['total_principal'] = truncate_number(current_total, 2)
 
       # find total interest credit
       entries = self.env['saving_account.entry'].search_read([
@@ -67,6 +92,7 @@ class TermAccountWizard(models.TransientModel):
       total_interest_credit = 0
       for entry in entries:
         total_interest_credit += entry['amount']
+
       account['total_interest_credit'] = truncate_number(total_interest_credit, 2)
     
     if self.read():
