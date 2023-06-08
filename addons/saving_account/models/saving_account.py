@@ -68,8 +68,7 @@ class SavingAccount(models.Model):
       current_total = 0
       # search interest entries of account
       interest_list = rec.env['saving_account.entry'].search([
-        ('account_id','=',rec.id), 
-        ('cloud_data')
+        ('account_id','=',rec.id),
         ('ledger','=','interest'),
         ('entry_type','in',['interest', 'credit_interest'])
       ])
