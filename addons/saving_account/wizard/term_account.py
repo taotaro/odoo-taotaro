@@ -4,6 +4,7 @@ import base64
 import logging
 _logger = logging.getLogger(__name__)
 
+
 class TermAccountWizard(models.TransientModel):
   _name="term_account.report.wizard"
   _description="Print Term Account Report Wizard"
@@ -91,6 +92,8 @@ class TermAccountWizard(models.TransientModel):
       ])
       total_interest_credit = 0
       for entry in entries:
+        close_date = entry['close_date']
+        _logger.info(f'entry: {entry} and close date: {close_date}')
         total_interest_credit += entry['amount']
 
       account['total_interest_credit'] = truncate_number(total_interest_credit, 2)
