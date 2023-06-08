@@ -103,6 +103,7 @@ class SavingAccount(models.Model):
   def _compute_last_interest_credit(self):
     _logger.info('last interest credit')
     for rec in self:
+      _logger.info(f'rec: {rec.close_date}')
       if rec.close_date != False:
         _logger.info(f'account closed: {rec.last_interest_credit}')
       interest_credit = rec.env['saving_account.entry'].search([
