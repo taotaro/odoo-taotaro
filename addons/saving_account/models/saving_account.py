@@ -63,10 +63,13 @@ class SavingAccount(models.Model):
   # calculate total interest of each account
   @api.onchange('interest_list_ids')
   def _compute_total_interest(self):
-    _logger.info(f'logs calculating total interest of each account')
+    # _logger.info(f'logs calculating total interest of each account')
     for rec in self:
       current_total = 0
-      _logger.info(f'close date of rec: {rec.close_date}')
+      # _logger.info(f'close date of rec: {rec.close_date}')
+      if rec.close_date != False:
+        _logger.info(f'closed account!')
+        continue
       # search interest entries of account
       interest_list = rec.env['saving_account.entry'].search([
         ('account_id','=',rec.id),
