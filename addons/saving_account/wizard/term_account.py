@@ -78,8 +78,8 @@ class TermAccountWizard(models.TransientModel):
             current_total = current_total - principal.amount
           elif principal.entry_type == "credit_interest":
             current_total = current_total + principal.amount
-      _logger.info(f'principal current: {current_total}')
-      _logger.info(f'total principal: {total_principal}')
+      # _logger.info(f'principal current: {current_total}')
+      # _logger.info(f'total principal: {total_principal}')
       account['total_principal'] = truncate_number(current_total, 2)
 
       # find total interest credit
