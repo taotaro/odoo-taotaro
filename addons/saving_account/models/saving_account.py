@@ -102,6 +102,8 @@ class SavingAccount(models.Model):
   @api.depends('last_interest_credit')
   def _compute_last_interest_credit(self):
     for rec in self:
+      if rec.close_date != False:
+        _logger.info(f'account closed: {rec.last_interest_credit}')
       interest_credit = rec.env['saving_account.entry'].search([
         ('account_id','=',rec.id), 
         ('entry_type','=','credit_interest'), 
