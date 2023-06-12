@@ -71,7 +71,7 @@ class SavingAccount(models.Model):
       # _logger.info(f'close date of rec: {rec.close_date}')
       if rec.close_date != False:
         _logger.info(f'closed account!: {rec.total_interest}')
-        rec.total_interest = rec.total_interest
+        # rec.total_interest = rec.total_interest
       # search interest entries of account
       interest_list = rec.env['saving_account.entry'].search([
         ('account_id','=',rec.id),
