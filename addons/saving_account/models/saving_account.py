@@ -46,6 +46,8 @@ class SavingAccount(models.Model):
         ('account_id','=',rec.id), 
         ('ledger','=','principal'),
       ])
+      if rec.close_date != False:
+        _logger.info(f'account closed: {rec.account_no}')
       # tally the accumulated total
       if principal_list:
         for principal in principal_list:
