@@ -69,8 +69,6 @@ class TermAccountWizard(models.TransientModel):
       last_interest_credit = truncate_number(account['last_interest_credit'], 2)
       # account['total_principal'] = truncate_number(account['total_principal'], 2)
       account['last_interest_credit'] = truncate_number(account['last_interest_credit'], 2)
-
-      _logger.info(f'account id: {account_no}, close date: {close_date}, last interest credit: {last_interest_credit} ')
       
       # calculate balance upto given date
       principal_list = self.env['saving_account.entry'].search([
@@ -101,6 +99,8 @@ class TermAccountWizard(models.TransientModel):
       ])
       total_interest_credit = 0
       for entry in entries:
+        acc = entry['account_no']
+        _logger.info(f'test entry: {acc}')
         total_interest_credit += entry['amount']
 
       account['total_interest_credit'] = truncate_number(total_interest_credit, 2)
