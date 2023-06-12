@@ -64,11 +64,11 @@ class TermAccountWizard(models.TransientModel):
     for account in accounts:
       close_date = account['close_date']
       account_no = account['account_no']
-      _logger.info(f'account info: {account_no}: {close_date}')
+      # _logger.info(f'account info: {account_no}: {close_date}')
       
       # account['total_principal'] = truncate_number(account['total_principal'], 2)
-      if account['close_date'] <= from_date:
-        _logger.info(f'greater: {account_no}')
+      if account['close_date'] != False:
+        _logger.info(f'greater: {account_no}: {close_date}')
       account['last_interest_credit'] = truncate_number(account['last_interest_credit'], 2)
       
       # calculate balance upto given date
