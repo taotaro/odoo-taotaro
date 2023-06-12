@@ -52,12 +52,12 @@ class TermAccountWizard(models.TransientModel):
       accounts = self.env['saving_account'].search_read([
         ('account_type','=',type_account),
         ('open_date','<=',from_date),
-        ('close_date','=',False)
+        # ('close_date','=',False)
       ])
     else:
       accounts = self.env['saving_account'].search_read([
         ('open_date','<=',from_date),
-        ('close_date','=',False)
+        # ('close_date','=',False)
       ])
 
     # truncate properly
