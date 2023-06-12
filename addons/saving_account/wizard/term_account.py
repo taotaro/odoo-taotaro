@@ -44,6 +44,10 @@ class TermAccountWizard(models.TransientModel):
     
     # find accounts in specified term and types
     accounts = []
+    account_401 = self.env['saving_account'].search_read([
+      ('account_no', '=', '401')
+    ])
+    _logger.info(f'found: account 401 {account_401}')
     if type_account != 'all':
       accounts = self.env['saving_account'].search_read([
         ('account_type','=',type_account),
