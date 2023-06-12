@@ -68,7 +68,7 @@ class TermAccountWizard(models.TransientModel):
       
       # account['total_principal'] = truncate_number(account['total_principal'], 2)
       if account['close_date'] != False:
-        if account['close_data'] <= from_date:
+        if account['close_date'] <= from_date:
           _logger.info(f'greater: {account_no}: {close_date}')
           account['last_interest_credit'] = 0
       account['last_interest_credit'] = truncate_number(account['last_interest_credit'], 2)
