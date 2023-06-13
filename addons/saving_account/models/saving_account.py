@@ -3,6 +3,8 @@
 from odoo import models, fields, api, _
 import datetime
 from ..helper import truncate_number
+import logging
+_logger = logging.getLogger(__name__)
 
 class SavingAccount(models.Model):
   _name = 'saving_account'
@@ -44,6 +46,8 @@ class SavingAccount(models.Model):
         ('account_id','=',rec.id), 
         ('ledger','=','principal'),
       ])
+      if rec.close_date != False:
+        _logger.info(f'account closed: {rec.account_no}')
       # tally the accumulated total
       if principal_list:
         for principal in principal_list:
@@ -61,17 +65,24 @@ class SavingAccount(models.Model):
   # calculate total interest of each account
   @api.onchange('interest_list_ids')
   def _compute_total_interest(self):
+    # _logger.info(f'logs calculating total interest of each account')
     for rec in self:
       current_total = 0
+      # _logger.info(f'close date of rec: {rec.close_date}')
+      if rec.close_date != False:
+        _logger.info(f'closed account!: {rec.total_interest}')
+        # rec.total_interest = rec.total_interest
       # search interest entries of account
       interest_list = rec.env['saving_account.entry'].search([
-        ('account_id','=',rec.id), 
+        ('account_id','=',rec.id),
         ('ledger','=','interest'),
         ('entry_type','in',['interest', 'credit_interest'])
       ])
       # tally the accumulated total
       if interest_list:
         for interest in interest_list:
+          # _logger.info(f'logs interest: {interest}')
+
           if interest.entry_type == 'interest':
             current_total = current_total + interest.amount
           if interest.entry_type == 'credit_interest':
@@ -92,6 +103,7 @@ class SavingAccount(models.Model):
 
   @api.depends('last_interest_credit')
   def _compute_last_interest_credit(self):
+    _logger.info('last interest credit')
     for rec in self:
       interest_credit = rec.env['saving_account.entry'].search([
         ('account_id','=',rec.id), 

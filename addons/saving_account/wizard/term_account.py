@@ -4,6 +4,7 @@ import base64
 import logging
 _logger = logging.getLogger(__name__)
 
+
 class TermAccountWizard(models.TransientModel):
   _name="term_account.report.wizard"
   _description="Print Term Account Report Wizard"
@@ -43,23 +44,38 @@ class TermAccountWizard(models.TransientModel):
     
     # find accounts in specified term and types
     accounts = []
+    account_401 = self.env['saving_account'].search_read([
+      ('account_no', '=', '401')
+    ])
+    _logger.info(f'found: account 401 {account_401}')
     if type_account != 'all':
       accounts = self.env['saving_account'].search_read([
         ('account_type','=',type_account),
         ('open_date','<=',from_date),
-        ('close_date','=',False)
+        # ('close_date','=',False)
       ])
     else:
       accounts = self.env['saving_account'].search_read([
         ('open_date','<=',from_date),
-        ('close_date','=',False)
+        # ('close_date','=',False)
       ])
 
     # truncate properly
     for account in accounts:
-      total_principal = truncate_number(account['total_principal'], 2)
-      last_interest_credit = truncate_number(account['last_interest_credit'], 2)
+      close_date = account['close_date']
+      account_no = account['account_no']
+      # _logger.info(f'account info: {account_no}: {close_date}')
+      
       # account['total_principal'] = truncate_number(account['total_principal'], 2)
+
+     ###### ADD THIS BACK
+      # if account['close_date'] != False:
+      #   if account['close_date'] <= from_date:
+      #     _logger.info(f'greater: {account_no}: {close_date}')
+      #     account['last_interest_credit'] = 0
+
+
+
       account['last_interest_credit'] = truncate_number(account['last_interest_credit'], 2)
       
       # calculate balance upto given date
@@ -77,8 +93,8 @@ class TermAccountWizard(models.TransientModel):
             current_total = current_total - principal.amount
           elif principal.entry_type == "credit_interest":
             current_total = current_total + principal.amount
-      _logger.info(f'principal current: {current_total}')
-      _logger.info(f'total principal: {total_principal}')
+      # _logger.info(f'principal current: {current_total}')
+      # _logger.info(f'total principal: {total_principal}')
       account['total_principal'] = truncate_number(current_total, 2)
 
       # find total interest credit
@@ -91,6 +107,8 @@ class TermAccountWizard(models.TransientModel):
       ])
       total_interest_credit = 0
       for entry in entries:
+        acc = entry['account_no']
+        _logger.info(f'test entry: {acc}')
         total_interest_credit += entry['amount']
 
       account['total_interest_credit'] = truncate_number(total_interest_credit, 2)
