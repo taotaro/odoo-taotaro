@@ -76,7 +76,7 @@ class TermAccountWizard(models.TransientModel):
 
 
 
-      account['last_interest_credit'] = truncate_number(account['last_interest_credit'], 2)
+      # account['last_interest_credit'] = truncate_number(account['last_interest_credit'], 2)
       credit_total = 0
       interest_credit = self.env['saving_account.entry'].search([
         ('account_id','=',account['id']), 
