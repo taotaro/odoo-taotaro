@@ -84,8 +84,12 @@ class TermAccountWizard(models.TransientModel):
         ('ledger','=','principal'),
         ('entry_date','<=',from_date)
         ])
-
-      _logger.info(f'credit total: {interest_credit} ')
+      if interest_credit:
+        account['last_interest_credit'] = interest_credit[-1].amount
+      else:
+        account['last_interest_credit'] = 0.0
+      last_interest_credit = account['last_interest_credit']
+      _logger.info(f'credit total: {last_interest_credit} ')
 
       # calculate balance upto given date
       principal_list = self.env['saving_account.entry'].search([
