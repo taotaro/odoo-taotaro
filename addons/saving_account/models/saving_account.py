@@ -44,10 +44,11 @@ class SavingAccount(models.Model):
             )
 
         # create unique id for each account (only if not provided)
-        vals.setdefault(
-            'account_no',
-            self.env['ir.sequence'].next_by_code('saving_account')
-        )
+        vals['account_no'] = self.env['ir.sequence'].next_by_code('saving_account')
+        # vals.setdefault(
+        #     'account_no',
+        #     self.env['ir.sequence'].next_by_code('saving_account')
+        # )
 
     return super().create(vals_list)
     
