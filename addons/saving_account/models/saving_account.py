@@ -31,10 +31,11 @@ class SavingAccount(models.Model):
   custom2 = fields.Text(string='Custom 2')
 
   @api.model
-  def create(self, vals):
-    # create unique id for each account
-    vals['account_no'] = self.env['ir.sequence'].next_by_code('saving_account')
-    return super(SavingAccount, self).create(vals)
+  def create(self, vals_list):
+    for vals in vals_list:
+      # create unique id for each account
+      vals['account_no'] = self.env['ir.sequence'].next_by_code('saving_account')
+      return super(SavingAccount, self).create(vals)
   
   # calculate total principal amount of each account
   @api.depends('principal_list_ids')
