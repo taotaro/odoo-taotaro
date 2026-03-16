@@ -146,30 +146,67 @@ class SavingAccountEntry(models.Model):
     print("Calculating daily interest")
     # search for accounts that are still open
     accounts = self.env['saving_account'].search([('close_date','=',False)])
-    if accounts:
-      for account in accounts:
-        account_type = account.account_type
-        # find rate to calculate daily interest
-        rate = self.env['interest.rate'].search([
-          ('start_date','<=',fields.Date.today()),
-          ('account_type','=',account_type)], 
-          order='start_date'
-        )[-1]
-        # if no rate, then no calculation
-        if not rate:
-          rate.annual_rate = 0
-        # if rate is found, create the interest record
-        if rate:
-          interest_amount = (account.total_principal * (rate.annual_rate / 100)) / 365
-          list = {
-            'ledger': 'interest',
-            'entry_type': 'interest',
-            'account_id': account.id,
-            'amount': truncate_number(interest_amount, 4),
-            'description': 'Daily Interest - Base Amount: %.2f' % account.total_principal
-          }
-          self.create(list)
+    if not accounts:
+      return
+
+    today = fields.Date.today()
+      
+    for account in accounts:
+      account_type = account.account_type
+
+      # ✅ 用 limit=1 + desc，避免 search()[−1] 空陣列爆炸
+      rate = self.env['interest.rate'].search(
+          [
+              ('start_date', '<=', today),
+              ('account_type', '=', account_type),
+          ],
+          order='start_date desc',
+          limit=1,
+      )
+
+      # 如果冇 rate，就 skip（唔好寫 rate.annual_rate = 0）
+      if not rate:
+        continue
+
+      interest_amount = (account.total_principal * (rate.annual_rate / 100.0)) / 365.0
+
+      vals = {
+          'ledger': 'interest',
+          'entry_type': 'interest',
+          'account_id': account.id,
+          'amount': truncate_number(interest_amount, 4),
+          'description': 'Daily Interest - Base Amount: %.2f' % account.total_principal,
+      }
+
+      # ✅ 重點：create_multi 要 list of dicts
+      self.create([vals])
+      
     return
+      
+    # if accounts:
+    #   for account in accounts:
+    #     account_type = account.account_type
+    #     # find rate to calculate daily interest
+    #     rate = self.env['interest.rate'].search([
+    #       ('start_date','<=',fields.Date.today()),
+    #       ('account_type','=',account_type)], 
+    #       order='start_date'
+    #     )[-1]
+    #     # if no rate, then no calculation
+    #     if not rate:
+    #       rate.annual_rate = 0
+    #     # if rate is found, create the interest record
+    #     if rate:
+    #       interest_amount = (account.total_principal * (rate.annual_rate / 100)) / 365
+    #       list = {
+    #         'ledger': 'interest',
+    #         'entry_type': 'interest',
+    #         'account_id': account.id,
+    #         'amount': truncate_number(interest_amount, 4),
+    #         'description': 'Daily Interest - Base Amount: %.2f' % account.total_principal
+    #       }
+    #       self.create(list)
+    # return
 
   # moving credit interests from interest to principal by creating records
   @api.model
