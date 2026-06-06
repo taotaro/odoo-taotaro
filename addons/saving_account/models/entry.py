@@ -87,32 +87,58 @@ class SavingAccountEntry(models.Model):
       elif rec.amount < 0:
         raise ValidationError(_("Value must not be negative. 數值不能為負值。"))
 
-  @api.model
-  def create(self, vals):
-    print("calling create")
-    # fill entry type field if there is any special conditions
-    try:
-      if vals['entry_type_principal']:
-        self['entry_type'] = self['entry_type_principal']
-        vals['entry_type'] = vals['entry_type_principal']
-    except:
-      print("no entry_type_principal")
+  @api.model_create_multi
+  def create(self, vals_list):
+      for vals in vals_list:
+          # fill entry_type from entry_type_principal if provided
+          if vals.get('entry_type_principal'):
+              vals['entry_type'] = vals['entry_type_principal']
 
-    # fill reference number according to entry type
-    if vals['entry_type']:
-      if vals['entry_type'] == 'deposit':
-        vals['ref_no'] = 'DP'
-        vals['ledger'] = 'principal'
-      if vals['entry_type'] == 'withdraw':
-        vals['ref_no'] = 'WD'
-        vals['ledger'] = 'principal'
-      if vals['entry_type'] == 'credit_interest':
-        vals['ref_no'] = 'CI'
+          entry_type = vals.get('entry_type')
 
-    # create unique id for each entry
-    vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry')
+          # fill reference number according to entry type
+          if entry_type == 'deposit':
+              vals['ref_no'] = 'DP'
+              vals['ledger'] = 'principal'
+          elif entry_type == 'withdraw':
+              vals['ref_no'] = 'WD'
+              vals['ledger'] = 'principal'
+          elif entry_type == 'credit_interest':
+              vals['ref_no'] = 'CI'
 
-    return super(SavingAccountEntry, self).create(vals)
+          # create unique id for each entry
+          if not vals.get('entry_no'):
+              vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry') or '/'
+
+      return super().create(vals_list)
+
+
+  # @api.model
+  # def create(self, vals):
+  #   print("calling create")
+  #   # fill entry type field if there is any special conditions
+  #   try:
+  #     if vals['entry_type_principal']:
+  #       self['entry_type'] = self['entry_type_principal']
+  #       vals['entry_type'] = vals['entry_type_principal']
+  #   except:
+  #     print("no entry_type_principal")
+
+  #   # fill reference number according to entry type
+  #   if vals['entry_type']:
+  #     if vals['entry_type'] == 'deposit':
+  #       vals['ref_no'] = 'DP'
+  #       vals['ledger'] = 'principal'
+  #     if vals['entry_type'] == 'withdraw':
+  #       vals['ref_no'] = 'WD'
+  #       vals['ledger'] = 'principal'
+  #     if vals['entry_type'] == 'credit_interest':
+  #       vals['ref_no'] = 'CI'
+
+  #   # create unique id for each entry
+  #   vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry')
+
+  #   return super(SavingAccountEntry, self).create(vals)
 
   # calculates daily interest with specified rate
   @api.model

@@ -14,14 +14,16 @@
                                 string="Deposit/Withdraw"
                                 class="oe_highlight"
                                 context="{'close_date': False}"
-                                type="object"/>
+                                type="object"
+                                invisible="not account_no"/>
 
                         <button name="action_close_account"
                                 string="Close Account"
                                 class="oe_highlight"
                                 context="{'close_date': False}"
                                 type="object"
-                                confirm="Confirm closing this account? No further transaction is allowed after Account Closing! 確定關閉此帳戶? 帳戶關閉後將不能作任何交易!"/>
+                                confirm="Confirm closing this account? No further transaction is allowed after Account Closing! 確定關閉此帳戶? 帳戶關閉後將不能作任何交易!"
+                                invisible="not account_no"/>
                     </header>
 
                     <sheet>
