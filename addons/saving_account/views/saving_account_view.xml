@@ -44,11 +44,6 @@
                             </group>
                         </group>
                     </sheet>
-
-                    <footer>
-                        <button string="Save" class="btn-primary" special="save"/>
-                        <button string="Discard" class="btn-secondary" special="cancel"/>
-                    </footer>
                 </form>
             </field>
         </record>
