@@ -1,6 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="view_entry_form" model="ir.ui.view">
+        <field name="name">saving_account.entry.form</field>
+        <field name="model">saving_account.entry</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="account_id" string="Account"/>
+                        <field name="entry_date" string="Entry Date"/>
+                        <field name="ledger" string="Ledger"/>
+                        <field name="entry_type"
+                               string="Entry Type"
+                               invisible="ledger != 'interest'"/>
+                        <field name="entry_type_principal"
+                               string="Entry Type"
+                               invisible="ledger != 'principal'"/>
+                        <field name="amount" string="Amount"/>
+                        <field name="description" string="Description"/>
+                        <field name="reference" string="Reference"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_entry_form1" model="ir.ui.view">
+        <field name="name">saving_account.entry.form.readonly</field>
+        <field name="model">saving_account.entry</field>
+        <field name="arch" type="xml">
+            <form create="false">
+                <sheet>
+                    <group>
+                        <field name="account_id" string="Account" readonly="True"/>
+                        <field name="entry_date" string="Entry Date" readonly="True"/>
+                        <field name="ledger" string="Ledger" readonly="True"/>
+                        <field name="entry_type"
+                               string="Entry Type"
+                               invisible="ledger != 'interest'"/>
+                        <field name="entry_type_principal"
+                               string="Entry Type"
+                               invisible="ledger != 'principal'"/>
+                        <field name="amount" string="Amount"/>
+                        <field name="description" string="Description"/>
+                        <field name="reference" string="Reference"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_entry_list" model="ir.ui.view">
+        <field name="name">saving_account.entry.list</field>
+        <field name="model">saving_account.entry</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="entry_no" string="Entry No"/>
+                <field name="entry_date" string="Entry Date"/>
+                <field name="entry_type" string="Entry Type"/>
+                <field name="ledger" string="Ledger"/>
+                <field name="account_no" string="Account ID"/>
+                <field name="account_id" string="Account Name"/>
+                <field name="description" string="Description"/>
+                <field name="reference" string="Reference"/>
+                <field name="amount_signed" string="Amount"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_entry" model="ir.actions.act_window">
+        <field name="name">Entries</field>
+        <field name="res_model">saving_account.entry</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first entry!
+            </p>
+        </field>
+    </record>
+
+</odoo>
+
+<!-- <?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
   <record id="view_entry_form" model="ir.ui.view">
     <field name="name">saving_account.entry.form</field>
     <field name="model">saving_account.entry</field>
@@ -74,4 +159,4 @@
     </field>
   </record>
 
-</odoo>
+</odoo> -->
