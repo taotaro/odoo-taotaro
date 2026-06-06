@@ -73,6 +73,7 @@
             </field>
         </record>
 
+        <!-- 原本主畫面瀏覽 action -->
         <record id="action_saving_account" model="ir.actions.act_window">
             <field name="name">Accounts</field>
             <field name="res_model">saving_account</field>
@@ -85,8 +86,19 @@
             </field>
         </record>
 
+        <!-- ✅ 新增 popup create action -->
+        <record id="action_saving_account_popup" model="ir.actions.act_window">
+            <field name="name">New Account</field>
+            <field name="res_model">saving_account</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_saving_account_form"/>
+            <field name="target">new</field>
+            <field name="context">{}</field>
+        </record>
+
     </data>
 </odoo>
+
 
 <!-- <?xml version="1.0" encoding="utf-8"?>
 <odoo>
