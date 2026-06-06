@@ -80,6 +80,11 @@
         </field>
     </record>
 
+  <footer>
+      <button string="Save" class="btn-primary" special="save"/>
+      <button string="Discard" class="btn-secondary" special="cancel"/>
+  </footer>
+
 </odoo>
 
 <!-- <?xml version="1.0" encoding="utf-8"?>
