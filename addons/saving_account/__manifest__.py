@@ -75,10 +75,32 @@
     'version': '19.0.1.0.0',
 
     # ✅ MINIMAL first – avoid chain failures
-    'depends': ['base'],
+    # 'depends': ['base'],
+    'depends': ['base', 'mail'],
 
     # ✅ START EMPTY to make module load first
+    # 'data': [
+    # ],
     'data': [
+      'security/ir.model.access.csv',
+      'data/sequence_data.xml',
+      'data/cron.xml',
+      # 'data/saving_account_demo.xml',
+      # 'data/entry_demo.xml',
+      # 'data/interest_rate_demo.xml',
+      'wizard/term_account_view.xml',
+      'wizard/term_individual_account_view.xml',
+      'wizard/daily_financial_view.xml',
+      'views/saving_account_view.xml',
+      'views/entry_view.xml',
+      'views/rate_view.xml',
+      'views/email_setup_view.xml',
+      'views/menu.xml',
+      'report/term_account_template.xml',
+      'report/term_individual_account_template.xml',
+      'report/daily_financial_template.xml',
+      'report/report.xml',
+      'data/mail_template_data.xml',
     ],
 
     'demo': [],
