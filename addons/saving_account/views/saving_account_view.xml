@@ -7,7 +7,9 @@
             <field name="model">saving_account</field>
             <field name="arch" type="xml">
                 <form>
-                    <header>
+                    <header>                
+                        <button string="Save" special="save"/>
+                        <button string="Discard" special="cancel"/>
                         <button name="open_deposit_withdraw_form"
                                 string="Deposit/Withdraw"
                                 class="oe_highlight"
