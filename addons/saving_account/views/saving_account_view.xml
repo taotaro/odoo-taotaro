@@ -90,75 +90,90 @@
 
 <!-- <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
 
-  <record id="view_saving_account_form" model="ir.ui.view">
-    <field name="name">saving_account.form</field>
-    <field name="model">saving_account</field>
-    <field name="arch" type="xml">
-      <form>
-        <header>
-          <button name="open_deposit_withdraw_form" string="Deposit/Withdraw" class="oe_highlight" 
-          context="{'close_date': 'False'}" type="object"/>
-          <button name="action_close_account" string="Close Account" class="oe_highlight"
-          context="{'close_date': 'False'}" type="object"
-          confirm="Confirm closing this account? No further transaction is allowed after Account Closing! 
-          確定關閉此帳戶? 帳戶關閉後將不能作任何交易!"/>
-        </header>
-        <sheet>
-        <group>
-          <group>
-            <field name="account_type"/>
-            <field name="name"/>
-            <field name="email"/>
-            <field name="phone"/>
-          </group>
-          <group>
-            <field name="open_date" attrs="{'readonly': 1}"/>
-            <field name="close_date" attrs="{'readonly': 1}"/>
-          </group>
-          <group>
-            <field name="total_principal"/>
-            <field name="total_interest"/>
-            <field name="custom1"/>
-            <field name="custom2"/>
-          </group>
-        </group>
-        </sheet>
-      </form>
-    </field>
-  </record>
+        <record id="view_saving_account_form" model="ir.ui.view">
+            <field name="name">saving_account.form</field>
+            <field name="model">saving_account</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="open_deposit_withdraw_form"
+                                string="Deposit/Withdraw"
+                                class="oe_highlight"
+                                context="{'close_date': False}"
+                                type="object"/>
 
-  <record id="view_saving_account_tree" model="ir.ui.view">
-    <field name="name">saving_account.tree</field>
-    <field name="model">saving_account</field>
-    <field name="arch" type="xml">
-      <tree>
-        <field name="account_no" string="Account ID"/>
-        <field name="name" string="Name"/>
-        <field name="account_type" string="Account Type"/>
-        <field name="open_date" string="Open Date"/>
-        <field name="close_date" string="Close Date"/>
-        <field name="total_principal" string="Principal"/>
-        <field name="total_interest" string="Interest"/>
-        <field name="phone" string="Phone"/>
-        <field name="email" string="Email"/>
-        <field name="custom1" string="Custom 1"/>
-        <field name="custom2" string="Custom 2"/>
-      </tree>
-    </field>
-  </record>
+                        <button name="action_close_account"
+                                string="Close Account"
+                                class="oe_highlight"
+                                context="{'close_date': False}"
+                                type="object"
+                                confirm="Confirm closing this account? No further transaction is allowed after Account Closing! 確定關閉此帳戶? 帳戶關閉後將不能作任何交易!"/>
+                    </header>
 
-  <record id="action_saving_account" model="ir.actions.act_window">
-    <field name="name">Accounts</field>
-    <field name="type">ir.actions.act_window</field>
-    <field name="res_model">saving_account</field>
-    <field name="view_mode">tree,form</field>
-    <field name="context">{}</field>
-    <field name="help" type="html">
-      <p class="o_view_nocontent_smiling_face">
-        Create your first account!
-      </p>
-    </field>
-  </record>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="account_type"/>
+                                <field name="name"/>
+                                <field name="email"/>
+                                <field name="phone"/>
+                            </group>
 
+                            <group>
+                                <field name="open_date" readonly="True"/>
+                                <field name="close_date" readonly="True"/>
+                            </group>
+
+                            <group>
+                                <field name="total_principal"/>
+                                <field name="total_interest"/>
+                                <field name="custom1"/>
+                                <field name="custom2"/>
+                            </group>
+                        </group>
+                    </sheet>
+
+                    <footer>
+                        <button string="Save" class="btn-primary" special="save"/>
+                        <button string="Discard" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_saving_account_list" model="ir.ui.view">
+            <field name="name">saving_account.list</field>
+            <field name="model">saving_account</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="account_no" string="Account ID"/>
+                    <field name="name" string="Name"/>
+                    <field name="account_type" string="Account Type"/>
+                    <field name="open_date" string="Open Date"/>
+                    <field name="close_date" string="Close Date"/>
+                    <field name="total_principal" string="Principal"/>
+                    <field name="total_interest" string="Interest"/>
+                    <field name="phone" string="Phone"/>
+                    <field name="email" string="Email"/>
+                    <field name="custom1" string="Custom 1"/>
+                    <field name="custom2" string="Custom 2"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="action_saving_account" model="ir.actions.act_window">
+            <field name="name">Accounts</field>
+            <field name="res_model">saving_account</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first account!
+                </p>
+            </field>
+        </record>
+
+    </data>
 </odoo> -->
