@@ -77,12 +77,15 @@ class SavingAccountEntry(models.Model):
   def _check_amount(self):
     print("calling check amount")
     for rec in self:
-      current_total = rec.account_id.total_principal + rec.amount
+      # current_total = rec.account_id.total_principal + rec.amount
+      current_total = rec.account_id.total_principal + rec.account_id.total_interest
       # check if account is closed or not
       if rec.entry_type == 'deposit' and rec.account_id.close_date != False:
         raise ValidationError(_("Deposit is not allowed for closed account. 不能為已關閉的帳戶進行存款操作。"))
       #check if amount is greater than total money in account
-      elif rec.entry_type == 'withdraw' and rec.amount > current_total + rec.account_id.total_interest:
+      elif rec.entry_type == 'withdraw' and rec.amount > current_total:
+        raise ValidationError(_("Withdraw Amount must not be larger than Principal Amount. 提款金額不能高於帳戶本金金額。"))
+      elif rec.amount > rec.account_id.total_principal:
         raise ValidationError(_("Withdraw Amount must not be larger than Principal Amount. 提款金額不能高於帳戶本金金額。"))
       elif rec.amount < 0:
         raise ValidationError(_("Value must not be negative. 數值不能為負值。"))
