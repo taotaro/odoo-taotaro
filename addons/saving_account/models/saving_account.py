@@ -68,7 +68,8 @@ class SavingAccount(models.Model):
             current_total = current_total + principal.amount
 
       # update the amount
-      rec.total_principal = rec.total_principal + current_total
+      rec.total_principal = current_total
+      # rec.total_principal = rec.total_principal + current_total
       rec.total_principal = truncate_number(rec.total_principal, 2)
 
   # calculate total interest of each account
@@ -98,7 +99,8 @@ class SavingAccount(models.Model):
             current_total = current_total - interest.amount
 
       # update the amount
-      rec.total_interest = rec.total_interest + current_total
+      rec.total_interest = current_total
+      # rec.total_interest = rec.total_interest + current_total
       rec.total_interest = truncate_number(rec.total_interest, 4)
   
   # add a sign to unique account id according to account type

@@ -85,18 +85,18 @@ class SavingAccountEntry(models.Model):
       #check if amount is greater than total money in account
       elif rec.entry_type == 'withdraw' and rec.amount > current_total:
         raise ValidationError(_(
-                    "Withdraw Amount must not be larger than available balance.\n"
-                    "提款金額不能高於可用結餘。\n\n"
-                    "Withdraw Amount / 提款金額: %.2f\n"
-                    "Principal / 本金: %.2f\n"
-                    "Interest / 利息: %.4f\n"
-                    "Available Balance / 可用結餘: %.4f"
-                ) % (
-                    rec.amount,
-                    rec.account_id.total_principal,
-                    rec.account_id.total_interest,
-                    current_total,
-                ))
+                  "Withdraw Amount must not be larger than available balance.\n"
+                  "提款金額不能高於可用結餘。\n\n"
+                  "Withdraw Amount / 提款金額: %.2f\n"
+                  "Principal / 本金: %.2f\n"
+                  "Interest / 利息: %.4f\n"
+                  "Available Balance / 可用結餘: %.4f"
+              ) % (
+                  rec.amount,
+                  rec.account_id.total_principal,
+                  rec.account_id.total_interest,
+                  current_total,
+              ))
 
         # raise ValidationError(_("Withdraw Amount must not be larger than Principal Amount. 提款金額不能高於帳戶本金金額。"))
       elif rec.amount < 0:
