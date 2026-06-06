@@ -9,7 +9,7 @@
             <field name="code">model._cron_daily_interest()</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
+            <!-- <field name="numbercall">-1</field> -->
   </record>
 
   <record id="ir_cron_data_move_credit_interest" model="ir.cron">
@@ -21,7 +21,7 @@
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
             <!-- <field name="nextcall" eval="(DateTime.now().replace(month=9, day=30, hour=18, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" /> -->
-            <field name="numbercall">-1</field>
+            <!-- <field name="numbercall">-1</field> -->
   </record>
 
   <record id="ir_cron_data_email_daily_financial_statement" model="ir.cron">
@@ -32,7 +32,7 @@
             <field name="code">model._cron_send_email()</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
+            <!-- <field name="numbercall">-1</field> -->
   </record>
 
   <record id="ir_cron_data_email_term_account" model="ir.cron">
@@ -43,7 +43,7 @@
             <field name="code">model._cron_send_email()</field>
             <field name="interval_number">1</field>
             <field name="interval_type">weeks</field>
-            <field name="numbercall">-1</field>
+            <!-- <field name="numbercall">-1</field> -->
   </record>
 
   <record id="ir_cron_data_email_term_individual_account" model="ir.cron">
@@ -54,7 +54,7 @@
             <field name="code">model._cron_send_email()</field>
             <field name="interval_number">1</field>
             <field name="interval_type">weeks</field>
-            <field name="numbercall">-1</field>
+            <!-- <field name="numbercall">-1</field> -->
   </record>
 
 </odoo>
