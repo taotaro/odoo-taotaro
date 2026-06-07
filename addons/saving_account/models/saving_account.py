@@ -22,8 +22,23 @@ class SavingAccount(models.Model):
   phone = fields.Char(string='Phone Number')
   open_date = fields.Date(string='Open Date', default=fields.Date.today())
   close_date = fields.Date(string='Close Date')
-  principal_list_ids = fields.One2many('saving_account.entry', 'amount', string="Principal Lists", domain=[('entry_type','in',['deposit', 'withdraw'])])
-  interest_list_ids = fields.One2many('saving_account.entry', 'entry_no', string="Interest Lists", domain=[('entry_type','=','interest')])
+    
+  principal_list_ids = fields.One2many(
+      'saving_account.entry',
+      'account_id',   # ✅ 正確 inverse field
+      string="Principal Lists",
+      domain=[('entry_type', 'in', ['deposit', 'withdraw'])]
+  )
+
+  interest_list_ids = fields.One2many(
+      'saving_account.entry',
+      'account_id',   # ✅ 同樣係 account_id
+      string="Interest Lists",
+      domain=[('entry_type', '=', 'interest')]
+  )
+
+  # principal_list_ids = fields.One2many('saving_account.entry', 'amount', string="Principal Lists", domain=[('entry_type','in',['deposit', 'withdraw'])])
+  # interest_list_ids = fields.One2many('saving_account.entry', 'entry_no', string="Interest Lists", domain=[('entry_type','=','interest')])
   total_principal = fields.Float(compute='_compute_total_principal', compute_sudo=True, string='Principal')
   total_interest = fields.Float(compute='_compute_total_interest', compute_sudo=True, string='Interest', digits=(16, 4))
   last_interest_credit = fields.Float(compute='_compute_last_interest_credit', compute_sudo=True, string='Last Interest Credit')
