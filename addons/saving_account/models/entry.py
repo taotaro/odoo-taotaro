@@ -179,7 +179,6 @@ class SavingAccountEntry(models.Model):
               vals['ledger'] = 'principal'
           elif entry_type == 'credit_interest':
               vals['ref_no'] = 'CI'
-              vals['ledger'] = 'principal'   # ✅ FIX
 
           # create unique id for each entry
           if not vals.get('entry_no'):
