@@ -131,35 +131,35 @@ class SavingAccountEntry(models.Model):
         if rec.amount < 0:
             raise ValidationError(_("Value must not be negative.")) 
   
-  # check for validity and produce errors
-  @api.constrains('entry_type_principal', 'entry_type', 'amount')
-  def _check_amount(self):
-    print("calling check amount")
-    for rec in self:
-      # current_total = rec.account_id.total_principal + rec.amount
-      current_total = rec.account_id.total_principal + rec.account_id.total_interest
-      # check if account is closed or not
-      if rec.entry_type == 'deposit' and rec.account_id.close_date != False:
-        raise ValidationError(_("Deposit is not allowed for closed account. 不能為已關閉的帳戶進行存款操作。"))
-      #check if amount is greater than total money in account
-      elif rec.entry_type == 'withdraw' and rec.amount > current_total:
-        raise ValidationError(_(
-                  "Withdraw Amount must not be larger than available balance.\n"
-                  "提款金額不能高於可用結餘。\n\n"
-                  "Withdraw Amount / 提款金額: %.2f\n"
-                  "Principal / 本金: %.2f\n"
-                  "Interest / 利息: %.4f\n"
-                  "Available Balance / 可用結餘: %.4f"
-              ) % (
-                  rec.amount,
-                  rec.account_id.total_principal,
-                  rec.account_id.total_interest,
-                  current_total,
-              ))
+  # # check for validity and produce errors
+  # @api.constrains('entry_type_principal', 'entry_type', 'amount')
+  # def _check_amount(self):
+  #   print("calling check amount")
+  #   for rec in self:
+  #     # current_total = rec.account_id.total_principal + rec.amount
+  #     current_total = rec.account_id.total_principal + rec.account_id.total_interest
+  #     # check if account is closed or not
+  #     if rec.entry_type == 'deposit' and rec.account_id.close_date != False:
+  #       raise ValidationError(_("Deposit is not allowed for closed account. 不能為已關閉的帳戶進行存款操作。"))
+  #     #check if amount is greater than total money in account
+  #     elif rec.entry_type == 'withdraw' and rec.amount > current_total:
+  #       raise ValidationError(_(
+  #                 "Withdraw Amount must not be larger than available balance.\n"
+  #                 "提款金額不能高於可用結餘。\n\n"
+  #                 "Withdraw Amount / 提款金額: %.2f\n"
+  #                 "Principal / 本金: %.2f\n"
+  #                 "Interest / 利息: %.4f\n"
+  #                 "Available Balance / 可用結餘: %.4f"
+  #             ) % (
+  #                 rec.amount,
+  #                 rec.account_id.total_principal,
+  #                 rec.account_id.total_interest,
+  #                 current_total,
+  #             ))
 
-        # raise ValidationError(_("Withdraw Amount must not be larger than Principal Amount. 提款金額不能高於帳戶本金金額。"))
-      elif rec.amount < 0:
-        raise ValidationError(_("Value must not be negative. 數值不能為負值。"))
+  #       # raise ValidationError(_("Withdraw Amount must not be larger than Principal Amount. 提款金額不能高於帳戶本金金額。"))
+  #     elif rec.amount < 0:
+  #       raise ValidationError(_("Value must not be negative. 數值不能為負值。"))
 
   @api.model_create_multi
   def create(self, vals_list):
