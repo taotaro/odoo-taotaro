@@ -78,7 +78,8 @@ class SavingAccountEntry(models.Model):
         if not rec.account_id:
             continue
 
-        account = rec.account_id
+        rec.account_id._compute_total_principal()
+        # account = rec.account_id
         # account = self.env['saving_account'].browse(rec.account_id.id)
 
         # ✅ Calculate principal manually
@@ -116,7 +117,7 @@ class SavingAccountEntry(models.Model):
         if rec.entry_type == 'deposit' and rec.account_id.close_date:
             raise ValidationError(_("Deposit is not allowed for closed account."))
 
-        if rec.entry_type == 'withdraw' and rec.amount > account.total_principal :
+        if rec.entry_type == 'withdraw' and rec.amount > rec.account_id.total_principal :
             raise ValidationError(_(
                   "Withdraw Amount must not be larger than Principal Amount.\n"
                   "提款金額不能高於帳戶本金金額。\n\n"
@@ -124,7 +125,7 @@ class SavingAccountEntry(models.Model):
                   "Principal / 本金: %.2f\n"
                   )  % (
                   rec.amount,
-                  account.total_principal
+                  rec.account_id.total_principal
                   ))
             # raise ValidationError(_(
             #     "Withdraw Amount must not be larger than available balance.\n\n"
