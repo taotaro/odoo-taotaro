@@ -22,7 +22,7 @@
                                 context="{'close_date': False}"
                                 type="object"
                                 confirm="Confirm closing this account? No further transaction is allowed after Account Closing! 確定關閉此帳戶? 帳戶關閉後將不能作任何交易!"
-                                invisible="account_no or close_date"/>
+                                invisible="not account_no or close_date"/>
                     </header>
 
                     <sheet>
