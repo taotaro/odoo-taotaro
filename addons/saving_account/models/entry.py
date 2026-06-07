@@ -117,16 +117,18 @@ class SavingAccountEntry(models.Model):
         if rec.entry_type == 'deposit' and rec.account_id.close_date:
             raise ValidationError(_("Deposit is not allowed for closed account."))
 
-        if rec.entry_type == 'withdraw' and rec.amount > rec.account_id.total_principal :
-            raise ValidationError(_(
-                  "Withdraw Amount must not be larger than Principal Amount.\n"
-                  "提款金額不能高於帳戶本金金額。\n\n"
-                  "Withdraw Amount / 提款金額: %.2f\n"
-                  "Principal / 本金: %.2f\n"
-                  )  % (
-                  rec.amount,
-                  rec.account_id.total_principal
-                  ))
+        if rec.entry_type == 'withdraw' and rec.account_id.total_principal < 0:
+            raise ValidationError(_("Withdraw Amount must not be larger than Principal Amount. 提款金額不能高於帳戶本金金額。"))
+            
+            # raise ValidationError(_(
+            #       "Withdraw Amount must not be larger than Principal Amount.\n"
+            #       "提款金額不能高於帳戶本金金額。\n\n"
+            #       "Withdraw Amount / 提款金額: %.2f\n"
+            #       "Principal / 本金: %.2f\n"
+            #       )  % (
+            #       rec.amount,
+            #       rec.account_id.total_principal
+            #       ))
             # raise ValidationError(_(
             #     "Withdraw Amount must not be larger than available balance.\n\n"
             #     "Withdraw Amount: %.2f\n"
