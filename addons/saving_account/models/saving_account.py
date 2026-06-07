@@ -207,6 +207,6 @@ class SavingAccount(models.Model):
           'default_account_id': account.id,
           'default_ledger': 'principal',
           'default_entry_type_principal': 'withdraw',
-          'default_amount': account.total_principal + account.total_interest
+          'default_amount': account.total_principal # + account.total_interest
         }
       } 
