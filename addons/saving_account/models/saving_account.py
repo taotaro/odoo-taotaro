@@ -27,14 +27,14 @@ class SavingAccount(models.Model):
       'saving_account.entry',
       'account_id',   # ✅ 正確 inverse field
       string="Principal Lists",
-      domain=[('entry_type', 'in', ['deposit', 'withdraw'])]
+      domain=[('ledger', '=', 'principal')]
   )
 
   interest_list_ids = fields.One2many(
       'saving_account.entry',
       'account_id',   # ✅ 同樣係 account_id
       string="Interest Lists",
-      domain=[('entry_type', '=', 'interest')]
+      domain=[('ledger', '=', 'interest')]
   )
 
   # principal_list_ids = fields.One2many('saving_account.entry', 'amount', string="Principal Lists", domain=[('entry_type','in',['deposit', 'withdraw'])])
