@@ -72,6 +72,65 @@ class SavingAccountEntry(models.Model):
 
     return principal_list
     
+  @api.constrains('entry_type_principal', 'entry_type', 'amount', 'account_id')
+  def _check_amount(self):
+    for rec in self:
+        if not rec.account_id:
+            continue
+
+        # ✅ Calculate principal manually
+        principal_total = 0.0
+        principal_entries = self.env['saving_account.entry'].search([
+            ('account_id', '=', rec.account_id.id),
+            ('ledger', '=', 'principal'),
+        ])
+
+        for line in principal_entries:
+            if line.entry_type == 'deposit':
+                principal_total += line.amount
+            elif line.entry_type == 'withdraw':
+                principal_total -= line.amount
+            elif line.entry_type == 'credit_interest':
+                principal_total += line.amount
+
+        # # ✅ Calculate interest manually
+        # interest_total = 0.0
+        # interest_entries = self.env['saving_account.entry'].search([
+        #     ('account_id', '=', rec.account_id.id),
+        #     ('ledger', '=', 'interest'),
+        #     ('entry_type', 'in', ['interest', 'credit_interest'])
+        # ])
+
+        # for line in interest_entries:
+        #     if line.entry_type == 'interest':
+        #         interest_total += line.amount
+        #     elif line.entry_type == 'credit_interest':
+        #         interest_total -= line.amount
+
+        available_total = principal_total #+ interest_total
+
+        # ✅ Validation
+        if rec.entry_type == 'deposit' and rec.account_id.close_date:
+            raise ValidationError(_("Deposit is not allowed for closed account."))
+
+        if rec.entry_type == 'withdraw' and rec.amount > available_total:
+            raise ValidationError(_("Withdraw Amount must not be larger than Principal Amount. 提款金額不能高於帳戶本金金額。"))
+            # raise ValidationError(_(
+            #     "Withdraw Amount must not be larger than available balance.\n\n"
+            #     "Withdraw Amount: %.2f\n"
+            #     "Principal: %.2f\n"
+            #     "Interest: %.4f\n"
+            #     "Available: %.4f"
+            # ) % (
+            #     rec.amount,
+            #     principal_total,
+            #     interest_total,
+            #     available_total,
+            # ))
+
+        if rec.amount < 0:
+            raise ValidationError(_("Value must not be negative.")) 
+  
   # check for validity and produce errors
   @api.constrains('entry_type_principal', 'entry_type', 'amount')
   def _check_amount(self):
