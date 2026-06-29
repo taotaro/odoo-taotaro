@@ -1,5 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_saving_account,access_saving_account,model_saving_account,base.group_user,1,1,1,1
+access_saving_account_user,saving_account_user,model_saving_account,base.group_user,1,1,1,1
 access_saving_account_entry,access_saving_account_entry,model_saving_account_entry,base.group_user,1,1,1,1
 access_interest_rate,access_interest_rate,model_interest_rate,base.group_user,1,1,1,1
 access_term_account_report_wizard,access_term_account_report_wizard,model_term_account_report_wizard,base.group_user,1,1,1,1

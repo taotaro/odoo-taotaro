@@ -5,28 +5,46 @@
     <t t-call="web.html_container">
       <t t-call="web.external_layout">
         <div class="page">
-        <div class="text-right">
-          <table style="table-layout:fixed; table-width:full; text:center">
-            <tr>
-              <td>Yue Hwa Chinese Products Saving System</td>
-              <td><t t-esc="form['date_from']"/></td>
-              <td>to</td>
-              <td><t t-esc="form['date_to']"/></td>
-            </tr>
-            <tr>
-              <td><t t-esc="account_no"/></td>
-              <td><t t-esc="form['account_id'][1]"/></td>
-            </tr>
-          </table>
+        <div class="text-end">
+          
+            <table style="width:100%; border:none; border-collapse:collapse;">
+                <tr>
+                    <!-- 左邊 -->
+                    <td style="width:50%; text-align:right; padding-right:5px; border:none;">
+                        Yue Hwa Chinese Products Saving System
+                    </td>
+            
+                    <!-- 右邊 -->
+                    <td style="width:50%; text-align:left; padding-left:5px; border:none;">
+                        <t t-esc="form['date_from']"/>
+                         to 
+                        <t t-esc="form['date_to']"/>
+                    </td>
+                </tr>
+            
+                <tr>
+                    <!-- account no -->
+                    <td style="text-align:right; padding-right:5px;border:none;">
+                        <t t-esc="account_no"/>
+                    </td>
+            
+                    <!-- account name -->
+                    <td style="text-align:left; padding-left:5px; border:none;">
+                        <t t-esc="form['account_id'][1]"/>
+                    </td>
+                </tr>
+            </table>
+
           <h5><center>Term Individual Account Summary</center></h5>
-          <table class="table table-bordered" style="table-layout:fixed; text:right">
+          <table class="table table-bordered" style="table-layout:fixed; text-align:right">
             <tr>
-              <th>Date</th>
-              <th>Withdrawals</th>
-              <th>Deposits</th>
-              <th>Interest</th>
-              <th>Balance</th>
-              <th>Ref</th>
+                <th style="text-align:right;">Date</th>
+                <th style="text-align:right;">Withdrawals</th>
+                <th style="text-align:right;">Deposits</th>
+                <th style="text-align:right;">Interest</th>
+                <th style="text-align:right;">Balance</th>
+                <th style="text-align:right;">Description</th>
+                <th style="text-align:right; padding-right:5px;">Ref</th>
             </tr>
             <t t-foreach="entry" t-as="line">
               <tr>
@@ -50,7 +68,11 @@
                     <td></td>
                   </t>
                 <td><t t-esc="'{:,.2f}'.format(float(line['balance']))"/></td>
-                <td><t t-esc="line['ref_no']"/></td>
+                <td><t t-esc="line.get('description', '')"/></td>
+                <!-- <td><t t-esc="line['ref_no']"/></td> -->
+                <td style="padding-right:5px;">
+                    <t t-esc="line['ref_no']"/>
+                </td>
               </tr>
             </t>
             <tr>

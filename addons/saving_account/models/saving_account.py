@@ -180,6 +180,8 @@ class SavingAccount(models.Model):
     if account['close_date'] == False:
       account['close_date'] = datetime.date.today()
       if account['total_interest'] > 0:
+        creditinterestamount = account.total_principal + account.total_interest
+
         # value to deduct from interest
         deduct = {
           'entry_type': 'credit_interest',
@@ -207,6 +209,21 @@ class SavingAccount(models.Model):
           'default_account_id': account.id,
           'default_ledger': 'principal',
           'default_entry_type_principal': 'withdraw',
-          'default_amount': account.total_principal # + account.total_interest
+          'default_amount': creditinterestamount #account.total_principal + account.total_interest
         }
       } 
+  
+  
+def action_view_entries(self):
+    self.ensure_one()
+
+    return {
+        'type': 'ir.actions.act_window',
+        'name': 'Entries',
+        'res_model': 'saving_account.entry',
+        'view_mode': 'list,form',
+        'domain': [('account_id', '=', self.id)],
+        'context': {
+            'default_account_id': self.id,
+        }
+    }
