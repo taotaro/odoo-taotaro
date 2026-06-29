@@ -5,18 +5,21 @@
         <field name="name">saving_account.entry.form</field>
         <field name="model">saving_account.entry</field>
         <field name="arch" type="xml">
-            <form>
+            <form create="false" edit="false" delete="false">
                 <sheet>
                     <group>
-                        <field name="account_id" string="Account"/>
-                        <field name="entry_date" string="Entry Date"/>
+                        <field name="account_type" string="Account Type" readonly="True"/>
+                        <field name="account_id" string="Account ID"/>
+                        <field name="entry_date" string="Entry Date" options="{'numeric': true}"/>
                         <field name="ledger" string="Ledger"/>
                         <field name="entry_type"
                                string="Entry Type"
-                               invisible="ledger != 'interest'"/>
+                               invisible="ledger != 'interest'"
+                               required="ledger == 'interest'"/>
                         <field name="entry_type_principal"
                                string="Entry Type"
-                               invisible="ledger != 'principal'"/>
+                               invisible="ledger != 'principal'"
+                               required="ledger == 'principal'"/>
                         <field name="amount" string="Amount"/>
                         <field name="description" string="Description"/>
                         <field name="reference" string="Reference"/>
@@ -30,18 +33,21 @@
         <field name="name">saving_account.entry.form.readonly</field>
         <field name="model">saving_account.entry</field>
         <field name="arch" type="xml">
-            <form create="false">
+            <form create="false" edit="false" delete="false">
                 <sheet>
                     <group>
+                        <field name="account_type" string="Account Type" readonly="True"/>
                         <field name="account_id" string="Account" readonly="True"/>
-                        <field name="entry_date" string="Entry Date" readonly="True"/>
+                        <field name="entry_date" string="Entry Date" readonly="True" options="{'numeric': true}"/>
                         <field name="ledger" string="Ledger" readonly="True"/>
                         <field name="entry_type"
                                string="Entry Type"
-                               invisible="ledger != 'interest'"/>
+                               invisible="ledger != 'interest'"
+                               required="ledger == 'interest'"/>
                         <field name="entry_type_principal"
                                string="Entry Type"
-                               invisible="ledger != 'principal'"/>
+                               invisible="ledger != 'principal'"
+                               required="ledger == 'principal'"/>
                         <field name="amount" string="Amount"/>
                         <field name="description" string="Description"/>
                         <field name="reference" string="Reference"/>
@@ -55,11 +61,13 @@
         <field name="name">saving_account.entry.list</field>
         <field name="model">saving_account.entry</field>
         <field name="arch" type="xml">
-            <list>
+            <list create="false" delete="false" default_order="entry_date desc">
+            <!-- <list> -->
                 <field name="entry_no" string="Entry No"/>
-                <field name="entry_date" string="Entry Date"/>
+                <field name="entry_date" string="Entry Date" options="{'numeric': true}"/>
                 <field name="entry_type" string="Entry Type"/>
                 <field name="ledger" string="Ledger"/>
+                <field name="account_type" string="Account Type" readonly="True"/>
                 <field name="account_no" string="Account ID"/>
                 <field name="account_id" string="Account Name"/>
                 <field name="description" string="Description"/>
@@ -82,81 +90,3 @@
     </record>
 
 </odoo>
-
-<!-- <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-
-  <record id="view_entry_form" model="ir.ui.view">
-    <field name="name">saving_account.entry.form</field>
-    <field name="model">saving_account.entry</field>
-    <field name="arch" type="xml">
-      <form>
-        <sheet>
-          <group>
-            <field name="account_id" string="Account"/>
-            <field name="entry_date" string="Entry Date"/>
-            <field name="ledger" string="Ledger"/>
-            <field name="entry_type" string="Entry Type" attrs="{'invisible': [('ledger', '!=', 'interest')]}"/>
-            <field name="entry_type_principal" string="Entry Type" attrs="{'invisible': [('ledger', '!=', 'principal')]}"/>
-            <field name="amount" string="Amount" digits="[16, 2]"/>
-            <field name="description" string="Description"/>
-            <field name="reference" string="Reference"/>
-          </group>
-        </sheet>
-      </form>
-    </field>
-  </record>
-
-  <record id="view_entry_form1" model="ir.ui.view">
-    <field name="name">saving_account.entry.form</field>
-    <field name="model">saving_account.entry</field>
-    <field name="arch" type="xml">
-      <form create="false">
-        <sheet>
-          <group>
-            <field name="account_id" string="Account" attrs="{'readonly': 1}"/>
-            <field name="entry_date" string="Entry Date" attrs="{'readonly': 1}"/>
-            <field name="ledger" string="Ledger" attrs="{'readonly': 1}"/>
-            <field name="entry_type" string="Entry Type" attrs="{'invisible': [('ledger', '!=', 'interest')]}"/>
-            <field name="entry_type_principal" string="Entry Type" attrs="{'invisible': [('ledger', '!=', 'principal')]}"/>
-            <field name="amount" string="Amount" digits="[16, 2]"/>
-            <field name="description" string="Description"/>
-            <field name="reference" string="Reference"/>
-          </group>
-        </sheet>
-      </form>
-    </field>
-  </record>
-
-  <record id="view_entry_tree" model="ir.ui.view">
-    <field name="name">saving_account.entry.tree</field>
-    <field name="model">saving_account.entry</field>
-    <field name="arch" type="xml">
-      <tree>
-        <field name="entry_no" string="Entry No"/>
-        <field name="entry_date" string="Entry Date"/>
-        <field name="entry_type" string="Entry Type"/>
-        <field name="ledger" string="Ledger"/>
-        <field name="account_no" string="Account ID"/>
-        <field name="account_id" string="Account Name"/>
-        <field name="description" string="Description"/>
-        <field name="reference" string="Reference"/>
-        <field name="amount_signed" string="Amount"/>
-      </tree>
-    </field>
-  </record>
-
-  <record id="action_entry" model="ir.actions.act_window">
-    <field name="name">Entries</field>
-    <field name="type">ir.actions.act_window</field>
-    <field name="res_model">saving_account.entry</field>
-    <field name="view_mode">tree,form,kanban</field>
-    <field name="context">{}</field>
-    <field name="help" type="html">
-      <p class="o_view_nocontent_smiling_face">
-        Create your first entry!
-      </p>
-    </field>
-  </record>
-
-</odoo> -->
