@@ -231,7 +231,8 @@ class DailyFinancialWizard(models.TransientModel):
     )
 
     pdf_content, _ = report._render_qweb_pdf(
-        self.ids,
+        report.report_name,
+        res_ids=self.ids,
         data=data
     )
 
