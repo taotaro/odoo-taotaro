@@ -1,6 +1,9 @@
 from odoo import models, fields, api, _
 import base64
+import logging
 from ..helper import truncate_number, find_last_1april
+
+_logger = logging.getLogger(__name__)
 
 class DailyFinancialWizard(models.TransientModel):
   _name="daily_financial.report.wizard"
@@ -8,13 +11,34 @@ class DailyFinancialWizard(models.TransientModel):
 
   date_from=fields.Date(string="Date From", default=fields.Date.today())
   date_to=fields.Date(string="Date To", default=fields.Date.today())
-  email_to=fields.Char(string="Email To", _compute="_get_default_email")
+  email_to = fields.Char(string="Email To")
+  # email_to=fields.Char(string="Email To", _compute="_get_default_email")
+  # email_to = fields.Char(
+  #     string="Email To",
+  #     compute="_get_default_email"
+  # )
 
-  @api.onchange('email_to')
-  def _get_default_email(self):
-    email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
-    for rec in self:
-      rec.email_to = email_to_send
+  
+  @api.model
+  def default_get(self, fields_list):
+      res = super().default_get(fields_list)
+
+      setup = self.env['email_setup'].search(
+          [],
+          limit=1,
+          order='create_date desc'
+      )
+
+      res['email_to'] = setup.email_to
+
+      return res
+
+
+  # @api.onchange('email_to')
+  # def _get_default_email(self):
+  #   email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
+  #   for rec in self:
+  #     rec.email_to = email_to_send
 
   def generate_report(self):
     from_date = ""
@@ -196,9 +220,23 @@ class DailyFinancialWizard(models.TransientModel):
 
   def action_send_email(self):
     # generate report template with filename
+    # data = self.generate_report()
+    # report_id = self.env.ref('saving_account.action_daily_financial_report')._render(self.ids, data=data)
+    # report_b64 = base64.b64encode(report_id[0])
+
     data = self.generate_report()
-    report_id = self.env.ref('saving_account.action_daily_financial_report')._render(self.ids, data=data)
-    report_b64 = base64.b64encode(report_id[0])
+
+    report = self.env.ref(
+        'saving_account.action_daily_financial_report'
+    )
+
+    pdf_content, _ = report._render_qweb_pdf(
+        self.ids,
+        data=data
+    )
+
+    report_b64 = base64.b64encode(pdf_content)
+
     now = fields.Datetime.today().strftime('%Y%m%d')
     report_name = now + '_daily_financial_statement.pdf'
     
@@ -212,7 +250,9 @@ class DailyFinancialWizard(models.TransientModel):
         })
 
     # find email to send to
-    email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
+    # email_to_send = self.env['email_setup'].search([], limit=1, order='create_date desc').email_to
+    # email_values = {'email_to': email_to_send}
+    email_to_send = self.email_to
     email_values = {'email_to': email_to_send}
     print("Sending email to", email_to_send)
 
@@ -231,32 +271,58 @@ class DailyFinancialWizard(models.TransientModel):
           'sticky': True,
         }
       }
-    except:
-      # send warning message when fail
+    except Exception as e:
+      _logger.exception("Email send failed: %s", e)
       return {
           'type': 'ir.actions.client',
           'tag': 'display_notification',
           'params': {
             'title': _('Warning'),
-            'message': 'Email failed to send',
+            'message': 'Email failed to send: %s' % str(e),
             'sticky': True,
           }
       }
+    # except:
+    #   # send warning message when fail
+    #   return {
+    #       'type': 'ir.actions.client',
+    #       'tag': 'display_notification',
+    #       'params': {
+    #         'title': _('Warning'),
+    #         'message': 'Email failed to send',
+    #         'sticky': True,
+    #       }
+    #   }
 
   @api.model
   def _cron_send_email(self):
-    # send scheduled email
     try:
-      print("Sending scheduled email...")
-      self.action_send_email()
-    except:
-      return {
-          'type': 'ir.actions.client',
-          'tag': 'display_notification',
-          'params': {
-            'title': _('Warning'),
-            'message': 'Email failed to send',
-            'sticky': False,
-          }
-      }
+        print("Sending scheduled email...")
+
+        wizard = self.create({
+            'date_from': fields.Date.today(),
+            'date_to': fields.Date.today(),
+        })
+
+        wizard.action_send_email()
+
+    except Exception as e:
+        _logger.exception("Daily Financial Email Error: %s", e)
+
+  # @api.model
+  # def _cron_send_email(self):
+  #   # send scheduled email
+  #   try:
+  #     print("Sending scheduled email...")
+  #     self.action_send_email()
+  #   except:
+  #     return {
+  #         'type': 'ir.actions.client',
+  #         'tag': 'display_notification',
+  #         'params': {
+  #           'title': _('Warning'),
+  #           'message': 'Email failed to send',
+  #           'sticky': False,
+  #         }
+  #     }
     
