@@ -77,173 +77,37 @@ class SavingAccountEntry(models.Model):
     for rec in self:
         if not rec.account_id:
             continue
-
-<<<<<<< HEAD
-  @api.model
-  def create(self, vals_list):
-    # 防呆：容許外部傳 dict（例如 cron 或其他 code）
-    if isinstance(vals_list, dict):
-        vals_list = [vals_list]
-
-    # 防呆：確保每一個 item 都係 dict
-    for i, vals in enumerate(vals_list):
-        if not isinstance(vals, dict):
-            raise ValueError(
-                f"SavingAccountEntry.create expects dict at index {i}, got {type(vals)}: {vals!r}"
-            )
-
-    for vals in vals_list:
-        entry_type_principal = vals.get('entry_type_principal')
-        if entry_type_principal:
-            vals['entry_type'] = entry_type_principal
-
-        entry_type = vals.get('entry_type')
-        if entry_type == 'deposit':
-            vals['ref_no'] = 'DP'
-            vals['ledger'] = 'principal'
-        elif entry_type == 'withdraw':
-            vals['ref_no'] = 'WD'
-            vals['ledger'] = 'principal'
-        elif entry_type == 'credit_interest':
-            vals['ref_no'] = 'CI'
-
-        vals.setdefault('entry_no', self.env['ir.sequence'].next_by_code('saving_account.entry'))
-
-    return super().create(vals_list)
-
-    # print("calling create")
-    # # fill entry type field if there is any special conditions
-    
-    # for vals in vals_list:
-    # # 1) 取 entry_type_principal → 寫返入 entry_type
-    #   entry_type_principal = vals.get('entry_type_principal')
-    #   if entry_type_principal:
-    #       vals['entry_type'] = entry_type_principal
-
-    # # 2) fill reference number according to entry type
-    #   entry_type = vals.get('entry_type')
-    #   if entry_type == 'deposit':
-    #     vals['ref_no'] = 'DP'
-    #     vals['ledger'] = 'principal'
-    #   elif entry_type == 'withdraw':
-    #     vals['ref_no'] = 'WD'
-    #     vals['ledger'] = 'principal'
-    #   elif entry_type == 'credit_interest':
-    #     vals['ref_no'] = 'CI'
-  
-    # # 3) create unique id for each entry（保留你原本邏輯：每筆都取一次 sequence）
-    #   vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry')
-
-    # return super(SavingAccountEntry, self).create(vals)
-        
-=======
         rec.account_id._compute_total_principal()
-        # account = rec.account_id
-        # account = self.env['saving_account'].browse(rec.account_id.id)
 
-        # ✅ Calculate principal manually
-        # principal_total = 0.0
-        # principal_entries = self.env['saving_account.entry'].search([
-        #     ('account_id', '=', rec.account_id.id),
-        #     ('ledger', '=', 'principal'),
-        # ])
-
-        # for line in principal_entries:
-        #     if line.entry_type == 'deposit':
-        #         principal_total += line.amount
-        #     elif line.entry_type == 'withdraw':
-        #         principal_total -= line.amount
-        #     elif line.entry_type == 'credit_interest':
-        #         principal_total += line.amount
-
-        # # ✅ Calculate interest manually
-        # interest_total = 0.0
-        # interest_entries = self.env['saving_account.entry'].search([
-        #     ('account_id', '=', rec.account_id.id),
-        #     ('ledger', '=', 'interest'),
-        #     ('entry_type', 'in', ['interest', 'credit_interest'])
-        # ])
-
-        # for line in interest_entries:
-        #     if line.entry_type == 'interest':
-        #         interest_total += line.amount
-        #     elif line.entry_type == 'credit_interest':
-        #         interest_total -= line.amount
-
-        # available_total = principal_total #+ interest_total
-
-        # ✅ Validation
         if rec.entry_type == 'deposit' and rec.account_id.close_date:
             raise ValidationError(_("Deposit is not allowed for closed account."))
 
         if rec.entry_type == 'withdraw' and rec.account_id.total_principal < 0:
             raise ValidationError(_("Withdraw Amount must not be larger than Principal Amount. 提款金額不能高於帳戶本金金額。"))
-            
-            # raise ValidationError(_(
-            #       "Withdraw Amount must not be larger than Principal Amount.\n"
-            #       "提款金額不能高於帳戶本金金額。\n\n"
-            #       "Withdraw Amount / 提款金額: %.2f\n"
-            #       "Principal / 本金: %.2f\n"
-            #       )  % (
-            #       rec.amount,
-            #       rec.account_id.total_principal
-            #       ))
-            # raise ValidationError(_(
-            #     "Withdraw Amount must not be larger than available balance.\n\n"
-            #     "Withdraw Amount: %.2f\n"
-            #     "Principal: %.2f\n"
-            #     "Interest: %.4f\n"
-            #     "Available: %.4f"
-            # ) % (
-            #     rec.amount,
-            #     principal_total,
-            #     interest_total,
-            #     available_total,
-            # ))
 
         if rec.amount < 0:
-            raise ValidationError(_("Value must not be negative.")) 
-  
-  # # check for validity and produce errors
-  # @api.constrains('entry_type_principal', 'entry_type', 'amount')
-  # def _check_amount(self):
-  #   print("calling check amount")
-  #   for rec in self:
-  #     # current_total = rec.account_id.total_principal + rec.amount
-  #     current_total = rec.account_id.total_principal + rec.account_id.total_interest
-  #     # check if account is closed or not
-  #     if rec.entry_type == 'deposit' and rec.account_id.close_date != False:
-  #       raise ValidationError(_("Deposit is not allowed for closed account. 不能為已關閉的帳戶進行存款操作。"))
-  #     #check if amount is greater than total money in account
-  #     elif rec.entry_type == 'withdraw' and rec.amount > current_total:
-  #       raise ValidationError(_(
-  #                 "Withdraw Amount must not be larger than available balance.\n"
-  #                 "提款金額不能高於可用結餘。\n\n"
-  #                 "Withdraw Amount / 提款金額: %.2f\n"
-  #                 "Principal / 本金: %.2f\n"
-  #                 "Interest / 利息: %.4f\n"
-  #                 "Available Balance / 可用結餘: %.4f"
-  #             ) % (
-  #                 rec.amount,
-  #                 rec.account_id.total_principal,
-  #                 rec.account_id.total_interest,
-  #                 current_total,
-  #             ))
+            raise ValidationError(_("Value must not be negative."))
 
-  #       # raise ValidationError(_("Withdraw Amount must not be larger than Principal Amount. 提款金額不能高於帳戶本金金額。"))
-  #     elif rec.amount < 0:
-  #       raise ValidationError(_("Value must not be negative. 數值不能為負值。"))
 
   @api.model_create_multi
   def create(self, vals_list):
+      # 兼容：如果外面傳入單一 dict，就包成 list
+      if isinstance(vals_list, dict):
+          vals_list = [vals_list]
+
+      # 防呆：確保每個元素都係 dict
+      for i, vals in enumerate(vals_list):
+          if not isinstance(vals, dict):
+              raise ValueError(
+                  f"SavingAccountEntry.create expects dict at index {i}, got {type(vals)}: {vals!r}"
+              )
+
       for vals in vals_list:
-          # fill entry_type from entry_type_principal if provided
           if vals.get('entry_type_principal'):
               vals['entry_type'] = vals['entry_type_principal']
 
           entry_type = vals.get('entry_type')
 
-          # fill reference number according to entry type
           if entry_type == 'deposit':
               vals['ref_no'] = 'DP'
               vals['ledger'] = 'principal'
@@ -253,15 +117,10 @@ class SavingAccountEntry(models.Model):
           elif entry_type == 'credit_interest':
               vals['ref_no'] = 'CI'
 
-          # create unique id for each entry
           if not vals.get('entry_no'):
               vals['entry_no'] = self.env['ir.sequence'].next_by_code('saving_account.entry') or '/'
 
       return super().create(vals_list)
-
-
-  # @api.model
->>>>>>> custom
   # def create(self, vals):
   #   print("calling create")
   #   # fill entry type field if there is any special conditions
