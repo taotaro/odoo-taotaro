@@ -45,24 +45,24 @@ class SavingAccount(models.Model):
   custom1 = fields.Text(string='Custom 1')
   custom2 = fields.Text(string='Custom 2')
 
-@api.model_create_multi
+  @api.model_create_multi
   def create(self, vals_list):
-      # 兼容：如果外面傳入單一 dict，就包成 list
-      if isinstance(vals_list, dict):
-          vals_list = [vals_list]
+    # 兼容：如果外面傳入單一 dict，就包成 list
+    if isinstance(vals_list, dict):
+        vals_list = [vals_list]
 
-      # 防呆：確保每個元素都係 dict
-      for i, vals in enumerate(vals_list):
-          if not isinstance(vals, dict):
-              raise ValueError(
-                  f"saving_account.create expects dict at index {i}, got {type(vals)}: {vals!r}"
-              )
+    # 防呆：確保每個元素都係 dict
+    for i, vals in enumerate(vals_list):
+        if not isinstance(vals, dict):
+            raise ValueError(
+                f"saving_account.create expects dict at index {i}, got {type(vals)}: {vals!r}"
+            )
 
-      for vals in vals_list:
-          if not vals.get('account_no'):
-              vals['account_no'] = self.env['ir.sequence'].next_by_code('saving_account') or '/'
+    for vals in vals_list:
+        if not vals.get('account_no'):
+            vals['account_no'] = self.env['ir.sequence'].next_by_code('saving_account') or '/'
 
-      return super().create(vals_list)
+    return super().create(vals_list)
   
   # calculate total principal amount of each account
   @api.depends('principal_list_ids')
