@@ -230,7 +230,7 @@ class DailyFinancialWizard(models.TransientModel):
         'saving_account.action_daily_financial_report'
     )
 
-    pdf_content, _ = report._render_qweb_pdf(
+    pdf_content, report_type = report._render_qweb_pdf(
         report.report_name,
         res_ids=self.ids,
         data=data
@@ -247,7 +247,7 @@ class DailyFinancialWizard(models.TransientModel):
             'type': 'binary',
             'datas': report_b64,
             'store_fname': report_name,
-            'mimetype': 'application/x-pdf'
+            'mimetype': 'application/pdf'
         })
 
     # find email to send to
