@@ -22,40 +22,47 @@ class SavingAccount(models.Model):
   phone = fields.Char(string='Phone Number')
   open_date = fields.Date(string='Open Date', default=fields.Date.today())
   close_date = fields.Date(string='Close Date')
-  principal_list_ids = fields.One2many('saving_account.entry', 'amount', string="Principal Lists", domain=[('entry_type','in',['deposit', 'withdraw'])])
-  interest_list_ids = fields.One2many('saving_account.entry', 'entry_no', string="Interest Lists", domain=[('entry_type','=','interest')])
+    
+  principal_list_ids = fields.One2many(
+      'saving_account.entry',
+      'account_id',   # ✅ 正確 inverse field
+      string="Principal Lists",
+      domain=[('ledger', '=', 'principal')]
+  )
+
+  interest_list_ids = fields.One2many(
+      'saving_account.entry',
+      'account_id',   # ✅ 同樣係 account_id
+      string="Interest Lists",
+      domain=[('ledger', '=', 'interest')]
+  )
+
+  # principal_list_ids = fields.One2many('saving_account.entry', 'amount', string="Principal Lists", domain=[('entry_type','in',['deposit', 'withdraw'])])
+  # interest_list_ids = fields.One2many('saving_account.entry', 'entry_no', string="Interest Lists", domain=[('entry_type','=','interest')])
   total_principal = fields.Float(compute='_compute_total_principal', compute_sudo=True, string='Principal')
   total_interest = fields.Float(compute='_compute_total_interest', compute_sudo=True, string='Interest', digits=(16, 4))
   last_interest_credit = fields.Float(compute='_compute_last_interest_credit', compute_sudo=True, string='Last Interest Credit')
   custom1 = fields.Text(string='Custom 1')
   custom2 = fields.Text(string='Custom 2')
 
-  @api.model
+@api.model_create_multi
   def create(self, vals_list):
-    # ✅ 兼容：如果外面傳入單一 dict，就包成 list
-    if isinstance(vals_list, dict):
-        vals_list = [vals_list]
+      # 兼容：如果外面傳入單一 dict，就包成 list
+      if isinstance(vals_list, dict):
+          vals_list = [vals_list]
 
-    # ✅ 防呆：確保每個元素都係 dict
-    for i, vals in enumerate(vals_list):
-        if not isinstance(vals, dict):
-            raise ValueError(
-                f"saving_account.create expects dict at index {i}, got {type(vals)}: {vals!r}"
-            )
+      # 防呆：確保每個元素都係 dict
+      for i, vals in enumerate(vals_list):
+          if not isinstance(vals, dict):
+              raise ValueError(
+                  f"saving_account.create expects dict at index {i}, got {type(vals)}: {vals!r}"
+              )
 
-        # create unique id for each account (only if not provided)
-        vals['account_no'] = self.env['ir.sequence'].next_by_code('saving_account')
-        # vals.setdefault(
-        #     'account_no',
-        #     self.env['ir.sequence'].next_by_code('saving_account')
-        # )
+      for vals in vals_list:
+          if not vals.get('account_no'):
+              vals['account_no'] = self.env['ir.sequence'].next_by_code('saving_account') or '/'
 
-    return super().create(vals_list)
-    
-    # for vals in vals_list:
-    #   # create unique id for each account
-    #   vals['account_no'] = self.env['ir.sequence'].next_by_code('saving_account')
-    #   return super(SavingAccount, self).create(vals)
+      return super().create(vals_list)
   
   # calculate total principal amount of each account
   @api.depends('principal_list_ids')
@@ -80,7 +87,8 @@ class SavingAccount(models.Model):
             current_total = current_total + principal.amount
 
       # update the amount
-      rec.total_principal = rec.total_principal + current_total
+      rec.total_principal = current_total
+      # rec.total_principal = rec.total_principal + current_total
       rec.total_principal = truncate_number(rec.total_principal, 2)
 
   # calculate total interest of each account
@@ -110,7 +118,8 @@ class SavingAccount(models.Model):
             current_total = current_total - interest.amount
 
       # update the amount
-      rec.total_interest = rec.total_interest + current_total
+      rec.total_interest = current_total
+      # rec.total_interest = rec.total_interest + current_total
       rec.total_interest = truncate_number(rec.total_interest, 4)
   
   # add a sign to unique account id according to account type
@@ -175,6 +184,8 @@ class SavingAccount(models.Model):
     if account['close_date'] == False:
       account['close_date'] = datetime.date.today()
       if account['total_interest'] > 0:
+        creditinterestamount = account.total_principal + account.total_interest
+
         # value to deduct from interest
         deduct = {
           'entry_type': 'credit_interest',
@@ -202,7 +213,20 @@ class SavingAccount(models.Model):
           'default_account_id': account.id,
           'default_ledger': 'principal',
           'default_entry_type_principal': 'withdraw',
-          'default_amount': account.total_principal + account.total_interest
+          'default_amount': creditinterestamount #account.total_principal + account.total_interest
         }
       }
-    
+
+  def action_view_entries(self):
+      self.ensure_one()
+
+      return {
+          'type': 'ir.actions.act_window',
+          'name': 'Entries',
+          'res_model': 'saving_account.entry',
+          'view_mode': 'list,form',
+          'domain': [('account_id', '=', self.id)],
+          'context': {
+              'default_account_id': self.id,
+          }
+      }
