@@ -179,6 +179,7 @@ class SavingAccount(models.Model):
 
   # button to close account, move interest accumulated to principal 
   # and open deposit/withdraw form
+  # Empty
   def action_close_account(self):
     account = self.env['saving_account'].search([('id','=',self.id)])
     if account['close_date'] == False:
